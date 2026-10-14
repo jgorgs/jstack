@@ -25,6 +25,8 @@ node <plugin>/skills/reflect/scripts/find-transcript.mjs ~/.claude/projects/<enc
 
 It covers the three layouts (flat `<id>.jsonl`, nested `<id>/<id>.jsonl`, subagent `<parent>/subagents/<child>.jsonl`), newest first, and prints the first path whose opening typed prompt carries the fragment. Do not reimplement the scan by hand: the first line of a transcript is session metadata, not a message, a session that starts with `/clear` or a `!` shell command records that command's wrapper and output as `user` records before the prompt, and files run to several megabytes, so the finder streams each candidate and stops at its first typed `user` record. If it exits 1, write a tight digest of the session and pass that instead. It lists, one line each in turn order, the user's prompts and corrections, the tool calls and their results, and the files touched. It states no diagnosis, verdict, or cause. The reviewers judge the session, not your conclusions about it.
 
+When reviewers receive a digest instead of the transcript, label conclusions based on that digest and treat missing or unreported evidence as inconclusive until a transcript or artifact confirms the omission.
+
 ## 2. Spawn three reviewers in parallel
 
 One message, three `Agent` calls, `subagent_type: "general-purpose"`. Reviewers need MCP access to look up the tickets, chat threads, and observability traces the transcript references, so pick a subagent_type that retains MCP access. The prompt forbids file writes. The parent applies edits.
@@ -59,6 +61,8 @@ Follow each approved row's Routing exactly:
 - Substantive existing-skill edit (a new section, a new pattern table, more than ~10 lines): hand to the **plugin-dev:skill-development** skill and run its draft / test / iterate loop.
 - `tune description: <skill path>` (the skill exists but didn't trigger when it should have): hand to `plugin-dev:skill-development` and run its description-optimization loop.
 - `new skill via plugin-dev:skill-development: <kebab-name>`: hand creation to `plugin-dev:skill-development`. Do not invent the shape ad hoc.
+
+A learning that holds in any repository (how to engineer, review, verify, ship) is an edit to this plugin, made in the `jgorgs/pstack-claude` repository as a pull request, never in the installed plugin cache under `~/.claude/plugins/`. A learning about one project (its commands, services, data, people, conventions) goes to that project's `AGENTS.md`.
 
 If your environment ships a SKILL.md validator, run it on every touched skill before declaring done.
 

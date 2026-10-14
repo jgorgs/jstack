@@ -15,6 +15,8 @@ Use the session's task-tracking tools for the todolist. On Claude Code these are
 
 ## Non-negotiables
 
+When a repo instruction file requires this workflow, say so in the first work update and load this skill before implementation. Make the route visible at task start so compliance is not reconstructed after the fact.
+
 The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
 
 Remaining triggers:
