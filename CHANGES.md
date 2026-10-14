@@ -2,6 +2,14 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.0.1 - attribution labels, overview image, security reporting
+
+Eight upstream links in `NOTICE.md` read `cursor/plugins/jstack @ <sha>` while their URLs open `cursor/plugins/pstack`, because the JStack rename rewrote the labels along with the repository's own paths. Each label now names upstream's real path, `cursor/plugins/pstack`.
+
+The README no longer embeds an overview image. `assets/jstack-overview.png` still showed the old `poteto-mode` title and `setup-pstack`, and an image model drew it by editing the previous version, so it can't be corrected by hand. The image, its prompt file `assets/jstack-overview.prompt.txt`, and the README embed are removed. The README's prose already walks through the same request-to-verified-work flow.
+
+`SECURITY.md` already sends reporters to GitHub's private vulnerability reporting form for `jgorgs/jstack`, which is now enabled, so it is unchanged.
+
 ## 2.0.0 - jedi-mode
 
 The poteto names become jedi names. Nothing else changes: the skills, playbooks, agents, and scripts behave as they did in 1.0.0. The rename breaks every caller that names the old skills, agents, or paths, so the major version moves.
