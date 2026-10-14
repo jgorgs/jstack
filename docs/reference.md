@@ -1,10 +1,10 @@
-# jstack reference
+# JStack reference
 
 Start with the [README](../README.md) for installation and your first task.
 
 ## Slash commands
 
-The package includes 61 skill directories: 37 public skills and 24 `principle-*` references. Claude Code uses `/jstack:<name>`, and Pi uses `/skill:<name>`. In Codex, request a skill by name or install the [optional shortcuts](#codex) for the `/name` form below.
+The package includes 62 skill directories: 38 public skills and 24 `principle-*` references. Claude Code uses `/jstack:<name>`, and Pi uses `/skill:<name>`. In Codex, request a skill by name or install the [optional shortcuts](#codex) for the `/name` form below.
 
 Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 
@@ -33,6 +33,7 @@ Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 | `/ketchup` | catch up on everything in this chat since your last message, with an executive summary for each action item |
 | `/setup-jstack` | configure jstack per-role model choices |
 | `/poteto-help` | answer a question about jstack with the prompt to send and the file the answer came from |
+| `/upstream-review` | list the pstack-claude changes since the last review that are worth copying into JStack |
 | `/unslop` | clean up writing by removing AI tells |
 | `/no-comments` | strip comments before review, fix the accepted findings, encode claimed constraints |
 | `/create-verification-skill` | generate a project-local verification skill and feature map |
@@ -208,7 +209,7 @@ plugins/jstack/
   skills/                        Shared skills, references, and scripts
   agents/                        Claude Code subagent definitions
   hooks/                         Startup routing for Claude Code, Codex, and Copilot; Copilot tool checks
-tools/                           Generation, validation, and upstream sync
+tools/                           Generation and validation
 tests/                           Repository checks
 ```
 
@@ -218,7 +219,7 @@ Skills-only installs use `plugins/jstack/skills/`. Agent references and license 
 
 The [generator](../tools/generate.mjs) updates versions, model defaults, Codex prompts, Copilot preambles and role lists, and portable reference files, and validates the Pi package manifest. The [slash-command table](#slash-commands) supplies the Codex prompt descriptions and order. Edit that table when changing a menu description, then regenerate. Keep a row for every public skill, with `poteto-mode` first.
 
-[Documentation fact tests](../tests/readme-facts.test.mjs) check the skill counts and upstream pin. The table parser requires the header `| command | use it when |`.
+[Documentation fact tests](../tests/readme-facts.test.mjs) check the skill counts. The table parser requires the header `| command | use it when |`.
 
 Run the generator and repository tests with Bun:
 
@@ -232,14 +233,12 @@ The install step reads the root `bun.lock` and fetches `typebox`, which the Pi e
 
 CI also checks shell scripts, workflows, Markdown, relative links, and the bundled Bun tools. See [local checks](../CONTRIBUTING.md#things-that-will-fail-ci) for commands and [release instructions](../CONTRIBUTING.md#releasing) for versioning and the live Claude Code command check.
 
-### Port scope and attribution
+### Attribution and upstream review
 
-The skill tree is synced against upstream `997ffc7` (v0.15.21). The thermos skills and agents are synced against `118e73b` (thermos 1.0.0).
+JStack forked Michael Denyer's [pstack-claude](https://github.com/michael-denyer/pstack-claude) at `94f5ce9` (0.9.84). That port's skill tree was synced against Lauren Tan's pstack at `997ffc7` (v0.15.21), and its thermos skills and agents against `118e73b` (thermos 1.0.0). JStack takes later upstream changes by hand: [UPSTREAM.md](../UPSTREAM.md) records the last pstack-claude commit reviewed, and `/jstack:upstream-review` lists what changed since.
 
-This repository ports Lauren Tan's pstack from Cursor to Claude Code and shares the skills with other runtimes. It includes six cursor-team-kit skills, the three thermos skills with their two review subagents, and an independently authored `babysit` skill. The port supplies Claude Code plugin registration and routing, Codex manifests and shortcuts, the Codex tool mapping, the Pi package, extension, and tool mapping, and the GitHub Copilot hooks and tool mapping.
+The pstack-claude port brought Lauren Tan's pstack from Cursor to Claude Code and shares the skills with other runtimes. It includes six cursor-team-kit skills, the three thermos skills with their two review subagents, and an independently authored `babysit` skill. The port supplies Claude Code plugin registration and routing, Codex manifests and shortcuts, the Codex tool mapping, the Pi package, extension, and tool mapping, and the GitHub Copilot hooks and tool mapping.
 
-Cursor-specific automations, sticky-mode metadata, the Grok Bot UI workflow, and the Cursor UI tutorial are excluded. [tools/upstream.json](../tools/upstream.json) records the revisions and exclusions, [tools/substitutions.json](../tools/substitutions.json) holds the Cursor-to-Claude rewrite rules, and [CHANGES.md](../CHANGES.md) records each release. The bundled `thermo-nuclear-code-quality-review` provides a maintainability review when a workflow calls for one, `thermo-nuclear-review` a correctness and security audit, and `thermos` runs both as parallel subagents.
-
-For skill changes, follow the [sync boundary](../CONTRIBUTING.md#the-sync-boundary). Runtime adaptations and workflow changes both land here, and a workflow change is declared as a fork.
+Cursor-specific automations, sticky-mode metadata, the Grok Bot UI workflow, and the Cursor UI tutorial are excluded. [CHANGES.md](../CHANGES.md) records each release. The bundled `thermo-nuclear-code-quality-review` provides a maintainability review when a workflow calls for one, `thermo-nuclear-review` a correctness and security audit, and `thermos` runs both as parallel subagents.
 
 See the [license summary](../README.md#license) for licenses and full-plugin attribution. [NOTICE-skills.md](../NOTICE-skills.md) is the notice for skills-only installations.

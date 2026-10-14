@@ -11,7 +11,7 @@ const piTools = join(pluginRoot, "skills/poteto-mode/references/pi-tools.md");
 const always = {
   "jstack-parallel-calls":
     "If you intend to call multiple tools and there are no dependencies between the calls, make all of the independent calls in the same response, otherwise you MUST wait for previous calls to finish first to determine the dependent values.",
-  "jstack-pi-tools": `jstack skills are written for Claude Code. When one names a Claude Code tool (Agent, Skill, AskUserQuestion, Bash), a bundled skill, or a Claude model, read ${piTools} for the Pi equivalent before following it.`,
+  "jstack-pi-tools": `JStack skills are written for Claude Code. When one names a Claude Code tool (Agent, Skill, AskUserQuestion, Bash), a bundled skill, or a Claude model, read ${piTools} for the Pi equivalent before following it.`,
 };
 
 const setup = useWorld();
