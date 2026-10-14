@@ -10,7 +10,7 @@
       "name": "jstack",
       "source": "./plugins/jstack",
       "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
-      "version": "1.0.0"
+      "version": "2.0.0"
     }
   ]
 }
