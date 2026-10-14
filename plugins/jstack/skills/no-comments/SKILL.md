@@ -5,9 +5,9 @@ description: "Spawn the comment-sicko subagent, fix accepted findings, and offer
 
 # No comments
 
-On Codex, read the [platform mapping](../poteto-mode/references/codex-tools.md), including its per-skill notes, before following this skill.
+On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), including its per-skill notes, before following this skill.
 
-On GitHub Copilot, read the [platform mapping](../poteto-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
+On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
 
 Spawn comment-sicko. Act on accepted findings.
 

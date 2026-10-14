@@ -354,10 +354,10 @@ describe("slashCommands", () => {
     }
   });
 
-  test("the live reference names exactly the public skills, poteto-mode first", () => {
+  test("the live reference names exactly the public skills, jedi-mode first", () => {
     const text = readFileSync(join(repoRoot, "docs/reference.md"), "utf8");
     const rows = slashCommands(text, publicSkills(join(repoRoot, "plugins/jstack/skills")));
-    expect(rows[0].name).toBe("poteto-mode");
+    expect(rows[0].name).toBe("jedi-mode");
   });
 });
 
@@ -411,10 +411,10 @@ describe("lead lines", () => {
   test("Codex and Copilot stamp a preamble on their noted skills and Pi stamps none", () => {
     expect(RUNTIMES.map((r) => r.name)).toEqual(["Codex", "Pi", "GitHub Copilot"]);
     expect(codex.preamble).toBe(
-      "On Codex, read the [platform mapping](../poteto-mode/references/codex-tools.md), including its per-skill notes, before following this skill.",
+      "On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), including its per-skill notes, before following this skill.",
     );
     expect(copilot.preamble).toBe(
-      "On GitHub Copilot, read the [platform mapping](../poteto-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.",
+      "On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.",
     );
     expect(pi.preamble).toBeNull();
     expect([...leads.values()].flat().filter((line) => line.includes("pi-tools.md"))).toEqual([]);
@@ -428,9 +428,9 @@ describe("lead lines", () => {
   });
 
   test("a prompt stub points at its runtime's mapping file unless its skill carries that runtime's preamble", () => {
-    const pointer = "through `poteto-mode/references/codex-tools.md`, including its Per-skill notes.";
+    const pointer = "through `jedi-mode/references/codex-tools.md`, including its Per-skill notes.";
     expect(promptStub({ name: "tdd", menu: "m" }, codex, { preamble: false })).toContain(pointer);
-    expect(promptStub({ name: "tdd", menu: "m" }, pi, { preamble: false })).toContain("`poteto-mode/references/pi-tools.md`");
+    expect(promptStub({ name: "tdd", menu: "m" }, pi, { preamble: false })).toContain("`jedi-mode/references/pi-tools.md`");
     expect(promptStub({ name: "how", menu: "m" }, codex, { preamble: true })).toBe(
       "---\nname: how\ndescription: m\ndisable-model-invocation: true\n---\n\nInvoke the `how` skill and follow it.\n",
     );
@@ -451,11 +451,11 @@ describe("lead lines", () => {
 });
 
 describe("effort agents", () => {
-  const poteto = "---\nname: poteto-agent\ndescription: Routing contract.\n---\n\n# Poteto subagent\n\nRead the skill.\n";
-  const agents = effortAgents(["high", "max"], poteto);
+  const jedi = "---\nname: jedi-agent\ndescription: Routing contract.\n---\n\n# Jedi subagent\n\nRead the skill.\n";
+  const agents = effortAgents(["high", "max"], jedi);
 
-  test("one general-purpose and one poteto agent per level, each setting only effort", () => {
-    expect(agents.map((a) => a.name)).toEqual(["effort-high", "poteto-agent-high", "effort-max", "poteto-agent-max"]);
+  test("one general-purpose and one jedi agent per level, each setting only effort", () => {
+    expect(agents.map((a) => a.name)).toEqual(["effort-high", "jedi-agent-high", "effort-max", "jedi-agent-max"]);
     for (const agent of agents) {
       const level = agent.name.split("-").at(-1);
       expect(agent.text).toContain(`\nname: ${agent.name}\n`);
@@ -464,14 +464,14 @@ describe("effort agents", () => {
     }
   });
 
-  test("the poteto variant carries poteto-agent's body verbatim", () => {
-    expect(agents[1].text.endsWith("---\n\n# Poteto subagent\n\nRead the skill.\n")).toBe(true);
+  test("the jedi variant carries jedi-agent's body verbatim", () => {
+    expect(agents[1].text.endsWith("---\n\n# Jedi subagent\n\nRead the skill.\n")).toBe(true);
     expect(agents[1].text.match(/^---$/gm)).toHaveLength(2);
   });
 
-  test("the poteto variant's description defers to jstack:poteto-agent rather than copying its routing contract", () => {
+  test("the jedi variant's description defers to jstack:jedi-agent rather than copying its routing contract", () => {
     const description = agents[1].text.match(/^description: (.*)$/m)[1];
-    expect(description).toContain("in place of `jstack:poteto-agent`");
+    expect(description).toContain("in place of `jstack:jedi-agent`");
     expect(description).not.toContain("Routing contract.");
   });
 
@@ -485,7 +485,7 @@ describe("effort agents", () => {
 
   test("plugin.json lists both hand-written and generated agents", () => {
     const listed = JSON.parse(readFileSync(join(pluginRoot, ".claude-plugin/plugin.json"), "utf8")).agents;
-    expect(listed).toContain("./agents/poteto-agent.md");
+    expect(listed).toContain("./agents/jedi-agent.md");
     expect(listed).toContain("./effort-agents/effort-high.md");
   });
 
@@ -500,7 +500,7 @@ describe("effort agents", () => {
     const text = effortSection(["low", "max"], "high");
     for (const level of ["low", "max", "high"]) expect(text).toContain(`\`${level}\``);
     expect(text).toContain('subagent_type: "jstack:effort-<level>"');
-    expect(text).toContain('subagent_type: "jstack:poteto-agent-<level>"');
+    expect(text).toContain('subagent_type: "jstack:jedi-agent-<level>"');
     expect(text).toContain("`reasoning_effort`");
   });
 });
@@ -661,13 +661,13 @@ describe("plan, changes, apply", () => {
     const cases = [
       [
         PORTABLE_ASSETS,
-        { source: "NOTICE-skills.md", target: "poteto-mode/references/NOTICE.md" },
-        "plugins/jstack/skills/poteto-mode/references/NOTICE.md is not directly inside a generator-owned directory",
+        { source: "NOTICE-skills.md", target: "jedi-mode/references/NOTICE.md" },
+        "plugins/jstack/skills/jedi-mode/references/NOTICE.md is not directly inside a generator-owned directory",
       ],
       [
         PORTABLE_ASSETS,
-        { source: "LICENSE", target: "poteto-mode/references/licenses/old/LICENSE" },
-        "plugins/jstack/skills/poteto-mode/references/licenses/old/LICENSE is not directly inside a generator-owned directory",
+        { source: "LICENSE", target: "jedi-mode/references/licenses/old/LICENSE" },
+        "plugins/jstack/skills/jedi-mode/references/licenses/old/LICENSE is not directly inside a generator-owned directory",
       ],
       [
         OWNED_DIRS,
@@ -736,7 +736,7 @@ describe("plan, changes, apply", () => {
   });
 
   test("plan refuses a path two producers write whole with different text", () => {
-    const target = "poteto-mode/references/licenses/LICENSE";
+    const target = "jedi-mode/references/licenses/LICENSE";
     PORTABLE_ASSETS.push({ source: "NOTICE-skills.md", target });
     try {
       expect(() => plan(repoRoot)).toThrow(`plugins/jstack/skills/${target} is planned twice with different text`);
@@ -755,7 +755,7 @@ describe("plan, changes, apply", () => {
   test("problems reports a lead line in a file that does not own it", () => {
     const root = repoCopy();
     append(root, "plugins/jstack/skills/tdd/SKILL.md", `\n${codex.preamble}\n`);
-    const codexTools = "plugins/jstack/skills/poteto-mode/references/codex-tools.md";
+    const codexTools = "plugins/jstack/skills/jedi-mode/references/codex-tools.md";
     writeFileSync(join(root, codexTools), readFileSync(join(root, codexTools), "utf8").replace(/^\| `why` \|.*\n/m, ""));
     const failures = problems(root).filter((f) => f.startsWith("generator-owned lead lines"));
     expect(failures).toHaveLength(1);
@@ -767,7 +767,7 @@ describe("plan, changes, apply", () => {
     const root = repoCopy();
     append(root, ...STRAY_SLUG);
     append(root, "plugins/jstack/skills/deslop/SKILL.md", "\n[gone](missing.md)\n");
-    append(root, "plugins/jstack/skills/unslop/SKILL.md", '\nsubagent_type: "poteto-agent"\n');
+    append(root, "plugins/jstack/skills/unslop/SKILL.md", '\nsubagent_type: "jedi-agent"\n');
     const failures = problems(root);
     expect(failures).toEqual([
       expect.stringContaining("plugins/jstack/skills/tdd/SKILL.md:"),
@@ -781,7 +781,7 @@ describe("plan, changes, apply", () => {
 
   test("a write run regenerates before it validates, so a slug left only in a stale copy passes", () => {
     const root = repoCopy();
-    const copy = "plugins/jstack/skills/poteto-mode/references/agents/comment-sicko.md";
+    const copy = "plugins/jstack/skills/jedi-mode/references/agents/comment-sicko.md";
     append(root, copy, "\nUse claude-opus-99 here.\n");
     expect(generate(root).status).toBe(0);
     expect(readFileSync(join(root, copy), "utf8")).toBe(

@@ -264,7 +264,7 @@ suite("jstack on live pi", () => {
   );
 
   test(
-    "worktree: an isolated agent runs in its own worktree, removed when clean and kept with changes; jstack:poteto-agent carries its agent file",
+    "worktree: an isolated agent runs in its own worktree, removed when clean and kept with changes; jstack:jedi-agent carries its agent file",
     async () => {
       await withParent(async (parent) => {
         const cleanFrom = await parent.run(
@@ -285,11 +285,11 @@ suite("jstack on live pi", () => {
         expect(git("branch", "--list", clean.agent.worktree.branch)).toBe("");
 
         const dirtyFrom = await parent.run(
-          'Make one agent tool call in the foreground with subagent_type "jstack:poteto-agent", isolation "worktree", description "wt-dirty", prompt "Use the bash tool to run exactly: echo hi > note.txt. Then reply with exactly one word: done". Then reply with exactly one word: ok.',
+          'Make one agent tool call in the foreground with subagent_type "jstack:jedi-agent", isolation "worktree", description "wt-dirty", prompt "Use the bash tool to run exactly: echo hi > note.txt. Then reply with exactly one word: done". Then reply with exactly one word: ok.',
         );
         const dirty = agentByDescription(file, "wt-dirty").at(-1);
-        expect(dirty.agent.subagentType).toBe("jstack:poteto-agent");
-        expect(sections(childEntries(dirty)).addendum).toContain(agentBody("agents/poteto-agent.md"));
+        expect(dirty.agent.subagentType).toBe("jstack:jedi-agent");
+        expect(sections(childEntries(dirty)).addendum).toContain(agentBody("agents/jedi-agent.md"));
         const [dirtyResult] = parent.toolResults("agent", dirtyFrom);
         expect(textOf(dirtyResult)).toContain(`worktree: ${dirty.agent.worktree.path} (branch ${dirty.agent.worktree.branch})`);
         expect(readFileSync(join(dirty.agent.worktree.path, "note.txt"), "utf8")).toBe("hi\n");

@@ -1,5 +1,5 @@
 // Skills name each other in prose, not links: "the **how** skill", "the
-// **laziness-protocol** principle skill", "(**principle-x**)" in poteto-mode's
+// **laziness-protocol** principle skill", "(**principle-x**)" in jedi-mode's
 // index, and "`/name`" slash forms. Nothing resolved them until now, so a
 // renamed directory left dangling references no tool could see.
 import { describe, expect, test } from "bun:test";
@@ -43,8 +43,8 @@ describe("prose skill references", () => {
 
   // An index entry names its leaf as "(**principle-x**)", or the leaf is the
   // entry's title in kebab case, hyphens kept and other punctuation dropped.
-  test("poteto-mode's Principles index lists exactly the principle leaves", () => {
-    const index = readFileSync(join(skillsDir, "poteto-mode/SKILL.md"), "utf8");
+  test("jedi-mode's Principles index lists exactly the principle leaves", () => {
+    const index = readFileSync(join(skillsDir, "jedi-mode/SKILL.md"), "utf8");
     const start = index.indexOf("\n## Principles\n");
     const section = index.slice(start, index.indexOf("\n## ", start + 1));
     const listed = new Set();

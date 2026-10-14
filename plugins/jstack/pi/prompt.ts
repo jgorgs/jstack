@@ -11,9 +11,9 @@ const TOOLS_SECTION = "jstack-pi-tools";
 
 // jstack skills name Claude Code tools and models. A session with the hook off,
 // a child agent, or a skill invoked directly may never see the pointer in
-// poteto-mode/SKILL.md, so every session gets it here.
+// jedi-mode/SKILL.md, so every session gets it here.
 function piToolsNote(pluginRoot: string): string {
-  const file = join(pluginRoot, "skills", "poteto-mode", "references", "pi-tools.md");
+  const file = join(pluginRoot, "skills", "jedi-mode", "references", "pi-tools.md");
   return `JStack skills are written for Claude Code. When one names a Claude Code tool (Agent, Skill, AskUserQuestion, Bash), a bundled skill, or a Claude model, read ${file} for the Pi equivalent before following it.`;
 }
 // Claude Code's system prompt, word for word but for its function_calls block.

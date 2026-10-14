@@ -1,5 +1,5 @@
 # Prints the GitHub Copilot SessionStart output: one JSON object whose
-# additionalContext is the poteto-mode mandate with the Copilot notes inside its
+# additionalContext is the jedi-mode mandate with the Copilot notes inside its
 # closing tag. Run after json.awk and setup-jstack's sheet.awk, with the sheet
 # as input and -v hooks=<this directory> found=<1 when the sheet exists>.
 # Only a valid sheet's known role lines reach the context, rebuilt from their

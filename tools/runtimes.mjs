@@ -5,12 +5,12 @@
 import { code, codeList, PLUGIN, SKILLS } from "./plugin.mjs";
 
 // Every runtime other than Claude Code that reads the skills through a mapping
-// file under poteto-mode/references/. A row gives the runtime the generated
+// file under jedi-mode/references/. A row gives the runtime the generated
 // Model names section in its mapping file, and a row with a `key` its
 // models.json block, checked by `checkModels`. A `skillPreambles` runtime also gets a preamble under
 // the first heading of each skill its Per-skill notes table lists, and a
 // runtime with a `prompts` directory a slash stub per public skill there. Pi
-// has neither: its one pointer is hand-written in poteto-mode's Platform
+// has neither: its one pointer is hand-written in jedi-mode's Platform
 // Adaptation section. `manifest` is the file the generator stamps VERSION
 // into, `validate` checks the runtime's packaging against the tree once that
 // manifest parses, and `hooks` lists the hooks files the manifest names,
@@ -55,10 +55,10 @@ export const RUNTIMES = [
   },
 ].map((runtime) => ({
   ...runtime,
-  tools: `${SKILLS}/poteto-mode/references/${runtime.mapping}`,
+  tools: `${SKILLS}/jedi-mode/references/${runtime.mapping}`,
   notesHeader: `| Skill | On ${runtime.name} |`,
   preamble: runtime.skillPreambles
-    ? `On ${runtime.name}, read the [platform mapping](../poteto-mode/references/${runtime.mapping}), ` +
+    ? `On ${runtime.name}, read the [platform mapping](../jedi-mode/references/${runtime.mapping}), ` +
       "including its per-skill notes, before following this skill."
     : null,
 }));

@@ -12,7 +12,7 @@ const agentParams = Type.Object(
     subagent_type: Type.Optional(
       Type.String({
         description:
-          "Agent definition to run: general-purpose (default), jstack:poteto-agent, jstack:comment-sicko, jstack:thermo-nuclear-review-subagent, jstack:thermo-nuclear-code-quality-review-subagent, jstack:poteto-agent-<level>, or jstack:effort-<level>.",
+          "Agent definition to run: general-purpose (default), jstack:jedi-agent, jstack:comment-sicko, jstack:thermo-nuclear-review-subagent, jstack:thermo-nuclear-code-quality-review-subagent, jstack:jedi-agent-<level>, or jstack:effort-<level>.",
       }),
     ),
     model: Type.Optional(

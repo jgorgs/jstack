@@ -13,7 +13,7 @@ const pluginRoot = fileURLToPath(new URL("../plugins/jstack/", import.meta.url))
 const preToolUse = JSON.parse(readFileSync(join(pluginRoot, "hooks/copilot-hooks.json"), "utf8")).hooks.PreToolUse;
 const command = preToolUse[0].hooks[0].command;
 const allow = '{"permissionDecision":"allow"}\n';
-const playbook = join(pluginRoot, "skills/poteto-mode/playbooks/bug-fix.md");
+const playbook = join(pluginRoot, "skills/jedi-mode/playbooks/bug-fix.md");
 
 // Copilot sends Claude-format input to PascalCase hooks (observed on Copilot
 // CLI 1.0.89): tool_name is the Claude name, so `view` arrives as `Read`.
@@ -173,7 +173,7 @@ const runWith = (sheetText, payload, extraEnv = {}) => {
 const quiet = { status: 0, out: "", err: "" };
 
 describe("PreToolUse model check for jstack agents", () => {
-  const agent = (model, agent_type = "jstack:poteto-agent") =>
+  const agent = (model, agent_type = "jstack:jedi-agent") =>
     input("Agent", { agent_type, model, mode: "background", name: "w", prompt: "do it" });
 
   test("allows by silence a model the sheet names, in any role or panel slot", () => {
@@ -216,7 +216,7 @@ describe("PreToolUse model check for jstack agents", () => {
   });
 
   const silent = {
-    "a call with no model": [sheet(), input("Agent", { agent_type: "jstack:poteto-agent", prompt: "x" })],
+    "a call with no model": [sheet(), input("Agent", { agent_type: "jstack:jedi-agent", prompt: "x" })],
     "an empty model": [sheet(), agent("")],
     "a non-jstack agent": [sheet(), agent("claude-haiku-4.5", "general-purpose")],
     "an agent type that only contains jstack:": [sheet(), agent("claude-haiku-4.5", "my-jstack:agent")],
@@ -283,15 +283,15 @@ describe("PreToolUse vendored script runs", () => {
     "a log with prose resembling an outside path": `bash ${log} log.tsv review /outside/private.txt why evidence result`,
     "surrounding spaces": `  bash ${log} log.tsv review decision why evidence result  `,
     "direct execution": `${log} log.tsv review decision why evidence result`,
-    "a project flag with an absolute value": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project=${workspace}`,
-    "a project flag with a relative value": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project=.`,
-    "resume defaults": `node ${root}/skills/poteto-mode/scripts/resume.mjs read`,
-    "resume publication": `node ${root}/skills/poteto-mode/scripts/resume.mjs publish --note note.md --artifact=a.md --artifact b.md`,
+    "a project flag with an absolute value": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project=${workspace}`,
+    "a project flag with a relative value": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project=.`,
+    "resume defaults": `node ${root}/skills/jedi-mode/scripts/resume.mjs read`,
+    "resume publication": `node ${root}/skills/jedi-mode/scripts/resume.mjs publish --note note.md --artifact=a.md --artifact b.md`,
     "a relative transcript directory": `node ${find} notes/today prompt`,
-    "a playbook check": `node ${root}/skills/poteto-mode/scripts/check-playbooks.mjs`,
-    "a playbook check in a project": `node ${root}/skills/poteto-mode/scripts/check-playbooks.mjs .`,
-    "an audit with defaults": `node ${root}/skills/poteto-mode/scripts/worktree-audit.mjs`,
-    "an audit with explicit roots": `node ${root}/skills/poteto-mode/scripts/worktree-audit.mjs . transcripts more-transcripts`,
+    "a playbook check": `node ${root}/skills/jedi-mode/scripts/check-playbooks.mjs`,
+    "a playbook check in a project": `node ${root}/skills/jedi-mode/scripts/check-playbooks.mjs .`,
+    "an audit with defaults": `node ${root}/skills/jedi-mode/scripts/worktree-audit.mjs`,
+    "an audit with explicit roots": `node ${root}/skills/jedi-mode/scripts/worktree-audit.mjs . transcripts more-transcripts`,
   };
   for (const [name, command] of Object.entries(allowed)) {
     test(`approves ${name}`, () => expect(run(bash(command), env)).toEqual({ status: 0, out: allow, err: "" }));
@@ -315,10 +315,10 @@ describe("PreToolUse vendored script runs", () => {
     "a wrong interpreter for a registered script": `sh ${find} ${workspace} prompt`,
     "an incomplete transcript command": `node ${find} ${workspace}`,
     "an incomplete log command": `bash ${log} log.tsv review`,
-    "an unknown resume option": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --new-option=path`,
-    "a missing resume option value": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project`,
-    "a read with publication arguments": `node ${root}/skills/poteto-mode/scripts/resume.mjs read --note note.md`,
-    "a publication without a note": `node ${root}/skills/poteto-mode/scripts/resume.mjs publish --artifact a.md`,
+    "an unknown resume option": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --new-option=path`,
+    "a missing resume option value": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project`,
+    "a read with publication arguments": `node ${root}/skills/jedi-mode/scripts/resume.mjs read --note note.md`,
+    "a publication without a note": `node ${root}/skills/jedi-mode/scripts/resume.mjs publish --artifact a.md`,
     "a chained rm": `node ${find} ${workspace} prompt;rm -rf ~`,
     "a spaced chain": `node ${find} ${workspace} prompt ; rm -rf ~`,
     "command substitution": `node ${find} ${workspace} prompt $(whoami)`,
@@ -348,13 +348,13 @@ describe("PreToolUse vendored script runs", () => {
     "a .. script path": `node ${root}/skills/reflect/scripts/../../../hooks/session-start.sh`,
     "a .. argument": `node ${find} ${workspace} prompt ../../etc/passwd`,
     "a quoted .. argument": `node ${find} ${workspace} prompt '../x'`,
-    "a relative flag that climbs into a sibling": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project=../outside`,
-    "a relative flag naming the parent": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project=..`,
+    "a relative flag that climbs into a sibling": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project=../outside`,
+    "a relative flag naming the parent": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project=..`,
     "an absolute argument outside the workspace": `bash ${log} /etc/profile review decision why evidence result`,
     // A path operand in the plugin could rewrite the context every session loads.
     "a log appended to the plugin's session context": `bash ${log} ${root}/hooks/session-start-copilot.md review decision why evidence result`,
-    "a path in the plugin": `node ${root}/skills/poteto-mode/scripts/check-plan.mjs ${root}/skills/reflect/SKILL.md`,
-    "a flag holding an outside path": `node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project=/etc/x`,
+    "a path in the plugin": `node ${root}/skills/jedi-mode/scripts/check-plan.mjs ${root}/skills/reflect/SKILL.md`,
+    "a flag holding an outside path": `node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project=/etc/x`,
     "a sibling prefix": `node ${root}-evil/skills/reflect/scripts/find-transcript.mjs`,
     "a script outside scripts/": `node ${root}/skills/reflect/SKILL.md`,
     "a hook script": `sh ${root}/hooks/session-start.sh`,
@@ -394,7 +394,7 @@ describe("PreToolUse vendored script runs", () => {
     try {
       expect(run(bash(`bash ${log} ${link}/log.tsv review decision why evidence result`), env)).toEqual(quiet);
       expect(run(bash(`bash ${log} linked-outside/log.tsv review decision why evidence result`), env)).toEqual(quiet);
-      expect(run(bash(`node ${root}/skills/poteto-mode/scripts/resume.mjs begin --project=linked-outside`), env)).toEqual(quiet);
+      expect(run(bash(`node ${root}/skills/jedi-mode/scripts/resume.mjs begin --project=linked-outside`), env)).toEqual(quiet);
     } finally {
       rmSync(link);
       rmSync(outside, { recursive: true });

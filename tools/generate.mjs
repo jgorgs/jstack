@@ -20,12 +20,12 @@
 //     -> each model-consuming skill's "## Models" and "## Reasoning effort" sections
 //     -> setup-jstack's Models section and override-sheet block, and interrogate's reviewer table
 //     -> the "## Model names" section of each runtime's mapping file
-//        (poteto-mode/references/codex-tools.md, pi-tools.md, copilot-tools.md)
+//        (jedi-mode/references/codex-tools.md, pi-tools.md, copilot-tools.md)
 //     -> one effort agent pair per level in plugins/jstack/effort-agents/
-//   the Per-skill notes table in poteto-mode/references/codex-tools.md
+//   the Per-skill notes table in jedi-mode/references/codex-tools.md
 //     -> the Codex preamble under the first heading of each listed skill's SKILL.md,
 //        and the codex-tools.md pointer in the prompt stub of every other public skill
-//   the Per-skill notes table in poteto-mode/references/copilot-tools.md
+//   the Per-skill notes table in jedi-mode/references/copilot-tools.md
 //     -> the GitHub Copilot preamble under the same heading, after any Codex one
 //   DRIVER_PLAYBOOKS -> the driver-skill line under each playbook's first heading
 //   plugins/jstack/models.json's roles, again
@@ -36,7 +36,7 @@
 //     agents/ directory, so it names every agent)
 //   plugins/jstack/agents/comment-sicko.md, LICENSE, LICENSE-cursor-team-kit,
 //   and NOTICE-skills.md
-//     -> portable copies under poteto-mode/references/{agents,licenses}/
+//     -> portable copies under jedi-mode/references/{agents,licenses}/
 //   No other model name (a claude-* ID or a backticked family name) may appear
 //   in skill prose; the scan below fails on strays.
 //
@@ -79,15 +79,15 @@ const VERSIONED_MANIFESTS = [
 export const PORTABLE_ASSETS = [
   {
     source: "plugins/jstack/agents/comment-sicko.md",
-    target: "poteto-mode/references/agents/comment-sicko.md",
+    target: "jedi-mode/references/agents/comment-sicko.md",
   },
-  { source: "LICENSE", target: "poteto-mode/references/licenses/LICENSE" },
+  { source: "LICENSE", target: "jedi-mode/references/licenses/LICENSE" },
   {
     source: "LICENSE-cursor-team-kit",
-    target: "poteto-mode/references/licenses/LICENSE-cursor-team-kit",
+    target: "jedi-mode/references/licenses/LICENSE-cursor-team-kit",
   },
-  { source: "LICENSE-thermos", target: "poteto-mode/references/licenses/LICENSE-thermos" },
-  { source: "NOTICE-skills.md", target: "poteto-mode/references/licenses/NOTICE.md" },
+  { source: "LICENSE-thermos", target: "jedi-mode/references/licenses/LICENSE-thermos" },
+  { source: "NOTICE-skills.md", target: "jedi-mode/references/licenses/NOTICE.md" },
 ];
 
 // The generator removes every entry of these directories that no planned path
@@ -95,8 +95,8 @@ export const PORTABLE_ASSETS = [
 export const OWNED_DIRS = [
   ...PROMPT_RUNTIMES.map((runtime) => runtime.prompts),
   EFFORT_AGENTS,
-  `${SKILLS}/poteto-mode/references/agents`,
-  `${SKILLS}/poteto-mode/references/licenses`,
+  `${SKILLS}/jedi-mode/references/agents`,
+  `${SKILLS}/jedi-mode/references/licenses`,
 ];
 
 // Replace the manifest's single "version" value, preserving all formatting.
@@ -188,7 +188,7 @@ export function agentSkills(skillsDir) {
       throw new Error(`${path}: disable-model-invocation: true breaks model-initiated entry (CHANGES 0.9.8)`);
     }
     const userInvocable = front["user-invocable"] !== false;
-    // CHANGES 0.9.9: principle leaves are read by path from poteto-mode and
+    // CHANGES 0.9.9: principle leaves are read by path from jedi-mode and
     // stay out of the slash menu.
     if (name.startsWith("principle-") && userInvocable) {
       throw new Error(`${path}: principle leaves carry user-invocable: false (CHANGES 0.9.9)`);
@@ -307,7 +307,7 @@ export function promptStub({ name, menu }, runtime, { preamble } = {}) {
   const pointer = preamble
     ? ""
     : " Resolve Claude tool names, Claude model names, and Claude built-in skills through " +
-      `\`poteto-mode/references/${runtime.mapping}\`, including its Per-skill notes.`;
+      `\`jedi-mode/references/${runtime.mapping}\`, including its Per-skill notes.`;
   return (
     `---\nname: ${name}\ndescription: ${menu}\ndisable-model-invocation: true\n---\n\n` +
     `Invoke the \`${name}\` skill and follow it.${pointer}\n`
@@ -467,7 +467,7 @@ export function regions(models) {
 }
 
 const PREAMBLE_RUNTIMES = RUNTIMES.filter((runtime) => runtime.preamble);
-const DRIVER_LINE = "Resolve the driver skill through [poteto-mode's Non-negotiables](../SKILL.md#non-negotiables).";
+const DRIVER_LINE = "Resolve the driver skill through [jedi-mode's Non-negotiables](../SKILL.md#non-negotiables).";
 const DRIVER_PLAYBOOKS = ["autopilot-full", "multi-phase-plan", "orchestrate", "refactoring", "shipping"];
 const LEAD_LINES = [...PREAMBLE_RUNTIMES.map((runtime) => runtime.preamble), DRIVER_LINE];
 
@@ -497,7 +497,7 @@ export function loadLeadLines(root = repo) {
       if (runtime.preamble) leads.set(file, [...(leads.get(file) ?? []), runtime.preamble]);
     }
   }
-  for (const playbook of DRIVER_PLAYBOOKS) leads.set(`${SKILLS}/poteto-mode/playbooks/${playbook}.md`, [DRIVER_LINE]);
+  for (const playbook of DRIVER_PLAYBOOKS) leads.set(`${SKILLS}/jedi-mode/playbooks/${playbook}.md`, [DRIVER_LINE]);
   return leads;
 }
 
@@ -641,20 +641,20 @@ export function effortSection(levels, defaultEffort) {
     "is the usual one. Strip the suffix before reading the model: `inherit-parent` or `auto` still omits `model` " +
     "at every level, and a model name is passed as `model`. " +
     "On Claude Code, a level picks the effort agent from the `subagent_type` you would otherwise use. " +
-    "`jstack:poteto-agent` becomes `subagent_type: \"jstack:poteto-agent-<level>\"`. " +
+    "`jstack:jedi-agent` becomes `subagent_type: \"jstack:jedi-agent-<level>\"`. " +
     "`general-purpose`, or no `subagent_type`, becomes `subagent_type: \"jstack:effort-<level>\"`. " +
     "The effort agents set only `effort`, so the model you pass still decides the model. " +
     "On Codex, pass the level as `spawn_agent`'s `reasoning_effort` and keep the usual instructions."
   );
 }
 
-// The effort agents: one general-purpose worker and one poteto-agent per level.
-// The poteto variants carry poteto-agent's body. Their descriptions name
-// jstack:poteto-agent instead of copying its routing contract, so only the
-// base agent reads as the delegate /poteto-mode runs spawn. A description is
+// The effort agents: one general-purpose worker and one jedi-agent per level.
+// The jedi variants carry jedi-agent's body. Their descriptions name
+// jstack:jedi-agent instead of copying its routing contract, so only the
+// base agent reads as the delegate /jedi-mode runs spawn. A description is
 // written unquoted, so it must not open with a backtick: strict YAML rejects it.
-export function effortAgents(levels, potetoAgent) {
-  const { body } = parseFrontmatter(potetoAgent);
+export function effortAgents(levels, jediAgent) {
+  const { body } = parseFrontmatter(jediAgent);
   return levels.flatMap((level) => [
     {
       name: `effort-${level}`,
@@ -667,10 +667,10 @@ export function effortAgents(levels, potetoAgent) {
         "The effort level changes how long you reason, not the task.\n",
     },
     {
-      name: `poteto-agent-${level}`,
+      name: `jedi-agent-${level}`,
       text:
-        `---\nname: poteto-agent-${level}\ndescription: Runs \`jstack:poteto-agent\` at ${level} reasoning effort. ` +
-        `Dispatched in place of \`jstack:poteto-agent\` when a jstack role's override names \`@${level}\`. The caller passes the model.\n` +
+        `---\nname: jedi-agent-${level}\ndescription: Runs \`jstack:jedi-agent\` at ${level} reasoning effort. ` +
+        `Dispatched in place of \`jstack:jedi-agent\` when a jstack role's override names \`@${level}\`. The caller passes the model.\n` +
         `effort: ${level}\n---\n` + body,
     },
   ]);
@@ -734,7 +734,7 @@ export function overrideSheetBlock(models) {
     "A model may carry a reasoning effort, as in `opus @xhigh` (levels: " + models.efforts.join(", ") + "); " +
     "the role then runs through the jstack effort agent of that level, each entry of a panel list on its own. " +
     "`default effort` sets the level for a value without one; `session` keeps the parent session's effort. " +
-    "`session hook: off` stops the Claude Code or Codex SessionStart hook, or the jstack Pi extension, from injecting the poteto-mode mandate; " +
+    "`session hook: off` stops the Claude Code or Codex SessionStart hook, or the jstack Pi extension, from injecting the jedi-mode mandate; " +
     "any other value, or no line, leaves it on.\n\n" +
     rows +
     `\n\ndefault effort: ${models.defaultEffort}\nsession hook: on`
@@ -895,7 +895,7 @@ export function plan(root, models) {
       put(`${runtime.prompts}/${skill.name}.md`, promptStub(skill, runtime, { preamble }));
     }
   }
-  const agents = effortAgents(models.efforts, read(`${PLUGIN}/agents/poteto-agent.md`));
+  const agents = effortAgents(models.efforts, read(`${PLUGIN}/agents/jedi-agent.md`));
   for (const agent of agents) put(`${EFFORT_AGENTS}/${agent.name}.md`, agent.text);
   stamp(`${PLUGIN}/.claude-plugin/plugin.json`, (text) =>
     stampAgentPaths(text, [

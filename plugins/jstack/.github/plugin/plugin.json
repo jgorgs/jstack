@@ -10,6 +10,6 @@
   "homepage": "https://github.com/jgorgs/jstack",
   "repository": "https://github.com/jgorgs/jstack",
   "license": "MIT",
-  "keywords": ["jstack", "poteto-mode", "workflow", "skills", "subagents", "github-copilot"],
+  "keywords": ["jstack", "jedi-mode", "workflow", "skills", "subagents", "github-copilot"],
   "hooks": "hooks/copilot-hooks.json"
 }

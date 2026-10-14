@@ -1,7 +1,7 @@
 /-!
 This model checks the sequential arithmetic of the watch-pr polling loop.
 
-Sources, in `plugins/jstack/skills/poteto-mode/scripts/watch-pr/`:
+Sources, in `plugins/jstack/skills/jedi-mode/scripts/watch-pr/`:
 
 * `policy.ts:399-402`  `queryBackoffSeconds`
 * `policy.ts:509-562`  `pollUntilTerminal`

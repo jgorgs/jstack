@@ -1,7 +1,7 @@
 {
   "name": "jstack",
   "version": "1.0.0",
-  "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. Codex build of the Claude Code plugin; skills are shared, tool names resolve via skills/poteto-mode/references/codex-tools.md. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
+  "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. Codex build of the Claude Code plugin; skills are shared, tool names resolve via skills/jedi-mode/references/codex-tools.md. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
   "author": {
     "name": "Jake Gorgol",
     "url": "https://github.com/jgorgs"
@@ -11,7 +11,7 @@
   "license": "MIT",
   "keywords": [
     "jstack",
-    "poteto-mode",
+    "jedi-mode",
     "workflow",
     "principles",
     "agent-style",
@@ -32,7 +32,7 @@
   "interface": {
     "displayName": "JStack",
     "shortDescription": "Rigorous, parallelizable agent workflows: go deep first, write less, verify everything",
-    "longDescription": "JStack guides agent work through poteto-mode's principles, parallel design exploration (architect/arena), adversarial multi-model review (interrogate), root-cause debugging, prose deslopping, and verified delivery. Skills are shared with the Claude Code build; on Codex, tool names resolve via the codex-tools mapping.",
+    "longDescription": "JStack guides agent work through jedi-mode's principles, parallel design exploration (architect/arena), adversarial multi-model review (interrogate), root-cause debugging, prose deslopping, and verified delivery. Skills are shared with the Claude Code build; on Codex, tool names resolve via the codex-tools mapping.",
     "developerName": "Jake Gorgol",
     "category": "Developer Tools",
     "capabilities": [
@@ -41,7 +41,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Work on this in poteto-mode.",
+      "Work on this in jedi-mode.",
       "Interrogate this diff with multiple models."
     ],
     "websiteURL": "https://github.com/jgorgs/jstack",

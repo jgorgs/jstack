@@ -78,26 +78,26 @@ describe("static plugin invariants", () => {
 
   test("a skill dispatching a plugin agent by its bare name fails and names the site", () => {
     const root = plugin((r) => {
-      agent(r, "poteto-agent");
-      skill(r, "caller", "", 'Spawn with `subagent_type: "poteto-agent"`.\n');
+      agent(r, "jedi-agent");
+      skill(r, "caller", "", 'Spawn with `subagent_type: "jedi-agent"`.\n');
     });
     expect(() => check(root)).toThrow(
-      'skills/caller/SKILL.md:6: subagent_type: "poteto-agent" (use "jstack:poteto-agent")',
+      'skills/caller/SKILL.md:6: subagent_type: "jedi-agent" (use "jstack:jedi-agent")',
     );
   });
 
   test.each([
-    "subagent_type: poteto-agent",
-    "subagent_type: 'poteto-agent'",
-    "subagent_type: `poteto-agent`",
-    'subagent_type:"poteto-agent"',
-    '"subagent_type": "poteto-agent"',
+    "subagent_type: jedi-agent",
+    "subagent_type: 'jedi-agent'",
+    "subagent_type: `jedi-agent`",
+    'subagent_type:"jedi-agent"',
+    '"subagent_type": "jedi-agent"',
   ])("a bare dispatch spelled %s fails and names the site", (line) => {
     const root = plugin((r) => {
-      agent(r, "poteto-agent");
+      agent(r, "jedi-agent");
       skill(r, "caller", "", `Spawn with ${line}.\n`);
     });
-    expect(() => check(root)).toThrow('skills/caller/SKILL.md:6: subagent_type: "poteto-agent" (use "jstack:poteto-agent")');
+    expect(() => check(root)).toThrow('skills/caller/SKILL.md:6: subagent_type: "jedi-agent" (use "jstack:jedi-agent")');
   });
 
   test.each([
@@ -120,22 +120,22 @@ describe("static plugin invariants", () => {
   });
 
   test.each([
-    'subagent_type: "jstack:poteto-agent"',
-    "subagent_type: jstack:poteto-agent",
-    "subagent_type: `jstack:poteto-agent`",
-    'subagent_type: "poteto-agent-high"',
-    "subagent_type: poteto-agent_v2",
-    "subagent_type: poteto-agent.local",
-    "subagent_type: poteto-agentX",
-    "subagent_type: poteto-agent.2",
-    "subagent_type: poteto-agent-high_v2",
-    "subagent_type: poteto-agent-high.local",
-    "my_subagent_type: poteto-agent",
-    "my\\_subagent_type: poteto-agent",
-    "presubagent_type: poteto-agent",
+    'subagent_type: "jstack:jedi-agent"',
+    "subagent_type: jstack:jedi-agent",
+    "subagent_type: `jstack:jedi-agent`",
+    'subagent_type: "jedi-agent-high"',
+    "subagent_type: jedi-agent_v2",
+    "subagent_type: jedi-agent.local",
+    "subagent_type: jedi-agentX",
+    "subagent_type: jedi-agent.2",
+    "subagent_type: jedi-agent-high_v2",
+    "subagent_type: jedi-agent-high.local",
+    "my_subagent_type: jedi-agent",
+    "my\\_subagent_type: jedi-agent",
+    "presubagent_type: jedi-agent",
   ])("a namespaced, longer, or differently keyed dispatch %s passes", (line) => {
     const root = plugin((r) => {
-      agent(r, "poteto-agent");
+      agent(r, "jedi-agent");
       skill(r, "caller", "", `Spawn with ${line}.\n`);
     });
     expect(() => check(root)).not.toThrow();

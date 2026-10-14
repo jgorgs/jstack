@@ -26,17 +26,17 @@ import { validateProsePaths, validateSkillsTree, walk } from "../tools/validate-
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const skillsDir = join(repoRoot, "plugins/jstack/skills");
 const requiredPortableFiles = [
-  "poteto-mode/references/agents/comment-sicko.md",
-  "poteto-mode/references/licenses/LICENSE",
-  "poteto-mode/references/licenses/LICENSE-cursor-team-kit",
-  "poteto-mode/references/licenses/LICENSE-thermos",
-  "poteto-mode/references/licenses/NOTICE.md",
+  "jedi-mode/references/agents/comment-sicko.md",
+  "jedi-mode/references/licenses/LICENSE",
+  "jedi-mode/references/licenses/LICENSE-cursor-team-kit",
+  "jedi-mode/references/licenses/LICENSE-thermos",
+  "jedi-mode/references/licenses/NOTICE.md",
 ];
 
 describe("shared Agent Skills tree", () => {
-  test("public skills include poteto-mode and exclude every principle leaf", () => {
+  test("public skills include jedi-mode and exclude every principle leaf", () => {
     const names = publicSkills(skillsDir);
-    expect(names).toContain("poteto-mode");
+    expect(names).toContain("jedi-mode");
     expect(names.some((n) => n.startsWith("principle-"))).toBe(false);
   });
 
@@ -232,11 +232,11 @@ describe("shared Agent Skills tree", () => {
         symlinkSync(join(skillsDir, name), join(installed, name), "dir");
       }
 
-      const poteto = join(installed, "poteto-mode");
+      const jedi = join(installed, "jedi-mode");
       for (const file of [
-        join(poteto, "SKILL.md"),
-        join(poteto, "references", "codex-tools.md"),
-        join(poteto, "..", "principle-model-the-domain", "SKILL.md"),
+        join(jedi, "SKILL.md"),
+        join(jedi, "references", "codex-tools.md"),
+        join(jedi, "..", "principle-model-the-domain", "SKILL.md"),
       ]) {
         expect(readFileSync(file, "utf8").length).toBeGreaterThan(0);
       }
