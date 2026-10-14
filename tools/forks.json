@@ -236,7 +236,7 @@
     },
     "plugins/pstack/skills/reflect/SKILL.md": {
       "kind": "policy",
-      "why": "Finds the session transcript with the port's find-transcript.mjs under Claude Code's projects directory, keeps the parent's conclusions out of the reviewer prompts (a fallback digest records events without a verdict, and nothing goes beside a transcript path), labels digest-based conclusions and treats evidence missing from a digest as inconclusive, routes repository-independent learnings to a pull request on jgorgs/pstack-claude and project learnings to that project's AGENTS.md, and drops Cursor's readonly agent mode and inline model column.",
+      "why": "Finds the session transcript with the port's find-transcript.mjs under Claude Code's projects directory, keeps the parent's conclusions out of the reviewer prompts (a fallback digest records events without a verdict, and nothing goes beside a transcript path), labels digest-based conclusions and treats evidence missing from a digest as inconclusive, routes repository-independent learnings to a pull request on jgorgs/jstack and project learnings to that project's AGENTS.md, and drops Cursor's readonly agent mode and inline model column.",
       "since": "0.1.0",
       "upstream": "not-proposed"
     },

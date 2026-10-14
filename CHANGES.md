@@ -8,7 +8,7 @@ This fork's releases number their patch as the upstream patch times 100 plus a f
 
 Seven skills carry one-sentence lessons as `policy` forks. `architect` traces the alternate routes to an outcome before a design replaces an existing workflow action. `blast-radius` also triggers on changes to shared application chrome, global styles, or selectors. `poteto-mode` announces in the first work update when a repo instruction file requires its workflow. The shipping playbook treats an admin merge over pending checks as a human-directed exception that records the check state and the user's reason. `principle-prove-it-works` probes a verification environment override before trusting it, and reaches a user-facing feature through visible navigation before a direct URL. `why` answers a comparative design question for both its history and its present fit.
 
-`reflect` labels conclusions drawn from a digest and treats evidence missing from one as inconclusive. Its Apply step routes a learning that holds in any repository to a pull request on `jgorgs/pstack-claude`, never to the installed plugin cache, and a learning about one project to that project's `AGENTS.md`.
+`reflect` labels conclusions drawn from a digest and treats evidence missing from one as inconclusive. Its Apply step routes a learning that holds in any repository to a pull request on `jgorgs/jstack`, never to the installed plugin cache, and a learning about one project to that project's `AGENTS.md`.
 
 ## 0.9.84 - run the Codex SessionStart hook again
 

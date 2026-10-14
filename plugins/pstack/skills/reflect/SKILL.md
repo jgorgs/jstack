@@ -62,7 +62,7 @@ Follow each approved row's Routing exactly:
 - `tune description: <skill path>` (the skill exists but didn't trigger when it should have): hand to `plugin-dev:skill-development` and run its description-optimization loop.
 - `new skill via plugin-dev:skill-development: <kebab-name>`: hand creation to `plugin-dev:skill-development`. Do not invent the shape ad hoc.
 
-A learning that holds in any repository (how to engineer, review, verify, ship) is an edit to this plugin, made in the `jgorgs/pstack-claude` repository as a pull request, never in the installed plugin cache under `~/.claude/plugins/`. A learning about one project (its commands, services, data, people, conventions) goes to that project's `AGENTS.md`.
+A learning that holds in any repository (how to engineer, review, verify, ship) is an edit to this plugin, made in the `jgorgs/jstack` repository as a pull request, never in the installed plugin cache under `~/.claude/plugins/`. A learning about one project (its commands, services, data, people, conventions) goes to that project's `AGENTS.md`.
 
 If your environment ships a SKILL.md validator, run it on every touched skill before declaring done.
 
