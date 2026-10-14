@@ -24,7 +24,6 @@ import {
   applyRegions,
   assertChangesHeading,
   changes,
-  deriveSkill,
   loadLeadLines,
   noteSkills,
   effortAgents,
@@ -379,97 +378,6 @@ describe("parseFrontmatter", () => {
       data: null,
       body: "# title\n---\nname: x\n---\n",
     });
-  });
-});
-
-describe("deriveSkill", () => {
-  const front = (flags, name = "x") => `---\nname: ${name}\ndescription: d\n${flags}---\n\nbody\n`;
-
-  test("drops disable-model-invocation on a public skill and swaps it on a principle leaf", () => {
-    expect(deriveSkill("plugins/pstack/skills/x/SKILL.md", front("disable-model-invocation: true\n"), models, leads)).toBe(
-      front(""),
-    );
-    expect(
-      deriveSkill(
-        "plugins/pstack/skills/principle-x/SKILL.md",
-        front("disable-model-invocation: true\n", "principle-x"),
-        models,
-        leads,
-      ),
-    ).toBe(front("user-invocable: false\n", "principle-x"));
-  });
-
-  test("names a skill after its directory and an agent after its file, and drops Cursor-only keys", () => {
-    const cursorKeys = "mode: true\nicon: crown\ncolor: yellow\nreminder: >-\n  New task?\n  Apply it.\n";
-    expect(
-      deriveSkill("plugins/pstack/skills/x/SKILL.md", front(`${cursorKeys}disable-model-invocation: true\n`, "X Mode"), models, leads),
-    ).toBe(front(""));
-    expect(deriveSkill("plugins/pstack/agents/comment-sicko.md", front("is_background: true\n", "Comment Sicko"), models, leads)).toBe(
-      front("", "comment-sicko"),
-    );
-  });
-
-  test("leaves a reference file's frontmatter alone", () => {
-    const text = front("mode: true\n", "Some Reference");
-    expect(deriveSkill("plugins/pstack/skills/x/references/y.md", text, models, leads)).toBe(text);
-  });
-
-  test.each(["|-", ">-"])("drops every paragraph of a %s reminder without changing adjacent fields", (style) => {
-    const text = front(`reminder: ${style}\n  First paragraph.\n\n  Second paragraph.\n  \n  Last paragraph.\nallowed-tools:\n  - Read\n`);
-    const out = deriveSkill("plugins/pstack/skills/x/SKILL.md", text, models, leads);
-
-    expect(parseFrontmatter(out)).toEqual({
-      data: { name: "x", description: "d", "allowed-tools": ["Read"] },
-      body: parseFrontmatter(text).body,
-    });
-    expect(deriveSkill("plugins/pstack/skills/x/SKILL.md", out, models, leads)).toBe(out);
-  });
-
-  test("leaves a prose mention of the flag alone", () => {
-    const text = front("", "automate-me") + "Never write `disable-model-invocation: true` on a skill.\n";
-    expect(deriveSkill("plugins/pstack/skills/automate-me/SKILL.md", text, models, leads)).toBe(text);
-  });
-
-  test("leaves a flag line in the body alone when the frontmatter has none", () => {
-    const text = front("", "automate-me") + "disable-model-invocation: true\n";
-    expect(deriveSkill("plugins/pstack/skills/automate-me/SKILL.md", text, models, leads)).toBe(text);
-  });
-
-  test("appends and stamps a Models section when upstream has none", () => {
-    const out = deriveSkill("plugins/pstack/skills/how/SKILL.md", front("disable-model-invocation: true\n"), models, leads);
-    expect(out.endsWith("body\n\n## Models\n\nRole defaults, stamped from")).toBe(false);
-    expect(out).toContain("body\n\n## Models\n\nRole defaults, stamped from");
-    expect(out).toContain("- how explorer:");
-    expect(out.endsWith("\n")).toBe(true);
-    expect(deriveSkill("plugins/pstack/skills/how/SKILL.md", out, models, leads)).toBe(out);
-  });
-
-  test("leaves a region whose anchor upstream lacks unstamped instead of throwing", () => {
-    const text = front("disable-model-invocation: true\n") + "no reviewer table here\n";
-    const out = deriveSkill("plugins/pstack/skills/interrogate/SKILL.md", text, models, leads);
-    expect(out.startsWith(front("", "interrogate") + "no reviewer table here\n")).toBe(true);
-    expect(out).not.toContain("| Reviewer A");
-    expect(out).toContain("\n## Reasoning effort\n\nA role value in");
-  });
-
-  test("appends the Reasoning effort section after the Models section", () => {
-    const out = deriveSkill("plugins/pstack/skills/how/SKILL.md", front("disable-model-invocation: true\n"), models, leads);
-    expect(out.indexOf("## Models")).toBeLessThan(out.indexOf("## Reasoning effort"));
-    expect(out).toContain("subagent_type: \"pstack:effort-<level>\"");
-  });
-
-  test("stamps a file's lead line in its own paragraph under the first heading", () => {
-    for (const file of ["plugins/pstack/skills/teach/SKILL.md", "plugins/pstack/skills/poteto-mode/playbooks/refactoring.md"]) {
-      const text = "---\nname: teach\ndescription: d\n---\n\n# Title\n\nbody\n";
-      const out = deriveSkill(file, text, models, leads);
-      expect(out).toBe(text.replace("# Title\n\n", `# Title\n\n${leads.get(file).join("\n\n")}\n\n`));
-      expect(deriveSkill(file, out, models, leads)).toBe(out);
-    }
-  });
-
-  test("a file the generator does not own passes through", () => {
-    const text = "# plain\n\nreference text\n";
-    expect(deriveSkill("plugins/pstack/skills/how/references/x.md", text, models, leads)).toBe(text);
   });
 });
 

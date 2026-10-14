@@ -1,8 +1,7 @@
-// Port-local rules live in files the port has forked, which tools/sync.mjs
-// three-way merges: a clean merge is written, and a conflict is written with
-// markers for a human to resolve. A rule dropped in either reads as a clean
-// sync, so each one is pinned here by the sentence that carries it, with the
-// issue or PR that earned it.
+// Local rules live in skill files that changes copied from upstream also touch.
+// A rule dropped while copying one in reads as a clean change, so each one is
+// pinned here by the sentence that carries it, with the issue or PR that
+// earned it.
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";

@@ -141,7 +141,7 @@ describe("static plugin invariants", () => {
     expect(() => check(root)).not.toThrow();
   });
 
-  test("an unresolved sync conflict in any plugin file fails and names each marker line", () => {
+  test("an unresolved merge conflict in any plugin file fails and names each marker line", () => {
     const root = plugin((r) => {
       mkdirSync(join(r, "skills/good/scripts"), { recursive: true });
       writeFileSync(

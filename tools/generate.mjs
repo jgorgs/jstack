@@ -235,8 +235,8 @@ export function validatePluginLayout(pluginRoot) {
   if (bareDispatches.length) {
     throw new Error(`plugin agents are dispatched by their namespaced name:\n${bareDispatches.join("\n")}`);
   }
-  // tools/sync.mjs writes an unresolved three-way merge with git's markers and
-  // still advances the pin, so this check is what keeps it out of a release.
+  // A hand-merged change from upstream can leave git's conflict markers behind,
+  // and this check keeps them out of a release.
   const markers = [];
   for (const file of walk(pluginRoot)) {
     if (!lstatSync(file).isFile()) continue;
@@ -247,7 +247,7 @@ export function validatePluginLayout(pluginRoot) {
     });
   }
   if (markers.length) {
-    throw new Error(`unresolved sync conflict markers; resolve each hunk by hand:\n${markers.join("\n")}`);
+    throw new Error(`unresolved merge conflict markers; resolve each hunk by hand:\n${markers.join("\n")}`);
   }
 }
 
@@ -408,7 +408,6 @@ export function regions(models) {
         file: skillFile(skill),
         name: "Models section",
         locate: section("Models"),
-        appendHeading: "## Models",
         render: () => blankPadded(modelsSection(roles)),
       })),
     {
@@ -421,7 +420,6 @@ export function regions(models) {
       file: skillFile(skill),
       name: "Reasoning effort section",
       locate: section("Reasoning effort"),
-      appendHeading: "## Reasoning effort",
       render: () => blankPadded(effortSection(models.efforts, models.defaultEffort)),
     })),
     {
@@ -524,15 +522,12 @@ export function stampLeadLine(text, lead) {
 
 // Stamp every region the generator owns in `file` (repo-relative). A missing
 // anchor throws: a stamped region is a structural contract with the file, not
-// an optional nicety. With strict: false a missing anchor is left alone.
-export function applyRegions(file, text, models, { strict = true } = {}) {
+// an optional nicety.
+export function applyRegions(file, text, models) {
   const lines = text.split("\n");
   for (const region of regions(models).filter((r) => r.file === file)) {
     const range = region.locate(lines);
-    if (!range) {
-      if (strict) throw new Error(`${file}: no anchor for the ${region.name} to stamp`);
-      continue;
-    }
+    if (!range) throw new Error(`${file}: no anchor for the ${region.name} to stamp`);
     lines.splice(range[0], range[1] - range[0], ...region.render());
   }
   return lines.join("\n");
@@ -622,52 +617,6 @@ export function loadModels(root = repo) {
   return parseModels(JSON.parse(readFileSync(join(root, PLUGIN, "models.json"), "utf8")), (skill) =>
     existsSync(join(skillsDir, skill, "SKILL.md")),
   );
-}
-
-// Frontmatter keys only Cursor reads. The port drops each with any indented
-// continuation lines and blank paragraphs.
-const CURSOR_ONLY_KEYS = /^(?:mode|icon|color|reminder|is_background):/;
-
-// The port's frontmatter for an upstream skill or plugin agent: `name` is the
-// skill's directory or the agent's file name, which is how Claude Code
-// registers it; Cursor-only keys go. Upstream ships
-// disable-model-invocation: true on every skill; the port drops it on public
-// skills and swaps it for user-invocable: false on principle leaves (CHANGES
-// 0.9.8, 0.9.9).
-function portFrontmatter(file, text) {
-  const skill = file.match(/^plugins\/pstack\/skills\/([^/]+)\/SKILL\.md$/)?.[1];
-  const name = skill ?? file.match(/^plugins\/pstack\/agents\/([^/]+)\.md$/)?.[1];
-  if (!name) return text;
-  const { body } = parseFrontmatter(text);
-  const kept = [];
-  let dropping = false;
-  for (const line of text.slice(0, text.length - body.length).split("\n")) {
-    dropping = CURSOR_ONLY_KEYS.test(line) || (dropping && /^(?:\s|$)/.test(line));
-    if (!dropping) kept.push(line.startsWith("name:") ? `name: ${name}` : line);
-  }
-  const head = kept.join("\n");
-  if (!skill) return head + body;
-  const swap = skill.startsWith("principle-") ? "\nuser-invocable: false\n" : "\n";
-  return head.replace("\ndisable-model-invocation: true\n", swap) + body;
-}
-
-// The port's derivation of an upstream file, as tools/sync.mjs applies it
-// before comparing with the local copy: the port's frontmatter, then the
-// generator's own stamps, its lead lines first. A Models section is appended as the last H2 when
-// upstream has none, which is where every hand-added one already sits. A
-// region whose anchor upstream lacks is left unstamped, so the file surfaces
-// as forked or conflicted instead of aborting the sync.
-export function deriveSkill(file, text, models, leads) {
-  const front = portFrontmatter(file, text);
-  const line = leads.get(file);
-  const out = (line && stampLeadLine(front, line)) || front;
-  const lines = out.split("\n");
-  for (const region of regions(models).filter((r) => r.file === file && r.appendHeading)) {
-    if (region.locate(lines)) continue;
-    if (lines.at(-1) !== "") lines.push("");
-    lines.push(region.appendHeading, "");
-  }
-  return applyRegions(file, lines.join("\n"), models, { strict: false });
 }
 
 export function modelsSection(roles) {
