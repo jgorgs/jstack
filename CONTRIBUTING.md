@@ -16,7 +16,7 @@ bun test tests/
 
 The root `package.json` declares `typebox` and the optional `@earendil-works/pi-coding-agent` as peer dependencies, because Pi provides both to an extension at runtime. The root `bun.lock` pins `typebox` for the generator, which checks hook files against it, and for the tests under `tests/pi/`, which load the extension outside Pi.
 
-The generator writes `VERSION` into all four plugin manifests and the Pi `package.json` and stamps model defaults from `plugins/jstack/models.json`. It also owns the lines under the first heading of some files: the Codex preamble on each skill with a row in the Per-skill notes table of `skills/poteto-mode/references/codex-tools.md`, and the driver-skill line on the playbooks in `DRIVER_PLAYBOOKS`. Either line anywhere else fails the generator, so a skill gets the preamble by gaining a notes row. The GitHub Copilot preamble comes the same way from the Per-skill notes table of `copilot-tools.md` and follows any Codex preamble. No skill file carries a Pi line: `poteto-mode/SKILL.md` points at `pi-tools.md` once, and a skill's Pi note is a row in that file. For Copilot it also stamps the role list in `skills/setup-jstack/scripts/sheet.awk`, the roles-by-tier table in `setup-jstack/copilot.md`, and the role-model skill list in `hooks/session-start-copilot.md` from `models.json`. It validates each skill's `name` and `description`, then generates a Codex prompt for each public skill using the [slash-command table](docs/reference.md#slash-commands).
+The generator writes `VERSION` into all four plugin manifests and the Pi `package.json` and stamps model defaults from `plugins/jstack/models.json`. It also owns the lines under the first heading of some files: the Codex preamble on each skill with a row in the Per-skill notes table of `skills/jedi-mode/references/codex-tools.md`, and the driver-skill line on the playbooks in `DRIVER_PLAYBOOKS`. Either line anywhere else fails the generator, so a skill gets the preamble by gaining a notes row. The GitHub Copilot preamble comes the same way from the Per-skill notes table of `copilot-tools.md` and follows any Codex preamble. No skill file carries a Pi line: `jedi-mode/SKILL.md` points at `pi-tools.md` once, and a skill's Pi note is a row in that file. For Copilot it also stamps the role list in `skills/setup-jstack/scripts/sheet.awk`, the roles-by-tier table in `setup-jstack/copilot.md`, and the role-model skill list in `hooks/session-start-copilot.md` from `models.json`. It validates each skill's `name` and `description`, then generates a Codex prompt for each public skill using the [slash-command table](docs/reference.md#slash-commands).
 
 It also copies the four files in `PORTABLE_ASSETS` into the skills-only installation and removes stale generated files. `NOTICE-skills.md` supplies the notice included with those skills.
 
@@ -39,10 +39,10 @@ If you touched `plugins/jstack/pi/` or `pi-tools.md`, run the Pi checks against 
 
 If you touched `plugins/jstack/hooks/`, `copilot-tools.md`, or `setup-jstack`, run `tests/copilot-smoke.sh` against a signed-in `copilot` CLI. It installs the checkout into a throwaway `HOME` and `COPILOT_HOME`, spends about twenty premium requests, and skips when `copilot` is missing. Set `SMOKE_GITHUB=<owner>/<repo>@<ref>` to repeat the plugin-file checks on a GitHub marketplace install of a pushed ref.
 
-If you touched `skills/poteto-mode/scripts/`:
+If you touched `skills/jedi-mode/scripts/`:
 
 ```shell
-cd plugins/jstack/skills/poteto-mode/scripts
+cd plugins/jstack/skills/jedi-mode/scripts
 bun install --frozen-lockfile
 bun run typecheck
 bun test orch watch-pr check-plan.test.ts

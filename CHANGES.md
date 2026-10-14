@@ -2,6 +2,37 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.0.0 - jedi-mode
+
+The poteto names become jedi names. Nothing else changes: the skills, playbooks, agents, and scripts behave as they did in 1.0.0. The rename breaks every caller that names the old skills, agents, or paths, so the major version moves.
+
+| 1.0.0 | 2.0.0 |
+| --- | --- |
+| skill `poteto-mode` (`/jstack:poteto-mode`, Codex `/poteto-mode`) | skill `jedi-mode` (`/jstack:jedi-mode`, Codex `/jedi-mode`) |
+| skill `poteto-help` (`/jstack:poteto-help`, Codex `/poteto-help`) | skill `jedi-help` (`/jstack:jedi-help`, Codex `/jedi-help`) |
+| agent `jstack:poteto-agent` | agent `jstack:jedi-agent` |
+| agents `jstack:poteto-agent-<level>` (`low`, `medium`, `high`, `xhigh`, `max`) | agents `jstack:jedi-agent-<level>` |
+| `plugins/jstack/skills/poteto-mode/` (playbooks, references, scripts) | `plugins/jstack/skills/jedi-mode/` |
+| `plugins/jstack/skills/poteto-help/` | `plugins/jstack/skills/jedi-help/` |
+| `plugins/jstack/agents/poteto-agent.md`, `plugins/jstack/effort-agents/poteto-agent-<level>.md` | `plugins/jstack/agents/jedi-agent.md`, `plugins/jstack/effort-agents/jedi-agent-<level>.md` |
+| `plugins/jstack/.codex-plugin/prompts/poteto-mode.md`, `poteto-help.md` | `jedi-mode.md`, `jedi-help.md` |
+| scripts package `@cursor-skill/poteto-mode-tools` | `@cursor-skill/jedi-mode-tools` |
+| install marker `node_modules/.poteto-mode-tools-install-key` | `node_modules/.jedi-mode-tools-install-key` |
+
+No environment variable carried the poteto name, so none changes. The override sheet's role names are unchanged too, so an existing `jstack-models.md` keeps working.
+
+The session hooks on Claude Code, Codex, and Copilot, and the routing instruction the Pi extension injects, now name `jedi-mode`, and the Codex, Pi, and Copilot mappings, the Pi agent tool, the generator's effort-agent stamps, and the tests and fixtures follow the new names. The skill's description triggers on "jedi" and `/jedi-mode`.
+
+What a caller must change:
+
+- Invoke `/jstack:jedi-mode` and `/jstack:jedi-help` on Claude Code and Copilot, `/jedi-mode` and `/jedi-help` on Codex, and `jedi-mode` by name on Pi and in skills-only installs.
+- Replace `subagent_type: "jstack:poteto-agent"` with `"jstack:jedi-agent"`, and `jstack:poteto-agent-<level>` with `jstack:jedi-agent-<level>`, in your own instructions and skills.
+- Point any path into `skills/poteto-mode/`, such as `skills/poteto-mode/scripts/check-playbooks.mjs` or `skills/poteto-mode/references/codex-tools.md`, at `skills/jedi-mode/`.
+- Rename the skill in instruction files that require poteto-mode: `CLAUDE.md`, `AGENTS.md`, and the standing instruction that `/jstack:setup-jstack` offers to append to `~/.copilot/copilot-instructions.md`.
+- Reinstall a skills-only install, or update symlinks into the tree, because the skill directories moved. The vendored scripts reinstall their bun dependencies on first run under the new directory. A clone that ran them before 2.0.0 keeps an untracked `plugins/jstack/skills/poteto-mode/scripts/node_modules/` after checkout. `.gitignore` now ignores `node_modules/` under any skill's `scripts/`, so the leftover stays out of commits, and you can delete it.
+
+A project playbook under `.agents/playbooks/` keeps its `extends` stems, because no playbook was renamed. Its anchors can break: the rename changed text in 14 of the bundled playbooks, including step text such as "poteto-mode's Models section" and "`jstack:poteto-agent`". Run `node <plugin>/skills/jedi-mode/scripts/check-playbooks.mjs` from the repository root, and requote each anchor it reports with the new names. Lauren Tan's credit in LICENSE, the NOTICE files, and the README is unchanged, and NOTICE.md records that `jedi-mode`, `jedi-help`, and `jedi-agent` are upstream's `poteto-mode`, `poteto-help`, and `poteto-agent` renamed. The entries below keep the names their releases shipped.
+
 ## 1.0.0 - JStack becomes its own plugin
 
 JStack is now its own plugin, maintained by Jake Gorgol, instead of a fork that merges pstack-claude. pstack-claude becomes a source reviewed by hand.

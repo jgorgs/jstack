@@ -7,7 +7,7 @@ import { sheetCases } from "../session-hook-sheets.mjs";
 import { pluginRoot, useWorld } from "./harness.mjs";
 
 const mandate = readFileSync(join(pluginRoot, "hooks/session-start-context.md"), "utf8");
-const piTools = join(pluginRoot, "skills/poteto-mode/references/pi-tools.md");
+const piTools = join(pluginRoot, "skills/jedi-mode/references/pi-tools.md");
 const always = {
   "jstack-parallel-calls":
     "If you intend to call multiple tools and there are no dependencies between the calls, make all of the independent calls in the same response, otherwise you MUST wait for previous calls to finish first to determine the dependent values.",

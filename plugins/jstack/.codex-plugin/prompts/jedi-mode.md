@@ -1,0 +1,7 @@
+---
+name: jedi-mode
+description: default entry point for any non-trivial task
+disable-model-invocation: true
+---
+
+Invoke the `jedi-mode` skill and follow it. Resolve Claude tool names, Claude model names, and Claude built-in skills through `jedi-mode/references/codex-tools.md`, including its Per-skill notes.

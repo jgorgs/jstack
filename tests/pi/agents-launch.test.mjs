@@ -57,9 +57,9 @@ describe("agent tool", () => {
   test("every jstack agent type reaches its child with its own agent file as the system prompt", async () => {
     const { w, pi, ctx } = setup();
     const files = {
-      "jstack:poteto-agent": "agents/poteto-agent.md",
+      "jstack:jedi-agent": "agents/jedi-agent.md",
       "jstack:comment-sicko": "agents/comment-sicko.md",
-      "jstack:poteto-agent-high": "effort-agents/poteto-agent-high.md",
+      "jstack:jedi-agent-high": "effort-agents/jedi-agent-high.md",
       "jstack:effort-low": "effort-agents/effort-low.md",
     };
     for (const type of Object.keys(files)) await pi.call("agent", { description: type, prompt: "x", subagent_type: type }, ctx);
@@ -68,9 +68,9 @@ describe("agent tool", () => {
 
   test("unknown subagent_type is an error listing every valid type", async () => {
     const { w, pi, ctx } = setup();
-    const err = await pi.call("agent", { description: "x", prompt: "x", subagent_type: "poteto-agent" }, ctx).catch((e) => e);
-    expect(err.message).toContain('Unknown subagent_type "poteto-agent"');
-    for (const t of ["general-purpose", "jstack:poteto-agent", "jstack:comment-sicko", "jstack:effort-high", "jstack:poteto-agent-xhigh"]) {
+    const err = await pi.call("agent", { description: "x", prompt: "x", subagent_type: "jedi-agent" }, ctx).catch((e) => e);
+    expect(err.message).toContain('Unknown subagent_type "jedi-agent"');
+    for (const t of ["general-purpose", "jstack:jedi-agent", "jstack:comment-sicko", "jstack:effort-high", "jstack:jedi-agent-xhigh"]) {
       expect(err.message).toContain(t);
     }
     expect(w.invocations()).toEqual([]);
@@ -91,19 +91,19 @@ describe("agent tool", () => {
 
   test("a resume whose system prompt file is gone writes it again, since pi would append the missing path as the prompt text", async () => {
     const { w, pi, ctx } = setup();
-    await pi.call("agent", { description: "p", prompt: "first", subagent_type: "jstack:poteto-agent" }, ctx);
+    await pi.call("agent", { description: "p", prompt: "first", subagent_type: "jstack:jedi-agent" }, ctx);
     rmSync(join(w.agentDir, "jstack", "parent-session", "prompts"), { recursive: true });
     await pi.call("send_message", { to: "p", message: "again" }, ctx);
     await waitFor(() => pi.messages.length === 1);
     const [first, second] = w.invocations();
-    expect(second.systemPrompt).toBe(agentBody("agents/poteto-agent.md"));
+    expect(second.systemPrompt).toBe(agentBody("agents/jedi-agent.md"));
     expect(flag(second, "--append-system-prompt")).toBe(flag(first, "--append-system-prompt"));
     expect(statSync(flag(second, "--append-system-prompt")).mode & 0o777).toBe(0o600);
   });
 
   test("a resume whose system prompt file is gone and whose type no longer has one fails, and no child starts", async () => {
     const { w, pi, ctx } = setup();
-    await pi.call("agent", { description: "p", prompt: "first", subagent_type: "jstack:poteto-agent" }, ctx);
+    await pi.call("agent", { description: "p", prompt: "first", subagent_type: "jstack:jedi-agent" }, ctx);
     rmSync(join(w.agentDir, "jstack", "parent-session", "prompts"), { recursive: true });
     const removedType = recordWith(pi.entries.at(-1).data, { agent: { subagentType: "jstack:removed" } });
 
@@ -122,7 +122,7 @@ describe("agent tool", () => {
     mkdirSync(state, { recursive: true });
     writeFileSync(join(state, "prompts"), "a file where the prompts directory belongs");
 
-    const err = await pi.call("agent", { description: "wt", prompt: "x", subagent_type: "jstack:poteto-agent", isolation: "worktree" }, ctx).catch((e) => e);
+    const err = await pi.call("agent", { description: "wt", prompt: "x", subagent_type: "jstack:jedi-agent", isolation: "worktree" }, ctx).catch((e) => e);
     expect(err).toBeInstanceOf(Error);
     expect(git("worktree", "list").split("\n")).toHaveLength(1);
     expect(git("branch", "--list").split("\n")).toHaveLength(1);

@@ -1,5 +1,5 @@
 // A bare `bun test` at the repository root must load the same files as CI's
-// `bun test tests/`. The vendored poteto-mode scripts import packages that
+// `bun test tests/`. The vendored jedi-mode scripts import packages that
 // only their own `bun install` provides, so loading them from the root fails
 // until some earlier run has installed them.
 import { expect, test } from "bun:test";

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
-const cli = fileURLToPath(new URL('../plugins/jstack/skills/poteto-mode/scripts/resume.mjs', import.meta.url));
+const cli = fileURLToPath(new URL('../plugins/jstack/skills/jedi-mode/scripts/resume.mjs', import.meta.url));
 function fixture(body) {
   // resume.mjs reports resolved paths; macOS tmpdir() sits behind the /var symlink.
   const project = realpathSync(mkdtempSync(join(tmpdir(), 'resume-project-')));
@@ -55,7 +55,7 @@ test('publishes a note linking an artifact with a parenthesized angle-bracket de
   assert.equal(run('read').value.checkpoint.artifacts[0].path, artifact);
 }));
 
-const storage = readFileSync(new URL('../plugins/jstack/skills/poteto-mode/references/resume-storage.md', import.meta.url), 'utf8');
+const storage = readFileSync(new URL('../plugins/jstack/skills/jedi-mode/references/resume-storage.md', import.meta.url), 'utf8');
 function publishNote(run, text, artifacts, unregistered = []) {
   const directory = run('begin').value.directory;
   const resume = join(directory, 'resume.md');

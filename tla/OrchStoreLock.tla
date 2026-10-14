@@ -1,7 +1,7 @@
 ---- MODULE OrchStoreLock ----
 (* The pid lock of the orch store, as N writer processes run it.
 
-   Source: plugins/jstack/skills/poteto-mode/scripts/orch/store.ts
+   Source: plugins/jstack/skills/jedi-mode/scripts/orch/store.ts
      holderIsDead                        lines 381-392
      acquireLock                         lines 394-540
        create                            lines 406-419
@@ -11,7 +11,7 @@
        the release function it returns   lines 521-539
      openStore: ensureLock, beginWrite   lines 1352-1378
      openStore: close                    lines 1729-1746
-   and plugins/jstack/skills/poteto-mode/scripts/orch/orch.ts lines 219-240,
+   and plugins/jstack/skills/jedi-mode/scripts/orch/orch.ts lines 219-240,
    where one CLI process opens the store, runs one operation and closes it.
 
    Each action is one filesystem call, labelled with its line. A writer never

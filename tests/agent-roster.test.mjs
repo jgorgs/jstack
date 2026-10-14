@@ -15,17 +15,17 @@ const agents = readdirSync(join(pluginRoot, "agents"))
 // Claude Code, Pi, and Copilot dispatch by the namespaced name. The Codex
 // mapping lists the bare names that have no spawn_agent type. The Pi tool's
 // description runs the names together in prose, so a name must not continue
-// into a longer one such as jstack:poteto-agent-<level>.
+// into a longer one such as jstack:jedi-agent-<level>.
 const rosters = [
   ["pi/agent-tools.ts", (name) => new RegExp(`jstack:${name}(?![\\w-])`)],
-  ["skills/poteto-mode/references/pi-tools.md", (name) => new RegExp(`\`jstack:${name}\``)],
-  ["skills/poteto-mode/references/copilot-tools.md", (name) => new RegExp(`\`jstack:${name}\``)],
-  ["skills/poteto-mode/references/codex-tools.md", (name) => new RegExp(`\`${name}\``)],
+  ["skills/jedi-mode/references/pi-tools.md", (name) => new RegExp(`\`jstack:${name}\``)],
+  ["skills/jedi-mode/references/copilot-tools.md", (name) => new RegExp(`\`jstack:${name}\``)],
+  ["skills/jedi-mode/references/codex-tools.md", (name) => new RegExp(`\`${name}\``)],
 ];
 
 describe("subagent roster", () => {
-  test("agents/ holds the base poteto-agent", () => {
-    expect(agents).toContain("poteto-agent");
+  test("agents/ holds the base jedi-agent", () => {
+    expect(agents).toContain("jedi-agent");
   });
 
   for (const [file, mention] of rosters) {

@@ -13,4 +13,4 @@ Run from a clone of `jgorgs/jstack`. `UPSTREAM.md` at its root records the last 
 
 Stop there. The list is the output. Open no branch or PR until Jake picks from it.
 
-When Jake picks, copy each chosen change by hand on a branch off `origin/main`, adapting `pstack` names to `jstack`, and open a PR. Update the recorded commit and version in `UPSTREAM.md` in the same PR. When he takes nothing, the update is the whole PR.
+When Jake picks, copy each chosen change by hand on a branch off `origin/main`, adapting `pstack` names to `jstack` and `poteto` names to `jedi` (`poteto-mode` to `jedi-mode`, `poteto-help` to `jedi-help`, `poteto-agent` to `jedi-agent`), and open a PR. Update the recorded commit and version in `UPSTREAM.md` in the same PR. When he takes nothing, the update is the whole PR.

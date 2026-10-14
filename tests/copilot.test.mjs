@@ -12,7 +12,7 @@ import { markdownFiles } from "../tools/validate-skills.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const skillsDir = join(repoRoot, "plugins/jstack/skills");
-const mappingPath = join(skillsDir, "poteto-mode/references/copilot-tools.md");
+const mappingPath = join(skillsDir, "jedi-mode/references/copilot-tools.md");
 const mapping = readFileSync(mappingPath, "utf8");
 const models = loadModels();
 
@@ -37,7 +37,7 @@ const TERMS = [
   ["~/.claude/orchestrate", "`~/.claude/orchestrate/`"],
   ["CLAUDE.md", "`CLAUDE.md`"],
   ["mcp__", "`mcp__`"],
-  ["jstack:poteto-agent", "`jstack:poteto-agent`"],
+  ["jstack:jedi-agent", "`jstack:jedi-agent`"],
   ["jstack:comment-sicko", "`jstack:comment-sicko`"],
   ["general-purpose", "`general-purpose`"],
 ];
@@ -95,8 +95,8 @@ describe("Copilot preambles", () => {
     }
   });
 
-  test("poteto-mode's Platform Adaptation names the Copilot mapping", () => {
-    const text = readFileSync(join(skillsDir, "poteto-mode/SKILL.md"), "utf8");
+  test("jedi-mode's Platform Adaptation names the Copilot mapping", () => {
+    const text = readFileSync(join(skillsDir, "jedi-mode/SKILL.md"), "utf8");
     expect(text).toContain("On GitHub Copilot, CLI or app, read [`references/copilot-tools.md`](references/copilot-tools.md)");
   });
 });
