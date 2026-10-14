@@ -5,11 +5,11 @@ import { homedir, tmpdir } from "node:os";
 import { dirname, join, sep } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { defaultSettings, PSTACK_STATE_DIR } from "../plugins/pstack/pi/config.ts";
-import { audit, classify, defaultTranscriptRoots, duSize, lastChats, pathSpellings, symlinkTargets } from "../plugins/pstack/skills/poteto-mode/scripts/worktree-audit.mjs";
+import { defaultSettings, JSTACK_STATE_DIR } from "../plugins/jstack/pi/config.ts";
+import { audit, classify, defaultTranscriptRoots, duSize, lastChats, pathSpellings, symlinkTargets } from "../plugins/jstack/skills/poteto-mode/scripts/worktree-audit.mjs";
 import { removeDuring } from "./remove-during.mjs";
 
-const script = join(import.meta.dir, "../plugins/pstack/skills/poteto-mode/scripts/worktree-audit.mjs");
+const script = join(import.meta.dir, "../plugins/jstack/skills/poteto-mode/scripts/worktree-audit.mjs");
 // node's ESM loader takes a file URL, not a drive-lettered path.
 const scriptUrl = pathToFileURL(script).href;
 const noNode = spawnSync("node", ["--version"]).status !== 0;
@@ -586,13 +586,13 @@ describe("default transcripts roots", () => {
     defaultTranscriptRoots({ ...options, home, stat: (path) => exists(gitPath(path)) ? {} : undefined }).map(gitPath);
 
   test("every runtime directory that exists, Pi's under PI_CODING_AGENT_DIR when set", () => {
-    const present = new Set([claude, "/home/u/.codex/sessions", "/pi/sessions", "/pi/pstack", "/home/u/.pi/agent/sessions"]);
+    const present = new Set([claude, "/home/u/.codex/sessions", "/pi/sessions", "/pi/jstack", "/home/u/.pi/agent/sessions"]);
     const exists = (path) => present.has(path);
     expect(roots({ env: { PI_CODING_AGENT_DIR: "/pi" }, exists })).toEqual([
       claude,
       "/home/u/.codex/sessions",
       "/pi/sessions",
-      "/pi/pstack",
+      "/pi/jstack",
     ]);
     expect(roots({ env: {}, exists })).toEqual([claude, "/home/u/.codex/sessions", "/home/u/.pi/agent/sessions"]);
   });
@@ -642,7 +642,7 @@ describe("default transcripts roots", () => {
   ])("the Pi roots are where the extension keeps sessions and agent state under %s", (_, env) => {
     const { agentDir } = defaultSettings(() => 0, env);
     const roots = defaultTranscriptRoots({ env, home: homedir(), stat: () => ({}) });
-    expect(roots).toEqual(expect.arrayContaining([join(agentDir, "sessions"), join(agentDir, PSTACK_STATE_DIR)]));
+    expect(roots).toEqual(expect.arrayContaining([join(agentDir, "sessions"), join(agentDir, JSTACK_STATE_DIR)]));
   });
 });
 

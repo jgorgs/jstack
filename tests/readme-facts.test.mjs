@@ -12,11 +12,11 @@ const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const documentation = ["README.md", "docs/reference.md"]
   .map((file) => readFileSync(join(repoRoot, file), "utf8"))
   .join("\n");
-const skillsDir = join(repoRoot, "plugins/pstack/skills");
+const skillsDir = join(repoRoot, "plugins/jstack/skills");
 const total = agentSkills(skillsDir).length;
 const publicCount = publicSkills(skillsDir).length;
 const principles = total - publicCount;
-const stubs = readdirSync(join(repoRoot, "plugins/pstack/.codex-plugin/prompts")).filter((f) => f.endsWith(".md")).length;
+const stubs = readdirSync(join(repoRoot, "plugins/jstack/.codex-plugin/prompts")).filter((f) => f.endsWith(".md")).length;
 
 const numbersBefore = (phrase) => [...documentation.matchAll(new RegExp(`(\\d+) (?:${phrase})`, "g"))].map((m) => Number(m[1]));
 

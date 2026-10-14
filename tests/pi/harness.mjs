@@ -8,10 +8,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { install } from "../../plugins/pstack/pi/index.ts";
+import { install } from "../../plugins/jstack/pi/index.ts";
 import { writeSheet } from "../session-hook-sheets.mjs";
 
-export const pluginRoot = fileURLToPath(new URL("../../plugins/pstack/", import.meta.url));
+export const pluginRoot = fileURLToPath(new URL("../../plugins/jstack/", import.meta.url));
 const fakePiBin = fileURLToPath(new URL("./fake-pi.mjs", import.meta.url));
 
 const fixtureModels = {
@@ -95,10 +95,10 @@ export function fakeCtx({ cwd, entries = [], model = { provider: "anthropic", id
 // A temp world: agent dir, a fixture models.json, a fake-pi script and log.
 export function world({ script = {}, sheet = null } = {}) {
   // realpath: macOS's tmpdir is a symlink, and git and the child report real paths.
-  const root = realpathSync(mkdtempSync(join(tmpdir(), "pstack-pi-")));
+  const root = realpathSync(mkdtempSync(join(tmpdir(), "jstack-pi-")));
   const agentDir = join(root, "agent");
   mkdirSync(agentDir);
-  if (sheet !== null) writeSheet(join(agentDir, "pstack-models.md"), sheet);
+  if (sheet !== null) writeSheet(join(agentDir, "jstack-models.md"), sheet);
   const modelsFile = join(root, "models.json");
   writeFileSync(modelsFile, JSON.stringify(fixtureModels));
   const scriptFile = join(root, "script.json");
@@ -179,7 +179,7 @@ export const resultText = (result) => result.content.map((c) => c.text).join("")
 
 export const listAgents = async (pi, ctx) => JSON.parse(resultText(await pi.call("list_agents", {}, ctx)));
 
-export const agentEntry = (data) => ({ type: "custom", customType: "pstack-agents", data });
+export const agentEntry = (data) => ({ type: "custom", customType: "jstack-agents", data });
 
 // A persisted record with fields replaced: identity ones under `agent`, the rest beside it.
 export const recordWith = (data, { agent = {}, ...state } = {}) => ({ ...data, ...state, agent: { ...data.agent, ...agent } });

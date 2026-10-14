@@ -8,14 +8,14 @@ import { join } from "node:path";
 // default and the test read the killed child as code null (run 36492567721).
 setDefaultTimeout(30_000);
 
-const mode = join(import.meta.dir, "../plugins/pstack/skills/poteto-mode");
+const mode = join(import.meta.dir, "../plugins/jstack/skills/poteto-mode");
 const playbook = readFileSync(join(mode, "playbooks/multi-phase-plan.md"), "utf8");
 const template = playbook.match(/^````markdown\n([\s\S]*?)^````$/m);
 if (!template) throw new Error("Multi-phase playbook has no plan skeleton");
 const skeleton = template[1];
 
 function run(plan) {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-check-plan-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-check-plan-"));
   try {
     const file = join(dir, "plan.md");
     writeFileSync(file, plan);

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { registerPathSkills } from "../../plugins/pstack/pi/path-skills.ts";
+import { registerPathSkills } from "../../plugins/jstack/pi/path-skills.ts";
 import { pluginRoot, useWorld } from "./harness.mjs";
 
 const setup = useWorld();
@@ -54,7 +54,7 @@ describe("paths: auto-load note", () => {
 
 describe("paths: frontmatter that is not a JSON array of globs", () => {
   const register = (pathsLine) => {
-    const root = mkdtempSync(join(tmpdir(), "pstack-paths-"));
+    const root = mkdtempSync(join(tmpdir(), "jstack-paths-"));
     const file = join(root, "skills", "csv", "SKILL.md");
     mkdirSync(join(root, "skills", "csv"), { recursive: true });
     writeFileSync(file, `---\nname: csv\npaths: ${pathsLine}\n---\nbody\n`);

@@ -6,12 +6,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const logScript = fileURLToPath(new URL("../plugins/pstack/skills/show-me-your-work/scripts/log.sh", import.meta.url));
+const logScript = fileURLToPath(new URL("../plugins/jstack/skills/show-me-your-work/scripts/log.sh", import.meta.url));
 
 // A spreadsheet runs a leading = + - @ as a formula, and a quote-aware TSV
 // reader unwraps a leading " (or runs an unterminated one into later rows).
 test("cells a spreadsheet or TSV reader would reinterpret are written with a leading quote", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const risky = ['"=HYPERLINK(""http://x"")"', '"unterminated', "=1+1", "+1", "-1", "@SUM(A1)"];
@@ -26,7 +26,7 @@ test("cells a spreadsheet or TSV reader would reinterpret are written with a lea
 });
 
 test("cells holding % and backslash sequences are written as given", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const cells = ["100%", "%s %d %n %%", "\\n \\t \\\\ \\0", "why", "result"];
@@ -41,7 +41,7 @@ test("cells holding % and backslash sequences are written as given", () => {
 // A shell printf on Linux writes 4 KiB at a time. Before the single write, 20 KB
 // rows interleaved there in 12 of 20 runs and 400 KB rows in 100 of 100.
 test("40 concurrent writers with 400 KB rows leave every row intact", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const manyStdioBuffers = "x".repeat(100_000);
@@ -63,7 +63,7 @@ test("40 concurrent writers with 400 KB rows leave every row intact", async () =
 });
 
 test("a row with non-ASCII cells is appended when PERL_UNICODE is set", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const cells = ["phase", "naïve ✓", "why", "日本語", "result"];
@@ -76,7 +76,7 @@ test("a row with non-ASCII cells is appended when PERL_UNICODE is set", () => {
 });
 
 test("a 200 KB row is appended, though Linux caps one argument at 128 KiB", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const underTheCap = "x".repeat(100_000);
@@ -89,7 +89,7 @@ test("a 200 KB row is appended, though Linux caps one argument at 128 KiB", () =
 });
 
 test("a row is appended when perl is not installed", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const bin = join(dir, "bin");
@@ -109,9 +109,9 @@ const drainsItsStdin = "#!/bin/sh\nwhile read -r _; do :; done\n";
 for (const [state, shim, env] of [
   ["is a shim that exits 3", "#!/bin/sh\necho 'perl: broken shim' >&2\nexit 3\n", {}],
   ["is a shim that exits 0 and writes nothing", drainsItsStdin, {}],
-  ["cannot load a module PERL5OPT names", null, { PERL5OPT: "-Mpstack_no_such_module" }],
+  ["cannot load a module PERL5OPT names", null, { PERL5OPT: "-Mjstack_no_such_module" }],
 ]) test(`a row is appended, with nothing on stderr, when perl ${state}`, () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const log = join(dir, "log.tsv");
     const bin = join(dir, "bin");
@@ -130,7 +130,7 @@ for (const [state, shim, env] of [
 });
 
 test("the caller's stdin is left unread when perl is a shim that drains its own", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const bin = join(dir, "bin");
     mkdirSync(bin);
@@ -147,7 +147,7 @@ test("the caller's stdin is left unread when perl is a shim that drains its own"
 });
 
 test("a short write fails and says how many bytes of the row were appended", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-log-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-log-"));
   try {
     const pastTheCap = "y".repeat(3000);
     const { status, stderr } = spawnSync(

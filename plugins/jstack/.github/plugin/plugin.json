@@ -1,0 +1,15 @@
+{
+  "name": "jstack",
+  "displayName": "JStack",
+  "version": "0.9.8401",
+  "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. GitHub Copilot CLI and app build. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
+  "author": {
+    "name": "Jake Gorgol",
+    "url": "https://github.com/jgorgs"
+  },
+  "homepage": "https://github.com/jgorgs/jstack",
+  "repository": "https://github.com/jgorgs/jstack",
+  "license": "MIT",
+  "keywords": ["jstack", "poteto-mode", "workflow", "skills", "subagents", "github-copilot"],
+  "hooks": "hooks/copilot-hooks.json"
+}

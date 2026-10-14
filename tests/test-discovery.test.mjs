@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 
 function loadedFiles(...paths) {
-  const result = spawnSync(process.execPath, ["test", "--test-name-pattern", "^pstack-no-such-test$", ...paths], {
+  const result = spawnSync(process.execPath, ["test", "--test-name-pattern", "^jstack-no-such-test$", ...paths], {
     cwd: repoRoot,
     encoding: "utf8",
   });

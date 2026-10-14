@@ -1,14 +1,14 @@
 {
-  "name": "pstack-claude",
+  "name": "jstack",
   "interface": {
-    "displayName": "pstack"
+    "displayName": "JStack"
   },
   "plugins": [
     {
-      "name": "pstack",
+      "name": "jstack",
       "source": {
         "source": "local",
-        "path": "./plugins/pstack"
+        "path": "./plugins/jstack"
       },
       "policy": {
         "installation": "AVAILABLE",

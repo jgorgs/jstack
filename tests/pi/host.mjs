@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-import { install } from "../../plugins/pstack/pi/index.ts";
+import { install } from "../../plugins/jstack/pi/index.ts";
 import { fakeCtx, fakePi } from "./harness.mjs";
 
 const [settingsJson, how] = process.argv.slice(2);

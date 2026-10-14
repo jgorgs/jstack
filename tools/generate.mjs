@@ -15,26 +15,26 @@
 //   The row set must equal the public skills (every Agent Skill not marked
 //   user-invocable: false); a skill without a row or a row without a skill
 //   fails by name.
-//   plugins/pstack/models.json (the model policy: role defaults, diverse panel,
+//   plugins/jstack/models.json (the model policy: role defaults, diverse panel,
 //   available slugs, and one block per RUNTIMES row: Codex equivalents, Pi IDs)
 //     -> each model-consuming skill's "## Models" and "## Reasoning effort" sections
-//     -> setup-pstack's Models section and override-sheet block, and interrogate's reviewer table
+//     -> setup-jstack's Models section and override-sheet block, and interrogate's reviewer table
 //     -> the "## Model names" section of each runtime's mapping file
 //        (poteto-mode/references/codex-tools.md, pi-tools.md, copilot-tools.md)
-//     -> one effort agent pair per level in plugins/pstack/effort-agents/
+//     -> one effort agent pair per level in plugins/jstack/effort-agents/
 //   the Per-skill notes table in poteto-mode/references/codex-tools.md
 //     -> the Codex preamble under the first heading of each listed skill's SKILL.md,
 //        and the codex-tools.md pointer in the prompt stub of every other public skill
 //   the Per-skill notes table in poteto-mode/references/copilot-tools.md
 //     -> the GitHub Copilot preamble under the same heading, after any Codex one
 //   DRIVER_PLAYBOOKS -> the driver-skill line under each playbook's first heading
-//   plugins/pstack/models.json's roles, again
-//     -> the role list in setup-pstack's scripts/sheet.awk, which checks a Copilot sheet
+//   plugins/jstack/models.json's roles, again
+//     -> the role list in setup-jstack's scripts/sheet.awk, which checks a Copilot sheet
 //     -> the list of skills that dispatch on role models in hooks/session-start-copilot.md
-//   plugins/pstack/{agents,effort-agents}/*.md -> the "agents" list in
-//     plugins/pstack/.claude-plugin/plugin.json (a list replaces the default
+//   plugins/jstack/{agents,effort-agents}/*.md -> the "agents" list in
+//     plugins/jstack/.claude-plugin/plugin.json (a list replaces the default
 //     agents/ directory, so it names every agent)
-//   plugins/pstack/agents/comment-sicko.md, LICENSE, LICENSE-cursor-team-kit,
+//   plugins/jstack/agents/comment-sicko.md, LICENSE, LICENSE-cursor-team-kit,
 //   and NOTICE-skills.md
 //     -> portable copies under poteto-mode/references/{agents,licenses}/
 //   No other model name (a claude-* ID or a backticked family name) may appear
@@ -78,7 +78,7 @@ const VERSIONED_MANIFESTS = [
 
 export const PORTABLE_ASSETS = [
   {
-    source: "plugins/pstack/agents/comment-sicko.md",
+    source: "plugins/jstack/agents/comment-sicko.md",
     target: "poteto-mode/references/agents/comment-sicko.md",
   },
   { source: "LICENSE", target: "poteto-mode/references/licenses/LICENSE" },
@@ -227,7 +227,7 @@ export function validatePluginLayout(pluginRoot) {
       // lookbehind scanned a long line about nine times slower.
       for (const [, name] of line.matchAll(/(?:^|\W|\\[a-z])subagent_type[\s\\"'`*]*[:=][\s\\"'`*]*([a-z0-9-]+)(?![\w-]|\.\w)/g)) {
         if (agents.includes(name)) {
-          bareDispatches.push(`${relative(pluginRoot, file)}:${i + 1}: subagent_type: "${name}" (use "pstack:${name}")`);
+          bareDispatches.push(`${relative(pluginRoot, file)}:${i + 1}: subagent_type: "${name}" (use "jstack:${name}")`);
         }
       }
     });
@@ -367,7 +367,7 @@ export const lineStartingWith = (prefix) => (lines) => {
 
 const blankPadded = (body) => ["", ...body.split("\n"), ""];
 
-const SHEET_ROLES_OPEN = "  # Stamped from plugins/pstack/models.json; edit there and rerun tools/generate.mjs.";
+const SHEET_ROLES_OPEN = "  # Stamped from plugins/jstack/models.json; edit there and rerun tools/generate.mjs.";
 const ROLE_SKILLS_LINE = "Skills that dispatch on role models:";
 
 // awk string literals: models.json role labels and effort levels hold no quote
@@ -394,7 +394,7 @@ function requiredRole(models, label) {
 // find it, and what it renders from the model policy. Adding a stamped region
 // means adding a row here; the stray-slug scan exempts exactly these spans.
 export function regions(models) {
-  const skillFile = (skill) => `plugins/pstack/skills/${skill}/SKILL.md`;
+  const skillFile = (skill) => `plugins/jstack/skills/${skill}/SKILL.md`;
   const rolesBySkill = new Map();
   for (const r of models.roles) {
     if (!rolesBySkill.has(r.skill)) rolesBySkill.set(r.skill, []);
@@ -423,13 +423,13 @@ export function regions(models) {
       render: () => blankPadded(effortSection(models.efforts, models.defaultEffort)),
     })),
     {
-      file: skillFile("setup-pstack"),
+      file: skillFile("setup-jstack"),
       name: "Models section",
       locate: section("Models"),
       render: () => blankPadded(setupModelsSection(models)),
     },
     {
-      file: skillFile("setup-pstack"),
+      file: skillFile("setup-jstack"),
       name: "override sheet",
       locate: fenceUnder("Write the override sheet", "markdown"),
       render: () => [overrideSheetBlock(models)],
@@ -441,13 +441,13 @@ export function regions(models) {
       render: () => blankPadded(runtime.modelNames(models)),
     })),
     {
-      file: skillFile("setup-pstack").replace("SKILL.md", "scripts/sheet.awk"),
+      file: skillFile("setup-jstack").replace("SKILL.md", "scripts/sheet.awk"),
       name: "role list",
       locate: between(SHEET_ROLES_OPEN, "  return n"),
       render: () => sheetRoles(models),
     },
     {
-      file: skillFile("setup-pstack").replace("SKILL.md", "copilot.md"),
+      file: skillFile("setup-jstack").replace("SKILL.md", "copilot.md"),
       name: "roles by tier",
       locate: tableRows("| Tier | Roles |", "| "),
       render: () =>
@@ -622,8 +622,8 @@ export function loadModels(root = repo) {
 export function modelsSection(roles) {
   const bullets = roles.map((r) => `- ${r.role}: ${codeList(r.models)}`).join("\n");
   return (
-    "Role defaults, stamped from `plugins/pstack/models.json` (edit there, rerun `tools/generate.mjs`). " +
-    "A matching role line in the `pstack-models.md` override sheet overrides each at runtime; `/setup-pstack` writes it and lists its path per runtime.\n\n" +
+    "Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). " +
+    "A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.\n\n" +
     bullets
   );
 }
@@ -641,8 +641,8 @@ export function effortSection(levels, defaultEffort) {
     "is the usual one. Strip the suffix before reading the model: `inherit-parent` or `auto` still omits `model` " +
     "at every level, and a model name is passed as `model`. " +
     "On Claude Code, a level picks the effort agent from the `subagent_type` you would otherwise use. " +
-    "`pstack:poteto-agent` becomes `subagent_type: \"pstack:poteto-agent-<level>\"`. " +
-    "`general-purpose`, or no `subagent_type`, becomes `subagent_type: \"pstack:effort-<level>\"`. " +
+    "`jstack:poteto-agent` becomes `subagent_type: \"jstack:poteto-agent-<level>\"`. " +
+    "`general-purpose`, or no `subagent_type`, becomes `subagent_type: \"jstack:effort-<level>\"`. " +
     "The effort agents set only `effort`, so the model you pass still decides the model. " +
     "On Codex, pass the level as `spawn_agent`'s `reasoning_effort` and keep the usual instructions."
   );
@@ -650,7 +650,7 @@ export function effortSection(levels, defaultEffort) {
 
 // The effort agents: one general-purpose worker and one poteto-agent per level.
 // The poteto variants carry poteto-agent's body. Their descriptions name
-// pstack:poteto-agent instead of copying its routing contract, so only the
+// jstack:poteto-agent instead of copying its routing contract, so only the
 // base agent reads as the delegate /poteto-mode runs spawn. A description is
 // written unquoted, so it must not open with a backtick: strict YAML rejects it.
 export function effortAgents(levels, potetoAgent) {
@@ -659,18 +659,18 @@ export function effortAgents(levels, potetoAgent) {
     {
       name: `effort-${level}`,
       text:
-        `---\nname: effort-${level}\ndescription: pstack subagent with the full tool set that runs at ${level} reasoning effort. ` +
+        `---\nname: effort-${level}\ndescription: jstack subagent with the full tool set that runs at ${level} reasoning effort. ` +
         `Its system prompt is this file, not the built-in \`general-purpose\` prompt. Dispatched in place of ` +
-        `\`general-purpose\` when a pstack role's override names \`@${level}\`. The caller passes the model.\n` +
-        `effort: ${level}\n---\n\n# pstack subagent (${level} effort)\n\n` +
+        `\`general-purpose\` when a jstack role's override names \`@${level}\`. The caller passes the model.\n` +
+        `effort: ${level}\n---\n\n# jstack subagent (${level} effort)\n\n` +
         "Do the task in your prompt. You have the full tool set. " +
         "The effort level changes how long you reason, not the task.\n",
     },
     {
       name: `poteto-agent-${level}`,
       text:
-        `---\nname: poteto-agent-${level}\ndescription: Runs \`pstack:poteto-agent\` at ${level} reasoning effort. ` +
-        `Dispatched in place of \`pstack:poteto-agent\` when a pstack role's override names \`@${level}\`. The caller passes the model.\n` +
+        `---\nname: poteto-agent-${level}\ndescription: Runs \`jstack:poteto-agent\` at ${level} reasoning effort. ` +
+        `Dispatched in place of \`jstack:poteto-agent\` when a jstack role's override names \`@${level}\`. The caller passes the model.\n` +
         `effort: ${level}\n---\n` + body,
     },
   ]);
@@ -712,7 +712,7 @@ export function stampAgentPaths(manifestText, paths) {
 
 export function setupModelsSection(models) {
   return (
-    "Stamped from `plugins/pstack/models.json` (edit there, rerun `tools/generate.mjs`).\n\n" +
+    "Stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`).\n\n" +
     `- Available Claude models: ${codeList(models.available)}\n` +
     `- Default panel: ${codeList(models.tiers.panel)}\n` +
     `- Reasoning effort levels: ${codeList(models.efforts)}\n` +
@@ -726,15 +726,15 @@ export function setupModelsSection(models) {
 export function overrideSheetBlock(models) {
   const rows = models.roles.map((r) => `${r.role}: ${r.models.join(", ")}`).join("\n");
   return (
-    "# pstack model configuration\n\n" +
-    "Per-role model overrides for pstack skills. Each pstack SKILL.md names its defaults in a Models section; " +
+    "# jstack model configuration\n\n" +
+    "Per-role model overrides for jstack skills. Each jstack SKILL.md names its defaults in a Models section; " +
     "the values here override those defaults. Delete a line to fall back to the skill default. " +
     "A value of `inherit-parent` or `auto` runs that role on the parent session's model (the `Agent` call omits `model`); " +
     "an alias entry in a panel list still counts toward that panel's fan-out. " +
     "A model may carry a reasoning effort, as in `opus @xhigh` (levels: " + models.efforts.join(", ") + "); " +
-    "the role then runs through the pstack effort agent of that level, each entry of a panel list on its own. " +
+    "the role then runs through the jstack effort agent of that level, each entry of a panel list on its own. " +
     "`default effort` sets the level for a value without one; `session` keeps the parent session's effort. " +
-    "`session hook: off` stops the Claude Code or Codex SessionStart hook, or the pstack Pi extension, from injecting the poteto-mode mandate; " +
+    "`session hook: off` stops the Claude Code or Codex SessionStart hook, or the jstack Pi extension, from injecting the poteto-mode mandate; " +
     "any other value, or no line, leaves it on.\n\n" +
     rows +
     `\n\ndefault effort: ${models.defaultEffort}\nsession hook: on`

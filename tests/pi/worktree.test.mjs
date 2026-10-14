@@ -5,7 +5,7 @@ import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-import { ensureWorktree, planWorktree, settleWorktree } from "../../plugins/pstack/pi/worktree.ts";
+import { ensureWorktree, planWorktree, settleWorktree } from "../../plugins/jstack/pi/worktree.ts";
 import { gitRepo, resultText, useWorld, waitFor } from "./harness.mjs";
 
 const setup = useWorld();

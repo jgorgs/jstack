@@ -1,12 +1,12 @@
-// The pstack Pi extension end to end on real pi and real models. Skipped unless
-// PSTACK_PI_LIVE=1. Each run builds a throwaway PI_CODING_AGENT_DIR with the
+// The jstack Pi extension end to end on real pi and real models. Skipped unless
+// JSTACK_PI_LIVE=1. Each run builds a throwaway PI_CODING_AGENT_DIR with the
 // user's credentials symlinked in and this repo installed as a package, so
-// children load pstack too. Nothing under ~/.pi is written.
+// children load jstack too. Nothing under ~/.pi is written.
 //
 // The aliases resolve through the shipped models.json table of
-// PSTACK_PI_LIVE_PROVIDER (default openai), or through the `pi models:`
-// line in PSTACK_PI_LIVE_MODELS when it is set. The parent runs on the sonnet
-// alias. PSTACK_PI_LIVE_KEEP=1 keeps the throwaway directory for inspection.
+// JSTACK_PI_LIVE_PROVIDER (default openai), or through the `pi models:`
+// line in JSTACK_PI_LIVE_MODELS when it is set. The parent runs on the sonnet
+// alias. JSTACK_PI_LIVE_KEEP=1 keeps the throwaway directory for inspection.
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
@@ -14,17 +14,17 @@ import { homedir, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { openingPrompt } from "../../plugins/pstack/skills/reflect/scripts/find-transcript.mjs";
+import { openingPrompt } from "../../plugins/jstack/skills/reflect/scripts/find-transcript.mjs";
 import { agentBody, alive as pidAlive, gitRepo, pluginRoot, readEntries, sleep } from "./harness.mjs";
 import { agentByDescription, assistantModels, childEntries, descendants, findSessionFile, jsonLines, liveModels, MINUTE, PiRpc, processTable, sections, textOf } from "./live-harness.mjs";
 
-const LIVE = process.env.PSTACK_PI_LIVE === "1";
+const LIVE = process.env.JSTACK_PI_LIVE === "1";
 const repoRoot = fileURLToPath(new URL("../../", import.meta.url));
-const { sheet: SHEET, models: MODELS } = liveModels(pluginRoot, "# pstack live test sheet\n\n");
+const { sheet: SHEET, models: MODELS } = liveModels(pluginRoot, "# jstack live test sheet\n\n");
 const PARENT_MODEL = MODELS.get("sonnet");
 const MANDATE = readFileSync(join(pluginRoot, "hooks/session-start-context.md"), "utf8");
-const MANDATE_KEY = "pstack-session-start";
-const SHEET_KEY = "pstack-models";
+const MANDATE_KEY = "jstack-session-start";
+const SHEET_KEY = "jstack-models";
 // Pi stores an extension's prompt section wrapped in a tag named by its key.
 const tagged = (key, text) => `<${key}>\n${text}\n</${key}>`;
 
@@ -35,7 +35,7 @@ let env;
 let git;
 
 function writeSheet(text) {
-  writeFileSync(join(agentDir, "pstack-models.md"), text);
+  writeFileSync(join(agentDir, "jstack-models.md"), text);
 }
 
 async function withParent(fn) {
@@ -53,10 +53,10 @@ function parentSessionFile(sessionId) {
 
 const suite = LIVE ? describe : describe.skip;
 
-suite("pstack on live pi", () => {
+suite("jstack on live pi", () => {
   beforeAll(() => {
     // realpath: macOS's tmpdir is a symlink, and git reports the worktree's real path.
-    root = realpathSync(mkdtempSync(join(tmpdir(), "pstack-pi-live-")));
+    root = realpathSync(mkdtempSync(join(tmpdir(), "jstack-pi-live-")));
     agentDir = join(root, "agent");
     work = join(root, "work");
     mkdirSync(agentDir);
@@ -84,7 +84,7 @@ suite("pstack on live pi", () => {
     };
     walk(agentDir);
     console.log(`model calls recorded in session files: ${calls}`);
-    if (process.env.PSTACK_PI_LIVE_KEEP !== "1") rmSync(root, { recursive: true, force: true });
+    if (process.env.JSTACK_PI_LIVE_KEEP !== "1") rmSync(root, { recursive: true, force: true });
   });
 
   test(
@@ -243,14 +243,14 @@ suite("pstack on live pi", () => {
   );
 
   test(
-    "effort: pstack:effort-high runs the child at thinking high with the effort agent as its system prompt",
+    "effort: jstack:effort-high runs the child at thinking high with the effort agent as its system prompt",
     async () => {
       await withParent(async (parent) => {
         await parent.run(
-          'Make one agent tool call in the foreground with subagent_type "pstack:effort-high", description "effort", prompt "Reply with exactly one word: done". Then reply with exactly one word: ok.',
+          'Make one agent tool call in the foreground with subagent_type "jstack:effort-high", description "effort", prompt "Reply with exactly one word: done". Then reply with exactly one word: ok.',
         );
         const record = agentByDescription(await parent.sessionFile(), "effort").at(-1);
-        expect(record).toMatchObject({ status: "completed", agent: { subagentType: "pstack:effort-high", thinking: "high" } });
+        expect(record).toMatchObject({ status: "completed", agent: { subagentType: "jstack:effort-high", thinking: "high" } });
         const child = childEntries(record);
         const levels = child.filter((e) => e.type === "thinking_level_change").map((e) => e.thinkingLevel);
         expect(levels.at(-1)).toBe("high");
@@ -264,7 +264,7 @@ suite("pstack on live pi", () => {
   );
 
   test(
-    "worktree: an isolated agent runs in its own worktree, removed when clean and kept with changes; pstack:poteto-agent carries its agent file",
+    "worktree: an isolated agent runs in its own worktree, removed when clean and kept with changes; jstack:poteto-agent carries its agent file",
     async () => {
       await withParent(async (parent) => {
         const cleanFrom = await parent.run(
@@ -285,10 +285,10 @@ suite("pstack on live pi", () => {
         expect(git("branch", "--list", clean.agent.worktree.branch)).toBe("");
 
         const dirtyFrom = await parent.run(
-          'Make one agent tool call in the foreground with subagent_type "pstack:poteto-agent", isolation "worktree", description "wt-dirty", prompt "Use the bash tool to run exactly: echo hi > note.txt. Then reply with exactly one word: done". Then reply with exactly one word: ok.',
+          'Make one agent tool call in the foreground with subagent_type "jstack:poteto-agent", isolation "worktree", description "wt-dirty", prompt "Use the bash tool to run exactly: echo hi > note.txt. Then reply with exactly one word: done". Then reply with exactly one word: ok.',
         );
         const dirty = agentByDescription(file, "wt-dirty").at(-1);
-        expect(dirty.agent.subagentType).toBe("pstack:poteto-agent");
+        expect(dirty.agent.subagentType).toBe("jstack:poteto-agent");
         expect(sections(childEntries(dirty)).addendum).toContain(agentBody("agents/poteto-agent.md"));
         const [dirtyResult] = parent.toolResults("agent", dirtyFrom);
         expect(textOf(dirtyResult)).toContain(`worktree: ${dirty.agent.worktree.path} (branch ${dirty.agent.worktree.branch})`);
@@ -394,7 +394,7 @@ suite("pstack on live pi", () => {
   test(
     "tools: the model calls list_agents at its first turn without tool_search, by default and under codemode only",
     async () => {
-      const PSTACK_TOOLS = ["agent", "send_message", "list_agents", "stop_agent", "ask_user_question", "schedule_wakeup"];
+      const JSTACK_TOOLS = ["agent", "send_message", "list_agents", "stop_agent", "ask_user_question", "schedule_wakeup"];
       const prompt = "Call the list_agents tool directly as your first action. Then reply with exactly one word: done.";
       const codemodeDir = join(root, "codemode-only");
       mkdirSync(join(codemodeDir, ".pi"), { recursive: true });
@@ -413,7 +413,7 @@ suite("pstack on live pi", () => {
         const entries = readEntries(parentSessionFile(events.find((e) => e.type === "session").id));
         const system = entries.find((e) => e.type === "message" && e.message.role === "system").message;
         const declared = system.toolsAdded.map((t) => t.name);
-        expect({ cwd, declared: PSTACK_TOOLS.filter((t) => declared.includes(t)) }).toEqual({ cwd, declared: PSTACK_TOOLS });
+        expect({ cwd, declared: JSTACK_TOOLS.filter((t) => declared.includes(t)) }).toEqual({ cwd, declared: JSTACK_TOOLS });
         const calls = entries
           .filter((e) => e.type === "message" && e.message.role === "assistant")
           .flatMap((e) => e.message.content.filter((c) => c.type === "toolCall").map((c) => c.name));
@@ -442,7 +442,7 @@ suite("pstack on live pi", () => {
       expect({ code, stderr: code === 0 ? "" : stderr }).toEqual({ code: 0, stderr: "" });
 
       const ends = events.filter((e) => e.type === "message_end").map((e) => e.message);
-      const noticeAt = ends.findIndex((m) => m.role === "custom" && m.customType === "pstack-agent");
+      const noticeAt = ends.findIndex((m) => m.role === "custom" && m.customType === "jstack-agent");
       expect(noticeAt).toBeGreaterThan(-1);
       const notice = ends[noticeAt];
       expect(notice.details.status).toBe("completed");

@@ -45,7 +45,7 @@ jobs:
       - name: Test Windows session hooks
         run: bun test --timeout 10000 tests/session-hook-windows.test.mjs
         env:
-          PSTACK_REQUIRE_WINDOWS_HOOK: "1"
+          JSTACK_REQUIRE_WINDOWS_HOOK: "1"
 
   windows-worktree-audit:
     name: Windows worktree audit
@@ -75,10 +75,10 @@ jobs:
       # generated job already validated the source tree's links and prose.
       - name: Install the skills tree with the skills CLI
         run: |
-          npx --yes skills@1.5.23 add ./plugins/pstack/skills \
+          npx --yes skills@1.5.23 add ./plugins/jstack/skills \
             --skill '*' --agent codex --yes --copy
       - name: Compare the installed skills tree with the source
-        run: diff -qr plugins/pstack/skills .agents/skills
+        run: diff -qr plugins/jstack/skills .agents/skills
 
   pi-types:
     name: Pi extension types
@@ -108,15 +108,15 @@ jobs:
       - name: Check the model catalog and child startup against Pi
         run: bun test tests/pi/catalog.test.mjs tests/pi/runtime.test.mjs
         env:
-          PSTACK_PI_REQUIRE_CATALOG: "1"
-          PSTACK_PI_REQUIRE_RUNTIME: "1"
+          JSTACK_PI_REQUIRE_CATALOG: "1"
+          JSTACK_PI_REQUIRE_RUNTIME: "1"
 
   scripts:
     name: Vendored bun tooling
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: plugins/pstack/skills/poteto-mode/scripts
+        working-directory: plugins/jstack/skills/poteto-mode/scripts
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

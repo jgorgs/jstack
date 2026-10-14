@@ -1,4 +1,4 @@
-// setup-pstack's check-sheet.sh, run for real. It shares sheet.awk with the
+// setup-jstack's check-sheet.sh, run for real. It shares sheet.awk with the
 // GitHub Copilot SessionStart hook, so a sheet it passes is one the hook adds
 // to the session context.
 import { afterAll, describe, expect, test } from "bun:test";
@@ -8,19 +8,19 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const pluginRoot = fileURLToPath(new URL("../plugins/pstack/", import.meta.url));
-const script = join(pluginRoot, "skills/setup-pstack/scripts/check-sheet.sh");
+const pluginRoot = fileURLToPath(new URL("../plugins/jstack/", import.meta.url));
+const script = join(pluginRoot, "skills/setup-jstack/scripts/check-sheet.sh");
 const models = JSON.parse(readFileSync(join(pluginRoot, "models.json"), "utf8"));
 const roles = models.roles.map((r) => r.role);
 
-const home = mkdtempSync(join(tmpdir(), "pstack-check-sheet-"));
+const home = mkdtempSync(join(tmpdir(), "jstack-check-sheet-"));
 afterAll(() => rmSync(home, { recursive: true, force: true }));
-const sheetPath = join(home, "pstack-models.md");
+const sheetPath = join(home, "jstack-models.md");
 
 const PANEL = "claude-opus-5, gpt-5.5 @xhigh, gemini-3.8-flash";
 const lines = (set = {}) =>
   models.roles.filter((r) => set[r.role] !== null).map(({ role, models: tier }) => `${role}: ${set[role] ?? (tier === "panel" ? PANEL : "claude-sonnet-5")}`);
-const sheet = (set, extra = []) => ["# pstack model overrides", "", ...lines(set), ...extra, "session hook: on", ""].join("\n");
+const sheet = (set, extra = []) => ["# jstack model overrides", "", ...lines(set), ...extra, "session hook: on", ""].join("\n");
 
 function check(text, env = {}, args = [sheetPath]) {
   if (text !== undefined) writeFileSync(sheetPath, text);
@@ -67,10 +67,10 @@ describe("check-sheet.sh", () => {
   test("reads the Copilot sheet when no path is given", () => {
     const copilotHome = join(home, "copilot-home");
     mkdirSync(copilotHome, { recursive: true });
-    writeFileSync(join(copilotHome, "pstack-models.md"), sheet({ [roles[0]]: null }));
+    writeFileSync(join(copilotHome, "jstack-models.md"), sheet({ [roles[0]]: null }));
     expect(check(undefined, { COPILOT_HOME: copilotHome }, [])).toEqual(invalid(`missing role \`${roles[0]}\``));
     mkdirSync(join(home, ".copilot"), { recursive: true });
-    writeFileSync(join(home, ".copilot", "pstack-models.md"), sheet());
+    writeFileSync(join(home, ".copilot", "jstack-models.md"), sheet());
     expect(check(undefined, {}, [])).toEqual(ok);
   });
 

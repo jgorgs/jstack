@@ -3,7 +3,7 @@
 // moves between groups is a decision, not a drift.
 import { expect, test } from "bun:test";
 
-import { isForegroundWait } from "../../plugins/pstack/pi/sleep-wait.ts";
+import { isForegroundWait } from "../../plugins/jstack/pi/sleep-wait.ts";
 import { useWorld, waitFor } from "./harness.mjs";
 
 const setup = useWorld();

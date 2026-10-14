@@ -7,13 +7,13 @@ import { fileURLToPath } from "node:url";
 
 import { sheetCases, writeSheet } from "./session-hook-sheets.mjs";
 
-const pluginRoot = fileURLToPath(new URL("../plugins/pstack/", import.meta.url));
+const pluginRoot = fileURLToPath(new URL("../plugins/jstack/", import.meta.url));
 const manifest = JSON.parse(readFileSync(join(pluginRoot, ".codex-plugin/plugin.json"), "utf8"));
 const handler = JSON.parse(readFileSync(join(pluginRoot, manifest.hooks), "utf8")).hooks.SessionStart[0].hooks[0];
 const mandate = readFileSync(join(pluginRoot, "hooks/session-start-context.md"), "utf8");
 
 function runHook({ sheet, codexHome, homeSheet, context = mandate, host = "cmd" } = {}) {
-  const fixture = mkdtempSync(join(tmpdir(), "pstack windows hook "));
+  const fixture = mkdtempSync(join(tmpdir(), "jstack windows hook "));
   try {
     const plugin = join(fixture, "plugin with spaces");
     const profile = join(fixture, "user profile");
@@ -22,7 +22,7 @@ function runHook({ sheet, codexHome, homeSheet, context = mandate, host = "cmd" 
     for (const [dir, content] of [[join(profile, ".codex"), homeSheet], [sheetRoot, sheet]]) {
       if (content !== undefined) {
         mkdirSync(dir, { recursive: true });
-        writeSheet(join(dir, "pstack-models.md"), content);
+        writeSheet(join(dir, "jstack-models.md"), content);
       }
     }
     const contextPath = join(plugin, "hooks/session-start-context.md");
@@ -58,7 +58,7 @@ function runHook({ sheet, codexHome, homeSheet, context = mandate, host = "cmd" 
 
 // CI's Windows job sets this, so a platform check that misfires fails there
 // instead of skipping every test.
-const required = process.env.PSTACK_REQUIRE_WINDOWS_HOOK === "1";
+const required = process.env.JSTACK_REQUIRE_WINDOWS_HOOK === "1";
 
 describe.skipIf(process.platform !== "win32" && !required)("Windows Codex SessionStart hook", () => {
   test("injects the shared context without a sheet or Bash", () => {

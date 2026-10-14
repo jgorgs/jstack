@@ -1,17 +1,17 @@
 # Pi equivalence
 
-This table lists every Claude Code mechanism the pstack plugin depends on, found by scanning `plugins/pstack/` for tool names, agent fields, hooks, paths, bundled skills, CLIs, and model names. Each row says how Pi 1.1 provides the same behavior and what proves it. `tests/pi-equivalence.test.mjs` fails when a row lacks a valid status, when an `extension` or `script` row names a test that does not exist, or when a `difference` row gives no reason.
+This table lists every Claude Code mechanism the jstack plugin depends on, found by scanning `plugins/jstack/` for tool names, agent fields, hooks, paths, bundled skills, CLIs, and model names. Each row says how Pi 1.1 provides the same behavior and what proves it. `tests/pi-equivalence.test.mjs` fails when a row lacks a valid status, when an `extension` or `script` row names a test that does not exist, or when a `difference` row gives no reason.
 
 Statuses:
 
-- `native`: Pi does it without pstack code.
-- `extension`: the [pstack Pi extension](../plugins/pstack/pi/index.ts) does it, proven by the named offline test.
+- `native`: Pi does it without jstack code.
+- `extension`: the [jstack Pi extension](../plugins/jstack/pi/index.ts) does it, proven by the named offline test.
 - `script`: a vendored script reads Pi's layout, proven by the named test.
-- `mapping`: the skills already describe the behavior in prose, and [pi-tools.md](../plugins/pstack/skills/poteto-mode/references/pi-tools.md) names the Pi equivalent.
+- `mapping`: the skills already describe the behavior in prose, and [pi-tools.md](../plugins/jstack/skills/poteto-mode/references/pi-tools.md) names the Pi equivalent.
 - `difference`: Pi behaves differently, and the reason column says why no skill depends on it for a correct result.
 - `n/a`: the plugin mentions it but no behavior depends on it.
 
-The Live column records the end-to-end run on real Pi with `PSTACK_PI_LIVE=1` (`tests/pi/live.test.mjs`). A Live value of `n/a` means the live run did not exercise that row. The machine that ran it had only a ChatGPT sign-in on the `openai` provider, so the family names resolved through the shipped `openai` table (X01b). The `anthropic/*` IDs (X01a) and the `openai-codex/*` IDs (X01c) were never called live; `tests/pi/catalog.test.mjs` checks both tables against the model catalog of the installed Pi.
+The Live column records the end-to-end run on real Pi with `JSTACK_PI_LIVE=1` (`tests/pi/live.test.mjs`). A Live value of `n/a` means the live run did not exercise that row. The machine that ran it had only a ChatGPT sign-in on the `openai` provider, so the family names resolved through the shipped `openai` table (X01b). The `anthropic/*` IDs (X01a) and the `openai-codex/*` IDs (X01c) were never called live; `tests/pi/catalog.test.mjs` checks both tables against the model catalog of the installed Pi.
 
 | ID | Claude Code mechanism | On Pi | Status | Evidence | Live |
 | --- | --- | --- | --- | --- | --- |
@@ -24,9 +24,9 @@ The Live column records the end-to-end run on real Pi with `PSTACK_PI_LIVE=1` (`
 | T07 | Message an agent (`SendMessage`) | `send_message` to a running agent is an RPC `steer` on the child's stdin, which the agent reads after its current tool calls, in the same run, so it reports once; a message to a finished agent, or to one that has settled and is exiting, resumes the same Pi session, model, and thinking once the process has exited | extension | `a message to a running agent reaches that run before it exits, and the agent reports once` | VERIFIED |
 | T08 | Stop an agent and confirm it stopped | `stop_agent` ends the child pi, which kills the bash command it has running, and reports `stopped` only after exit. A process a finished bash command left in the background runs in its own process group and outlives the agent. | extension | `ends the child and the bash command it has running, not a process a finished command left behind, and reports stopped once the child has exited` | VERIFIED |
 | T09 | Agent listing and completion notices | `list_agents`; status follows the process, so `completed` always means exited | extension | `list_agents survives a reload through the persisted entries` | VERIFIED |
-| T10 | Deferred tool loading (`ToolSearch`) | Every pstack tool registers at startup with `model-only` exposure, so Pi declares it to the model from the first turn, in every `codemode.mode`, and `tool_search` never has to load it | extension | `every pstack tool is model-only, so Pi declares it to the model in every codemode mode and never defers it` | VERIFIED |
+| T10 | Deferred tool loading (`ToolSearch`) | Every jstack tool registers at startup with `model-only` exposure, so Pi declares it to the model from the first turn, in every `codemode.mode`, and `tool_search` never has to load it | extension | `every jstack tool is model-only, so Pi declares it to the model in every codemode mode and never defers it` | VERIFIED |
 | T11 | `Skill` tool and `/command` | Pi lists skills in the system prompt; `/skill:<name>` forces one | native | Pi docs/skills.md | n/a |
-| T12 | `pstack:` skill namespace | Skills load under their bare names and run as `/skill:<name>`; agent types keep `pstack:` | difference | Command spelling only. Skills name each other by bare name in prose, and agent types resolve with the prefix. | n/a |
+| T12 | `jstack:` skill namespace | Skills load under their bare names and run as `/skill:<name>`; agent types keep `jstack:` | difference | Command spelling only. Skills name each other by bare name in prose, and agent types resolve with the prefix. | n/a |
 | T13 | `AskUserQuestion` | `ask_user_question` with the same shape; without a UI, and in a child agent, it fails and tells the model to ask in plain text | extension | `a single-select question returns the chosen label` | n/a |
 | T14 | `TaskCreate`/`TaskUpdate`/`TodoWrite` | poteto-mode's own `todo.md` fallback | mapping | poteto-mode Platform Adaptation; pi-tools.md Tool actions | n/a |
 | T15 | `Read`/`Edit`/`Write`/`Bash`/`Grep`/`Glob` | `read`, `edit`, `write`, `bash`; `grep`, `find`, `ls` when enabled | native | pi-tools.md Tool actions | n/a |
@@ -36,15 +36,15 @@ The Live column records the end-to-end run on real Pi with `PSTACK_PI_LIVE=1` (`
 | T19 | Facts named in the system prompt | Pi's system prompt lists tools and skills; the transcript directory is given in pi-tools.md | mapping | pi-tools.md `reflect` note | n/a |
 | T20 | Image-generation tool | None, as on Claude Code; draw with Mermaid or text | difference | Claude Code has no such tool either, so `teach` already falls back. | n/a |
 | T21 | Nested agents, up to three layers below the main conversation | A child at the third layer runs without the `agent` tool | extension | `agents nest at most three layers below the main session, as on Claude Code` | n/a |
-| A01 | `pstack:poteto-agent` | Resolved from `agents/poteto-agent.md` | extension | `every pstack agent type reaches its child with its own agent file as the system prompt` | VERIFIED |
+| A01 | `jstack:poteto-agent` | Resolved from `agents/poteto-agent.md` | extension | `every jstack agent type reaches its child with its own agent file as the system prompt` | VERIFIED |
 | A02 | Effort agents | `effort:` frontmatter becomes the child's `--thinking`; no effort inherits the parent's level | extension | `an effort agent passes its body as a 0600 system prompt file and its effort as --thinking; others run at the parent's level` | VERIFIED |
-| A03 | `pstack:comment-sicko` | Resolved from `agents/comment-sicko.md` | extension | `every pstack agent type reaches its child with its own agent file as the system prompt` | n/a |
-| A04 | Manifest `agents[]` registration | The extension reads `agents/` and `effort-agents/` at runtime | extension | `every pstack agent type reaches its child with its own agent file as the system prompt` | n/a |
+| A03 | `jstack:comment-sicko` | Resolved from `agents/comment-sicko.md` | extension | `every jstack agent type reaches its child with its own agent file as the system prompt` | n/a |
+| A04 | Manifest `agents[]` registration | The extension reads `agents/` and `effort-agents/` at runtime | extension | `every jstack agent type reaches its child with its own agent file as the system prompt` | n/a |
 | A05 | `general-purpose` agent type | A child with no agent file | extension | `foreground waits, returns the final text and agentId, and runs the exact child command` | n/a |
 | A06 | Agent file body as the child's system prompt | Appended with `--append-system-prompt`, keeping Pi's skill list visible to the child | extension | `an effort agent passes its body as a 0600 system prompt file and its effort as --thinking; others run at the parent's level` | VERIFIED |
 | H01 | `SessionStart` hook | The routing instruction is added at every agent start, so it survives resume, clear, and compaction | extension | `injects the mandate and the full sheet on every agent start` | VERIFIED |
 | H02 | `CLAUDE_PLUGIN_ROOT` | The extension locates the plugin from its own file path | extension | `injects the mandate when there is no sheet` | n/a |
-| H03 | `~/.claude` config directory | `$PI_CODING_AGENT_DIR` or `~/.pi/agent` | mapping | setup-pstack Other runtimes | n/a |
+| H03 | `~/.claude` config directory | `$PI_CODING_AGENT_DIR` or `~/.pi/agent` | mapping | setup-jstack Other runtimes | n/a |
 | H04 | Override sheet plus `@` include | The extension adds the whole sheet to the system prompt, children included | extension | `a child pi gets the sheet but not the mandate` | VERIFIED |
 | H05 | `CLAUDE.md` instructions file | Pi loads `AGENTS.md` or `CLAUDE.md` per directory, plus `~/.pi/agent/AGENTS.md` | native | pi-tools.md Instructions file | n/a |
 | H06 | `.claude/settings.local.json` env for todo tools | Pi has no todo tools; the `todo.md` fallback applies | n/a | poteto-mode Platform Adaptation | n/a |
@@ -59,11 +59,11 @@ The Live column records the end-to-end run on real Pi with `PSTACK_PI_LIVE=1` (`
 | S02 | `verify` skill | Read the project skill by path or add it to Pi's `skills` setting | mapping | pi-tools.md Driver and bundled skills | n/a |
 | S03 | `loop` skill | `/loop [interval] <prompt>` and self-paced `schedule_wakeup` | extension | `a fixed interval runs now and then on every interval until /loop stop` | VERIFIED |
 | S04 | `plugin-dev:skill-development` | Pi's skills docs and the Agent Skills specification | mapping | pi-tools.md Driver and bundled skills | n/a |
-| S05 | Bundled `babysit` disambiguation | Pi has no bundled `babysit`, so only pstack's exists | n/a | poteto-mode Non-negotiables | n/a |
+| S05 | Bundled `babysit` disambiguation | Pi has no bundled `babysit`, so only jstack's exists | n/a | poteto-mode Non-negotiables | n/a |
 | S06 | `superpowers`, `code-review`, `simplify`, `security-review` | Not present on Pi | difference | Mentions only. The hook text defers to other mandates, and no workflow requires these skills. | n/a |
 | S07a | Frontmatter `user-invocable: false` | Pi ignores it, so the 23 `principle-*` skills appear in `/skill:` completion | difference | Menu visibility only. The model still loads each principle skill by name, as on Claude Code. | n/a |
 | S07b | Frontmatter `paths:` auto-load | The extension notes the skill on the first matching file read or edit | extension | `the first matching file gets a one-line note naming the skill, once per session` | n/a |
-| S07c | Frontmatter `disable-model-invocation` | Honored by Pi; no pstack skill sets it | native | Pi docs/skills.md | n/a |
+| S07c | Frontmatter `disable-model-invocation` | Honored by Pi; no jstack skill sets it | native | Pi docs/skills.md | n/a |
 | C01 | `gh` | Same CLI through `bash` | native | pi-tools.md Vendored scripts | n/a |
 | C02 | `origin` | Same CLI through `bash` | native | pi-tools.md Vendored scripts | n/a |
 | C03 | `gt` | Same CLI through `bash` | native | pi-tools.md Vendored scripts | n/a |

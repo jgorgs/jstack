@@ -346,7 +346,7 @@ describe("non-interactive settle", () => {
 
       expect(turns.map((t) => t.map(({ message }) => message.details.agentId))).toEqual([[fast], [slow]]);
       for (const [{ message, options }] of turns) {
-        expect(message.customType).toBe("pstack-agent");
+        expect(message.customType).toBe("jstack-agent");
         expect(options).toEqual({ triggerTurn: true, deliverAs: "steer" });
       }
       expect(turns[1][0].message.content).toContain("slow done");
