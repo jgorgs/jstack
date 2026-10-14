@@ -3,15 +3,15 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { checkPlaybooks } from "../plugins/pstack/skills/poteto-mode/scripts/check-playbooks.mjs";
+import { checkPlaybooks } from "../plugins/jstack/skills/poteto-mode/scripts/check-playbooks.mjs";
 
 setDefaultTimeout(30_000);
 
-const script = join(import.meta.dir, "../plugins/pstack/skills/poteto-mode/scripts/check-playbooks.mjs");
+const script = join(import.meta.dir, "../plugins/jstack/skills/poteto-mode/scripts/check-playbooks.mjs");
 
 function run(playbooks, { throughSymlink = false, cwd = ".", args = ["."] } = {}) {
   // The script reports the resolved working directory; macOS tmpdir() sits behind the /var symlink.
-  const root = realpathSync(mkdtempSync(join(tmpdir(), "pstack-check-playbooks-")));
+  const root = realpathSync(mkdtempSync(join(tmpdir(), "jstack-check-playbooks-")));
   try {
     if (playbooks) {
       mkdirSync(join(root, ".agents/playbooks"), { recursive: true });
@@ -36,7 +36,7 @@ describe("project playbooks", () => {
     const result = run({
       "bug-fix.md": '---\nextends: bug-fix\nwhen: Use it for any bug report.\n---\n- **In** "Binary-search the cause": compare with main.\n',
     });
-    expect(result).toEqual({ code: 0, out: "Every project playbook matches this pstack's playbooks.\n" });
+    expect(result).toEqual({ code: 0, out: "Every project playbook matches this jstack's playbooks.\n" });
   });
 
   test("an unknown base, step text the base does not say, and an unquoted change all fail", () => {
@@ -47,7 +47,7 @@ describe("project playbooks", () => {
     });
     expect(result.code).toBe(1);
     expect(result.out).toContain('.agents/playbooks/bug-fix.md: "Ask the user to reproduce it" is not in any playbook it extends');
-    expect(result.out).toContain(".agents/playbooks/ship.md: extends `shipping-v2`, which this pstack has no playbook for");
+    expect(result.out).toContain(".agents/playbooks/ship.md: extends `shipping-v2`, which this jstack has no playbook for");
     expect(result.out).toContain(".agents/playbooks/fix.md: a change has no straight-quoted step text to anchor on");
   });
 
@@ -58,7 +58,7 @@ describe("project playbooks", () => {
     );
     expect(result).toEqual({
       code: 1,
-      out: ".agents/playbooks/ship.md: extends `shipping-v2`, which this pstack has no playbook for\n",
+      out: ".agents/playbooks/ship.md: extends `shipping-v2`, which this jstack has no playbook for\n",
     });
   });
 
@@ -75,21 +75,21 @@ describe("project playbooks", () => {
     const result = run({
       "bug-fix.md": '---\r\nextends: bug-fix\r\nwhen: Use it for any bug report.\r\n---\r\n- **In** "Binary-search the cause": compare with main.\r\n',
     });
-    expect(result).toEqual({ code: 0, out: "Every project playbook matches this pstack's playbooks.\n" });
+    expect(result).toEqual({ code: 0, out: "Every project playbook matches this jstack's playbooks.\n" });
   });
 
   test("a playbook saved with a UTF-8 byte-order mark passes", () => {
     const result = run({
       "bug-fix.md": '\uFEFF---\r\nextends: bug-fix\r\nwhen: Use it for any bug report.\r\n---\r\n- **In** "Binary-search the cause": compare with main.\r\n',
     });
-    expect(result).toEqual({ code: 0, out: "Every project playbook matches this pstack's playbooks.\n" });
+    expect(result).toEqual({ code: 0, out: "Every project playbook matches this jstack's playbooks.\n" });
   });
 
   test("with no argument the root is the working directory", () => {
     const result = run({ "ship.md": "---\nextends: shipping-v2\nwhen: Use it to ship.\n---\n" }, { args: [] });
     expect(result).toEqual({
       code: 1,
-      out: ".agents/playbooks/ship.md: extends `shipping-v2`, which this pstack has no playbook for\n",
+      out: ".agents/playbooks/ship.md: extends `shipping-v2`, which this jstack has no playbook for\n",
     });
   });
 
@@ -123,12 +123,12 @@ describe("project playbooks", () => {
     const result = run({ "ship.md": "---\nextends: ../SKILL\nwhen: Use it to ship.\n---\n" });
     expect(result).toEqual({
       code: 1,
-      out: ".agents/playbooks/ship.md: extends `../SKILL`, which this pstack has no playbook for\n",
+      out: ".agents/playbooks/ship.md: extends `../SKILL`, which this jstack has no playbook for\n",
     });
   });
 
   test("an extends stem with either path separator is not a playbook, even where that file exists", () => {
-    const root = mkdtempSync(join(tmpdir(), "pstack-check-playbooks-"));
+    const root = mkdtempSync(join(tmpdir(), "jstack-check-playbooks-"));
     try {
       const bundled = join(root, "bundled");
       mkdirSync(join(bundled, "sub"), { recursive: true });
@@ -137,8 +137,8 @@ describe("project playbooks", () => {
       mkdirSync(join(root, ".agents/playbooks"), { recursive: true });
       writeFileSync(join(root, ".agents/playbooks/ship.md"), "---\nextends: sub/x, sub\\x\nwhen: Use it to ship.\n---\n");
       expect(checkPlaybooks(root, bundled)).toEqual([
-        ".agents/playbooks/ship.md: extends `sub/x`, which this pstack has no playbook for",
-        ".agents/playbooks/ship.md: extends `sub\\x`, which this pstack has no playbook for",
+        ".agents/playbooks/ship.md: extends `sub/x`, which this jstack has no playbook for",
+        ".agents/playbooks/ship.md: extends `sub\\x`, which this jstack has no playbook for",
       ]);
     } finally {
       rmSync(root, { recursive: true, force: true });

@@ -2,7 +2,7 @@
 // cannot produce.
 import { expect, test } from "bun:test";
 
-import { PiChild } from "../../plugins/pstack/pi/child.ts";
+import { PiChild } from "../../plugins/jstack/pi/child.ts";
 import { sleep } from "./harness.mjs";
 
 const opts = { cwd: process.cwd(), exitGraceMs: 1000 };

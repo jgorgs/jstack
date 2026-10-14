@@ -24,10 +24,10 @@ describe("agent tool", () => {
       "--skill", join(w.settings.pluginRoot, "skills"),
       "--mode", "rpc",
       "--session-id", flag(inv, "--session-id"),
-      "--session-dir", join(w.agentDir, "pstack", "parent-session", "agents"),
+      "--session-dir", join(w.agentDir, "jstack", "parent-session", "agents"),
       "--model", "anthropic/parent-model",
       "--thinking", "medium",
-      "--pstack-depth", "1",
+      "--jstack-depth", "1",
     ]);
     expect(inv.prompt).toBe("-do it");
     expect(flag(inv, "--session-id")).toMatch(/^[0-9a-f-]{36}$/);
@@ -58,7 +58,7 @@ describe("agent tool", () => {
     await waitFor(() => pi.messages.length === 1);
     const [{ message, options }] = pi.messages;
     expect(options).toEqual({ triggerTurn: true, deliverAs: "steer" });
-    expect(message.customType).toBe("pstack-agent");
+    expect(message.customType).toBe("jstack-agent");
     expect(message.display).toBe(true);
     expect(message.content).toContain(`agentId: ${id}`);
     expect(message.content).toContain("status: completed");
@@ -193,7 +193,7 @@ describe("agent tool", () => {
     await pi.call("agent", { description: "big", prompt: "x", run_in_background: true }, ctx);
     await waitFor(() => pi.messages.length === 1);
     const { content, details } = pi.messages[0].message;
-    expect(dirname(details.outputFile)).toBe(join(w.agentDir, "pstack", "parent-session", "agents"));
+    expect(dirname(details.outputFile)).toBe(join(w.agentDir, "jstack", "parent-session", "agents"));
     expect(basename(details.outputFile)).toMatch(new RegExp(`^${details.agentId}\\.\\d+\\.out\\.md$`));
     expect(content).toContain(`full output: ${details.outputFile}`);
     expect(Buffer.byteLength(content)).toBeLessThan(51 * 1024);
@@ -229,7 +229,7 @@ describe("agent tool", () => {
     const id = (await pi.call("agent", { description: "big", prompt: "x", run_in_background: true }, ctx)).details.agentId;
     await w.until("invocation");
     const { pid } = w.invocations()[0];
-    rmSync(join(w.agentDir, "pstack"), { recursive: true, force: true });
+    rmSync(join(w.agentDir, "jstack"), { recursive: true, force: true });
     await waitFor(() => !alive(pid));
     await waitFor(() => pi.messages.length > 0, 2000);
     await sleep(100);

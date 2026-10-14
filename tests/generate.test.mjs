@@ -24,7 +24,6 @@ import {
   applyRegions,
   assertChangesHeading,
   changes,
-  deriveSkill,
   loadLeadLines,
   noteSkills,
   effortAgents,
@@ -99,7 +98,7 @@ describe("regions", () => {
       roles: models.roles.map((r) => ({ ...r, models: [`marker-${r.skill}`] })),
     };
     for (const skill of new Set(models.roles.map((r) => r.skill))) {
-      const file = `plugins/pstack/skills/${skill}/SKILL.md`;
+      const file = `plugins/jstack/skills/${skill}/SKILL.md`;
       const stamped = applyRegions(file, readFileSync(join(repoRoot, file), "utf8"), marked);
       expect(stamped).toContain(`\`marker-${skill}\``);
       expect(stamped).toContain("`marker-effort`");
@@ -107,7 +106,7 @@ describe("regions", () => {
   });
 
   test("applyRegions stamps in place and is idempotent", () => {
-    const file = "plugins/pstack/skills/how/SKILL.md";
+    const file = "plugins/jstack/skills/how/SKILL.md";
     const text = "# how\n\n## Models\n\nstale\n\n## After\nkeep\n\n## Reasoning effort\n";
     const once = applyRegions(file, text, models);
     expect(once).not.toContain("stale");
@@ -117,8 +116,8 @@ describe("regions", () => {
   });
 
   test("applyRegions throws when an owned file lost its anchor", () => {
-    expect(() => applyRegions("plugins/pstack/skills/how/SKILL.md", "# how\n\n## Reasoning effort\n", models)).toThrow(
-      "plugins/pstack/skills/how/SKILL.md: no anchor for the Models section to stamp",
+    expect(() => applyRegions("plugins/jstack/skills/how/SKILL.md", "# how\n\n## Reasoning effort\n", models)).toThrow(
+      "plugins/jstack/skills/how/SKILL.md: no anchor for the Models section to stamp",
     );
   });
 
@@ -129,7 +128,7 @@ describe("regions", () => {
 
   test("applyRegions leaves a file the generator does not own untouched", () => {
     const text = "# other\n\n## Models\n\nprose\n";
-    expect(applyRegions("plugins/pstack/skills/other/SKILL.md", text, models)).toBe(text);
+    expect(applyRegions("plugins/jstack/skills/other/SKILL.md", text, models)).toBe(text);
   });
 });
 
@@ -154,20 +153,20 @@ describe("runtime model names", () => {
 
 describe("strayModelSlugs", () => {
   test("a slug inside an owned region is exempt", () => {
-    const file = "plugins/pstack/skills/how/SKILL.md";
+    const file = "plugins/jstack/skills/how/SKILL.md";
     const text = applyRegions(file, "# how\n\n## Models\n\nx\n\n## Reasoning effort\n", models);
     expect(strayModelSlugs(file, text, models)).toEqual([]);
   });
 
   test("a slug under a Models heading in a file the generator does not own is a stray", () => {
     const text = "# other\n\n## Models\n\nUse claude-opus-99 always.\n";
-    expect(strayModelSlugs("plugins/pstack/skills/other/SKILL.md", text, models)).toEqual([
-      "plugins/pstack/skills/other/SKILL.md:5: Use claude-opus-99 always.",
+    expect(strayModelSlugs("plugins/jstack/skills/other/SKILL.md", text, models)).toEqual([
+      "plugins/jstack/skills/other/SKILL.md:5: Use claude-opus-99 always.",
     ]);
   });
 
   test("a slug outside the owned region of an owned file is a stray", () => {
-    const file = "plugins/pstack/skills/how/SKILL.md";
+    const file = "plugins/jstack/skills/how/SKILL.md";
     const text = applyRegions(file, "# how\n\n## Models\n\nx\n\n## Setup\n\nPrefer claude-sonnet-4-6.\n\n## Reasoning effort\n", models);
     const strays = strayModelSlugs(file, text, models);
     expect(strays).toHaveLength(1);
@@ -176,8 +175,8 @@ describe("strayModelSlugs", () => {
 
   test("a backticked family name outside an owned region is a stray", () => {
     const text = "# other\n\nDelegate to `fable` for this.\n";
-    expect(strayModelSlugs("plugins/pstack/skills/other/SKILL.md", text, models)).toEqual([
-      "plugins/pstack/skills/other/SKILL.md:3: Delegate to `fable` for this.",
+    expect(strayModelSlugs("plugins/jstack/skills/other/SKILL.md", text, models)).toEqual([
+      "plugins/jstack/skills/other/SKILL.md:3: Delegate to `fable` for this.",
     ]);
   });
 
@@ -188,7 +187,7 @@ describe("strayModelSlugs", () => {
     "anthropic/claude-3.5-sonnet",
     "anthropic.claude-3-5-sonnet-20240620-v1:0",
   ])("a claude-* ID that puts version numbers before a listed family is a stray: %s", (id) => {
-    const file = "plugins/pstack/skills/other/SKILL.md";
+    const file = "plugins/jstack/skills/other/SKILL.md";
     expect(strayModelSlugs(file, `# other\n\nDispatch with \`${id}\`.\n`, models)).toEqual([`${file}:3: Dispatch with \`${id}\`.`]);
   });
 
@@ -210,7 +209,7 @@ describe("strayModelSlugs", () => {
     "Name the worktree claude-wt-opus.",
     "Run the claude-octopus demo.",
   ])("a claude-* slug with no listed family after claude- or its version numbers is not a stray: %s", (line) => {
-    expect(strayModelSlugs("plugins/pstack/skills/other/SKILL.md", `# other\n\n${line}\n`, models)).toEqual([]);
+    expect(strayModelSlugs("plugins/jstack/skills/other/SKILL.md", `# other\n\n${line}\n`, models)).toEqual([]);
   });
 });
 
@@ -357,7 +356,7 @@ describe("slashCommands", () => {
 
   test("the live reference names exactly the public skills, poteto-mode first", () => {
     const text = readFileSync(join(repoRoot, "docs/reference.md"), "utf8");
-    const rows = slashCommands(text, publicSkills(join(repoRoot, "plugins/pstack/skills")));
+    const rows = slashCommands(text, publicSkills(join(repoRoot, "plugins/jstack/skills")));
     expect(rows[0].name).toBe("poteto-mode");
   });
 });
@@ -379,97 +378,6 @@ describe("parseFrontmatter", () => {
       data: null,
       body: "# title\n---\nname: x\n---\n",
     });
-  });
-});
-
-describe("deriveSkill", () => {
-  const front = (flags, name = "x") => `---\nname: ${name}\ndescription: d\n${flags}---\n\nbody\n`;
-
-  test("drops disable-model-invocation on a public skill and swaps it on a principle leaf", () => {
-    expect(deriveSkill("plugins/pstack/skills/x/SKILL.md", front("disable-model-invocation: true\n"), models, leads)).toBe(
-      front(""),
-    );
-    expect(
-      deriveSkill(
-        "plugins/pstack/skills/principle-x/SKILL.md",
-        front("disable-model-invocation: true\n", "principle-x"),
-        models,
-        leads,
-      ),
-    ).toBe(front("user-invocable: false\n", "principle-x"));
-  });
-
-  test("names a skill after its directory and an agent after its file, and drops Cursor-only keys", () => {
-    const cursorKeys = "mode: true\nicon: crown\ncolor: yellow\nreminder: >-\n  New task?\n  Apply it.\n";
-    expect(
-      deriveSkill("plugins/pstack/skills/x/SKILL.md", front(`${cursorKeys}disable-model-invocation: true\n`, "X Mode"), models, leads),
-    ).toBe(front(""));
-    expect(deriveSkill("plugins/pstack/agents/comment-sicko.md", front("is_background: true\n", "Comment Sicko"), models, leads)).toBe(
-      front("", "comment-sicko"),
-    );
-  });
-
-  test("leaves a reference file's frontmatter alone", () => {
-    const text = front("mode: true\n", "Some Reference");
-    expect(deriveSkill("plugins/pstack/skills/x/references/y.md", text, models, leads)).toBe(text);
-  });
-
-  test.each(["|-", ">-"])("drops every paragraph of a %s reminder without changing adjacent fields", (style) => {
-    const text = front(`reminder: ${style}\n  First paragraph.\n\n  Second paragraph.\n  \n  Last paragraph.\nallowed-tools:\n  - Read\n`);
-    const out = deriveSkill("plugins/pstack/skills/x/SKILL.md", text, models, leads);
-
-    expect(parseFrontmatter(out)).toEqual({
-      data: { name: "x", description: "d", "allowed-tools": ["Read"] },
-      body: parseFrontmatter(text).body,
-    });
-    expect(deriveSkill("plugins/pstack/skills/x/SKILL.md", out, models, leads)).toBe(out);
-  });
-
-  test("leaves a prose mention of the flag alone", () => {
-    const text = front("", "automate-me") + "Never write `disable-model-invocation: true` on a skill.\n";
-    expect(deriveSkill("plugins/pstack/skills/automate-me/SKILL.md", text, models, leads)).toBe(text);
-  });
-
-  test("leaves a flag line in the body alone when the frontmatter has none", () => {
-    const text = front("", "automate-me") + "disable-model-invocation: true\n";
-    expect(deriveSkill("plugins/pstack/skills/automate-me/SKILL.md", text, models, leads)).toBe(text);
-  });
-
-  test("appends and stamps a Models section when upstream has none", () => {
-    const out = deriveSkill("plugins/pstack/skills/how/SKILL.md", front("disable-model-invocation: true\n"), models, leads);
-    expect(out.endsWith("body\n\n## Models\n\nRole defaults, stamped from")).toBe(false);
-    expect(out).toContain("body\n\n## Models\n\nRole defaults, stamped from");
-    expect(out).toContain("- how explorer:");
-    expect(out.endsWith("\n")).toBe(true);
-    expect(deriveSkill("plugins/pstack/skills/how/SKILL.md", out, models, leads)).toBe(out);
-  });
-
-  test("leaves a region whose anchor upstream lacks unstamped instead of throwing", () => {
-    const text = front("disable-model-invocation: true\n") + "no reviewer table here\n";
-    const out = deriveSkill("plugins/pstack/skills/interrogate/SKILL.md", text, models, leads);
-    expect(out.startsWith(front("", "interrogate") + "no reviewer table here\n")).toBe(true);
-    expect(out).not.toContain("| Reviewer A");
-    expect(out).toContain("\n## Reasoning effort\n\nA role value in");
-  });
-
-  test("appends the Reasoning effort section after the Models section", () => {
-    const out = deriveSkill("plugins/pstack/skills/how/SKILL.md", front("disable-model-invocation: true\n"), models, leads);
-    expect(out.indexOf("## Models")).toBeLessThan(out.indexOf("## Reasoning effort"));
-    expect(out).toContain("subagent_type: \"pstack:effort-<level>\"");
-  });
-
-  test("stamps a file's lead line in its own paragraph under the first heading", () => {
-    for (const file of ["plugins/pstack/skills/teach/SKILL.md", "plugins/pstack/skills/poteto-mode/playbooks/refactoring.md"]) {
-      const text = "---\nname: teach\ndescription: d\n---\n\n# Title\n\nbody\n";
-      const out = deriveSkill(file, text, models, leads);
-      expect(out).toBe(text.replace("# Title\n\n", `# Title\n\n${leads.get(file).join("\n\n")}\n\n`));
-      expect(deriveSkill(file, out, models, leads)).toBe(out);
-    }
-  });
-
-  test("a file the generator does not own passes through", () => {
-    const text = "# plain\n\nreference text\n";
-    expect(deriveSkill("plugins/pstack/skills/how/references/x.md", text, models, leads)).toBe(text);
   });
 });
 
@@ -530,10 +438,10 @@ describe("lead lines", () => {
 
   test("a prompt stub repeats the codex-tools.md pointer only when its skill lacks the stamped preamble", () => {
     const { files } = plan(repoRoot);
-    const stubs = Object.keys(files).filter((rel) => rel.startsWith("plugins/pstack/.codex-plugin/prompts/"));
+    const stubs = Object.keys(files).filter((rel) => rel.startsWith("plugins/jstack/.codex-plugin/prompts/"));
     const pointsAtMapping = (rel) => files[rel].includes("codex-tools.md");
     const carriesPreamble = (rel) => {
-      const skill = `plugins/pstack/skills/${basename(rel, ".md")}/SKILL.md`;
+      const skill = `plugins/jstack/skills/${basename(rel, ".md")}/SKILL.md`;
       return readFileSync(join(repoRoot, skill), "utf8").includes("On Codex, read the [platform mapping]");
     };
     expect(stubs.filter(carriesPreamble).length).toBeGreaterThan(0);
@@ -561,9 +469,9 @@ describe("effort agents", () => {
     expect(agents[1].text.match(/^---$/gm)).toHaveLength(2);
   });
 
-  test("the poteto variant's description defers to pstack:poteto-agent rather than copying its routing contract", () => {
+  test("the poteto variant's description defers to jstack:poteto-agent rather than copying its routing contract", () => {
     const description = agents[1].text.match(/^description: (.*)$/m)[1];
-    expect(description).toContain("in place of `pstack:poteto-agent`");
+    expect(description).toContain("in place of `jstack:poteto-agent`");
     expect(description).not.toContain("Routing contract.");
   });
 
@@ -573,7 +481,7 @@ describe("effort agents", () => {
     }
   });
 
-  const pluginRoot = join(fileURLToPath(new URL("..", import.meta.url)), "plugins/pstack");
+  const pluginRoot = join(fileURLToPath(new URL("..", import.meta.url)), "plugins/jstack");
 
   test("plugin.json lists both hand-written and generated agents", () => {
     const listed = JSON.parse(readFileSync(join(pluginRoot, ".claude-plugin/plugin.json"), "utf8")).agents;
@@ -582,17 +490,17 @@ describe("effort agents", () => {
   });
 
   test("stamping the agents list keeps every other manifest field", () => {
-    const text = '{\n  "name": "pstack",\n  "version": "1.0.0"\n}\n';
+    const text = '{\n  "name": "jstack",\n  "version": "1.0.0"\n}\n';
     const out = stampAgentPaths(text, ["./agents/a.md"]);
-    expect(JSON.parse(out)).toEqual({ name: "pstack", version: "1.0.0", agents: ["./agents/a.md"] });
+    expect(JSON.parse(out)).toEqual({ name: "jstack", version: "1.0.0", agents: ["./agents/a.md"] });
     expect(stampAgentPaths(out, ["./agents/a.md"])).toBe(out);
   });
 
   test("the stamped section names every level, the default, both dispatch targets, and the Codex parameter", () => {
     const text = effortSection(["low", "max"], "high");
     for (const level of ["low", "max", "high"]) expect(text).toContain(`\`${level}\``);
-    expect(text).toContain('subagent_type: "pstack:effort-<level>"');
-    expect(text).toContain('subagent_type: "pstack:poteto-agent-<level>"');
+    expect(text).toContain('subagent_type: "jstack:effort-<level>"');
+    expect(text).toContain('subagent_type: "jstack:poteto-agent-<level>"');
     expect(text).toContain("`reasoning_effort`");
   });
 });
@@ -608,15 +516,15 @@ describe("plan, changes, apply", () => {
     return dir;
   };
   const repoCopy = () => {
-    const dir = scratch("pstack-generate-");
+    const dir = scratch("jstack-generate-");
     cpSync(repoRoot, dir, { recursive: true, filter: (src) => ![".git", "node_modules"].includes(basename(src)) });
     symlinkSync(join(repoRoot, "node_modules"), join(dir, "node_modules"));
     return dir;
   };
   const snapshot = (dir) => Object.fromEntries(walk(dir).map((path) => [path, readFileSync(path, "utf8")]));
   const quiet = { log: () => {} };
-  const STUB = "plugins/pstack/.codex-plugin/prompts/tdd.md";
-  const STRAY = "plugins/pstack/effort-agents/stray.md";
+  const STUB = "plugins/jstack/.codex-plugin/prompts/tdd.md";
+  const STRAY = "plugins/jstack/effort-agents/stray.md";
 
   test("the working tree is what the plan says", () => {
     expect(changes(repoRoot, plan(repoRoot))).toEqual([]);
@@ -666,7 +574,7 @@ describe("plan, changes, apply", () => {
   });
 
   test("apply writes each planned file and removes every other entry in an owned directory", () => {
-    const root = scratch("pstack-apply-");
+    const root = scratch("jstack-apply-");
     mkdirSync(join(root, "out/leftover"), { recursive: true });
     writeFileSync(join(root, "out/a.md"), "old");
     writeFileSync(join(root, "out/extra.md"), "orphan");
@@ -685,8 +593,8 @@ describe("plan, changes, apply", () => {
   });
 
   test("apply refuses a symlink at a planned path before writing anything", () => {
-    const root = scratch("pstack-apply-");
-    const outside = join(scratch("pstack-outside-"), "target.md");
+    const root = scratch("jstack-apply-");
+    const outside = join(scratch("jstack-outside-"), "target.md");
     writeFileSync(outside, "original");
     mkdirSync(join(root, "out"));
     symlinkSync(outside, join(root, "out/b.md"));
@@ -697,8 +605,8 @@ describe("plan, changes, apply", () => {
   });
 
   test("apply removes a stray symlink in an owned directory without touching its target", () => {
-    const root = scratch("pstack-apply-");
-    const outside = scratch("pstack-outside-");
+    const root = scratch("jstack-apply-");
+    const outside = scratch("jstack-outside-");
     writeFileSync(join(outside, "target.md"), "original");
     mkdirSync(join(root, "out"));
     symlinkSync(join(outside, "target.md"), join(root, "out/stray.md"));
@@ -709,8 +617,8 @@ describe("plan, changes, apply", () => {
   });
 
   test("apply refuses a planned path under a symlinked directory", () => {
-    const root = scratch("pstack-apply-");
-    const outside = scratch("pstack-outside-");
+    const root = scratch("jstack-apply-");
+    const outside = scratch("jstack-outside-");
     mkdirSync(join(root, "skills"));
     symlinkSync(outside, join(root, "skills/out"), "dir");
     for (const intended of [
@@ -723,8 +631,8 @@ describe("plan, changes, apply", () => {
   });
 
   test("apply refuses a symlinked owned directory with no planned files and deletes nothing through it", () => {
-    const root = scratch("pstack-apply-");
-    const outside = scratch("pstack-outside-");
+    const root = scratch("jstack-apply-");
+    const outside = scratch("jstack-outside-");
     writeFileSync(join(outside, "keep.md"), "original");
     symlinkSync(outside, join(root, "out"), "dir");
     expect(() => apply(root, { files: {}, ownedDirs: ["out"] }, quiet)).toThrow(
@@ -734,7 +642,7 @@ describe("plan, changes, apply", () => {
   });
 
   test("changes refuses a directory at a planned path", () => {
-    const root = scratch("pstack-apply-");
+    const root = scratch("jstack-apply-");
     mkdirSync(join(root, "out/a.md"), { recursive: true });
     expect(() => changes(root, { files: { "out/a.md": "A" }, ownedDirs: ["out"] })).toThrow(
       "out/a.md is not a regular file; the generator never overwrites one",
@@ -742,7 +650,7 @@ describe("plan, changes, apply", () => {
   });
 
   test("a planned file nested under an owned directory converges instead of being removed", () => {
-    const root = scratch("pstack-apply-");
+    const root = scratch("jstack-apply-");
     const intended = { files: { "out/sub/a.md": "A" }, ownedDirs: ["out"] };
     apply(root, intended, quiet);
     expect(changes(root, intended)).toEqual([]);
@@ -754,17 +662,17 @@ describe("plan, changes, apply", () => {
       [
         PORTABLE_ASSETS,
         { source: "NOTICE-skills.md", target: "poteto-mode/references/NOTICE.md" },
-        "plugins/pstack/skills/poteto-mode/references/NOTICE.md is not directly inside a generator-owned directory",
+        "plugins/jstack/skills/poteto-mode/references/NOTICE.md is not directly inside a generator-owned directory",
       ],
       [
         PORTABLE_ASSETS,
         { source: "LICENSE", target: "poteto-mode/references/licenses/old/LICENSE" },
-        "plugins/pstack/skills/poteto-mode/references/licenses/old/LICENSE is not directly inside a generator-owned directory",
+        "plugins/jstack/skills/poteto-mode/references/licenses/old/LICENSE is not directly inside a generator-owned directory",
       ],
       [
         OWNED_DIRS,
-        "plugins/pstack/effort-agents/nested",
-        "generator-owned directory plugins/pstack/effort-agents/nested is nested inside plugins/pstack/effort-agents",
+        "plugins/jstack/effort-agents/nested",
+        "generator-owned directory plugins/jstack/effort-agents/nested is nested inside plugins/jstack/effort-agents",
       ],
     ];
     for (const [list, entry, message] of cases) {
@@ -780,7 +688,7 @@ describe("plan, changes, apply", () => {
   const generate = (root, ...args) =>
     spawnSync(process.execPath, [join(root, "tools/generate.mjs"), ...args], { encoding: "utf8" });
   const append = (root, rel, text) => writeFileSync(join(root, rel), readFileSync(join(root, rel), "utf8") + text);
-  const STRAY_SLUG = ["plugins/pstack/skills/tdd/SKILL.md", "\nUse claude-opus-99 here.\n"];
+  const STRAY_SLUG = ["plugins/jstack/skills/tdd/SKILL.md", "\nUse claude-opus-99 here.\n"];
 
   test("plan restores every lead line removed by hand", () => {
     const root = repoCopy();
@@ -799,7 +707,7 @@ describe("plan, changes, apply", () => {
 
   test("plan converges a duplicated lead line, so --check flags the file as stale", () => {
     const root = repoCopy();
-    const file = "plugins/pstack/skills/how/SKILL.md";
+    const file = "plugins/jstack/skills/how/SKILL.md";
     const original = readFileSync(join(root, file), "utf8");
     expect(original).toContain(`\n\n${codex.preamble}\n`);
     writeFileSync(join(root, file), original.replace(`\n\n${codex.preamble}\n`, `\n\n${codex.preamble}\n${codex.preamble}\n`));
@@ -810,8 +718,8 @@ describe("plan, changes, apply", () => {
 
   test("two producers on one path compose", () => {
     const root = repoCopy();
-    const manifest = "plugins/pstack/.claude-plugin/plugin.json";
-    const skill = "plugins/pstack/skills/how/SKILL.md";
+    const manifest = "plugins/jstack/.claude-plugin/plugin.json";
+    const skill = "plugins/jstack/skills/how/SKILL.md";
     const text = (rel) => readFileSync(join(root, rel), "utf8");
     writeFileSync(
       join(root, manifest),
@@ -831,7 +739,7 @@ describe("plan, changes, apply", () => {
     const target = "poteto-mode/references/licenses/LICENSE";
     PORTABLE_ASSETS.push({ source: "NOTICE-skills.md", target });
     try {
-      expect(() => plan(repoRoot)).toThrow(`plugins/pstack/skills/${target} is planned twice with different text`);
+      expect(() => plan(repoRoot)).toThrow(`plugins/jstack/skills/${target} is planned twice with different text`);
     } finally {
       PORTABLE_ASSETS.pop();
     }
@@ -846,23 +754,23 @@ describe("plan, changes, apply", () => {
 
   test("problems reports a lead line in a file that does not own it", () => {
     const root = repoCopy();
-    append(root, "plugins/pstack/skills/tdd/SKILL.md", `\n${codex.preamble}\n`);
-    const codexTools = "plugins/pstack/skills/poteto-mode/references/codex-tools.md";
+    append(root, "plugins/jstack/skills/tdd/SKILL.md", `\n${codex.preamble}\n`);
+    const codexTools = "plugins/jstack/skills/poteto-mode/references/codex-tools.md";
     writeFileSync(join(root, codexTools), readFileSync(join(root, codexTools), "utf8").replace(/^\| `why` \|.*\n/m, ""));
     const failures = problems(root).filter((f) => f.startsWith("generator-owned lead lines"));
     expect(failures).toHaveLength(1);
-    expect(failures[0]).toContain("\nplugins/pstack/skills/why/SKILL.md:");
-    expect(failures[0]).toContain("\nplugins/pstack/skills/tdd/SKILL.md:");
+    expect(failures[0]).toContain("\nplugins/jstack/skills/why/SKILL.md:");
+    expect(failures[0]).toContain("\nplugins/jstack/skills/tdd/SKILL.md:");
   });
 
   test("problems reports every broken contract, and --check prints each and exits 1", () => {
     const root = repoCopy();
     append(root, ...STRAY_SLUG);
-    append(root, "plugins/pstack/skills/deslop/SKILL.md", "\n[gone](missing.md)\n");
-    append(root, "plugins/pstack/skills/unslop/SKILL.md", '\nsubagent_type: "poteto-agent"\n');
+    append(root, "plugins/jstack/skills/deslop/SKILL.md", "\n[gone](missing.md)\n");
+    append(root, "plugins/jstack/skills/unslop/SKILL.md", '\nsubagent_type: "poteto-agent"\n');
     const failures = problems(root);
     expect(failures).toEqual([
-      expect.stringContaining("plugins/pstack/skills/tdd/SKILL.md:"),
+      expect.stringContaining("plugins/jstack/skills/tdd/SKILL.md:"),
       "invalid local markdown links:\ndeslop/SKILL.md -> missing.md (missing)",
       expect.stringContaining("skills/unslop/SKILL.md:"),
     ]);
@@ -873,17 +781,17 @@ describe("plan, changes, apply", () => {
 
   test("a write run regenerates before it validates, so a slug left only in a stale copy passes", () => {
     const root = repoCopy();
-    const copy = "plugins/pstack/skills/poteto-mode/references/agents/comment-sicko.md";
+    const copy = "plugins/jstack/skills/poteto-mode/references/agents/comment-sicko.md";
     append(root, copy, "\nUse claude-opus-99 here.\n");
     expect(generate(root).status).toBe(0);
     expect(readFileSync(join(root, copy), "utf8")).toBe(
-      readFileSync(join(root, "plugins/pstack/agents/comment-sicko.md"), "utf8"),
+      readFileSync(join(root, "plugins/jstack/agents/comment-sicko.md"), "utf8"),
     );
   });
 
   test("--check reports a symlink at a planned path alongside the other failures and writes nothing", () => {
     const root = repoCopy();
-    const outside = join(scratch("pstack-outside-"), "target.md");
+    const outside = join(scratch("jstack-outside-"), "target.md");
     writeFileSync(outside, "original");
     rmSync(join(root, STUB));
     symlinkSync(outside, join(root, STUB));
@@ -897,7 +805,7 @@ describe("plan, changes, apply", () => {
 
   test("problems reports an agent whose frontmatter strict YAML cannot read", () => {
     const root = repoCopy();
-    const agent = "plugins/pstack/agents/comment-sicko.md";
+    const agent = "plugins/jstack/agents/comment-sicko.md";
     writeFileSync(
       join(root, agent),
       readFileSync(join(root, agent), "utf8").replace(/^description: .*$/m, "description: `backticked` first"),
@@ -909,7 +817,7 @@ describe("plan, changes, apply", () => {
 
   test("problems reports an agent whose frontmatter name is not its file name", () => {
     const root = repoCopy();
-    const agent = "plugins/pstack/agents/comment-sicko.md";
+    const agent = "plugins/jstack/agents/comment-sicko.md";
     writeFileSync(join(root, agent), readFileSync(join(root, agent), "utf8").replace(/^name: .*$/m, "name: sicko"));
     expect(problems(root)).toEqual([
       expect.stringContaining('./agents/comment-sicko.md: frontmatter name "sicko" != file name "comment-sicko"'),
@@ -918,25 +826,25 @@ describe("plan, changes, apply", () => {
 
   test("problems reports a malformed Codex manifest as one failure and still runs the other checks", () => {
     const root = repoCopy();
-    const manifest = "plugins/pstack/.codex-plugin/plugin.json";
+    const manifest = "plugins/jstack/.codex-plugin/plugin.json";
     append(root, ...STRAY_SLUG);
     for (const text of [readFileSync(join(root, manifest), "utf8") + "}\n", "null\n"]) {
       writeFileSync(join(root, manifest), text);
       expect(problems(root)).toEqual([
         expect.stringContaining(`${manifest}: `),
-        expect.stringContaining("plugins/pstack/skills/tdd/SKILL.md:"),
+        expect.stringContaining("plugins/jstack/skills/tdd/SKILL.md:"),
       ]);
     }
   });
 
   test("problems checks the Copilot manifest and the hooks file it names", () => {
     const root = repoCopy();
-    const manifest = "plugins/pstack/.github/plugin/plugin.json";
-    const hooks = "plugins/pstack/hooks/copilot-hooks.json";
+    const manifest = "plugins/jstack/.github/plugin/plugin.json";
+    const hooks = "plugins/jstack/hooks/copilot-hooks.json";
     writeFileSync(join(root, hooks), readFileSync(join(root, hooks), "utf8").replace("hooks/pre-tool-use.sh", "hooks/gone.sh"));
     expect(problems(root)).toEqual([expect.stringContaining("hooks/gone.sh does not exist")]);
     const text = readFileSync(join(root, manifest), "utf8");
-    writeFileSync(join(root, manifest), text.replace('"name": "pstack"', '"name": "other"'));
+    writeFileSync(join(root, manifest), text.replace('"name": "jstack"', '"name": "other"'));
     expect(problems(root)).toEqual([
       expect.stringContaining(`${manifest}: name "other"`),
       expect.stringContaining("hooks/gone.sh does not exist"),
@@ -946,9 +854,9 @@ describe("plan, changes, apply", () => {
   // #265: 0.9.83 shipped this file, and Codex then loaded no plugin hooks.
   test("problems reports a root plugin.json, and --check exits 1", () => {
     const root = repoCopy();
-    const manifest = { $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", name: "pstack" };
-    writeFileSync(join(root, "plugins/pstack/plugin.json"), JSON.stringify(manifest));
-    const failure = "plugins/pstack/plugin.json exists; Codex then skips the hooks .codex-plugin/plugin.json names (#265)";
+    const manifest = { $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", name: "jstack" };
+    writeFileSync(join(root, "plugins/jstack/plugin.json"), JSON.stringify(manifest));
+    const failure = "plugins/jstack/plugin.json exists; Codex then skips the hooks .codex-plugin/plugin.json names (#265)";
     expect(problems(root)).toEqual([failure]);
     const check = generate(root, "--check");
     expect(check.status).toBe(1);
@@ -957,18 +865,18 @@ describe("plan, changes, apply", () => {
 
   test("problems reports a hook path that resolves outside the plugin, through .. or through a symlink", () => {
     const root = repoCopy();
-    const hooks = "plugins/pstack/hooks/hooks.json";
+    const hooks = "plugins/jstack/hooks/hooks.json";
     const text = readFileSync(join(root, hooks), "utf8");
     writeFileSync(join(root, hooks), text.replace("hooks/session-start.sh", "../../tools/generate.mjs"));
     expect(problems(root)).toEqual([expect.stringContaining("../../tools/generate.mjs does not exist in the plugin")]);
-    const outside = join(scratch("pstack-outside-"), "start.sh");
+    const outside = join(scratch("jstack-outside-"), "start.sh");
     writeFileSync(outside, "#!/bin/sh\n", { mode: 0o755 });
-    symlinkSync(outside, join(root, "plugins/pstack/hooks/linked.sh"));
+    symlinkSync(outside, join(root, "plugins/jstack/hooks/linked.sh"));
     writeFileSync(join(root, hooks), text.replace("hooks/session-start.sh", "hooks/linked.sh"));
     expect(problems(root)).toEqual([expect.stringContaining("hooks/linked.sh does not exist in the plugin")]);
   });
 
   test("problems reports a root with no plugin directory, down to the last check, and does not throw", () => {
-    expect(problems(scratch("pstack-empty-"))).toContainEqual(expect.stringContaining("plugins/pstack/hooks/hooks.json"));
+    expect(problems(scratch("jstack-empty-"))).toContainEqual(expect.stringContaining("plugins/jstack/hooks/hooks.json"));
   });
 });

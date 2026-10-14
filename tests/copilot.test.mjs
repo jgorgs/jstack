@@ -11,7 +11,7 @@ import { RUNTIMES } from "../tools/runtimes.mjs";
 import { markdownFiles } from "../tools/validate-skills.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
-const skillsDir = join(repoRoot, "plugins/pstack/skills");
+const skillsDir = join(repoRoot, "plugins/jstack/skills");
 const mappingPath = join(skillsDir, "poteto-mode/references/copilot-tools.md");
 const mapping = readFileSync(mappingPath, "utf8");
 const models = loadModels();
@@ -37,8 +37,8 @@ const TERMS = [
   ["~/.claude/orchestrate", "`~/.claude/orchestrate/`"],
   ["CLAUDE.md", "`CLAUDE.md`"],
   ["mcp__", "`mcp__`"],
-  ["pstack:poteto-agent", "`pstack:poteto-agent`"],
-  ["pstack:comment-sicko", "`pstack:comment-sicko`"],
+  ["jstack:poteto-agent", "`jstack:poteto-agent`"],
+  ["jstack:comment-sicko", "`jstack:comment-sicko`"],
   ["general-purpose", "`general-purpose`"],
 ];
 
@@ -63,7 +63,7 @@ describe("copilot-tools.md coverage", () => {
     const noted = [...table.matchAll(/^\| `([a-z0-9-]+)` \|/gm)].map((m) => m[1]);
     const skills = new Set(skillText.filter(([rel]) => rel.endsWith("/SKILL.md")).map(([rel]) => rel.split("/")[0]));
     for (const name of noted) expect(skills.has(name)).toBe(true);
-    for (const name of ["interrogate", "setup-pstack", "no-comments", "reflect", "recall", "babysit"]) {
+    for (const name of ["interrogate", "setup-jstack", "no-comments", "reflect", "recall", "babysit"]) {
       expect(noted).toContain(name);
     }
   });
@@ -101,10 +101,10 @@ describe("Copilot preambles", () => {
   });
 });
 
-// Copilot's ask_user is single-select with one question per call, and pstack
+// Copilot's ask_user is single-select with one question per call, and jstack
 // ships no Copilot models, so setup asks tier by tier from choice lists.
 describe("Copilot setup questions", () => {
-  const setupDir = join(skillsDir, "setup-pstack");
+  const setupDir = join(skillsDir, "setup-jstack");
   const skill = readFileSync(join(setupDir, "SKILL.md"), "utf8");
   const questions = readFileSync(join(setupDir, "copilot.md"), "utf8");
   const sequence = questions.slice(questions.indexOf("## Question sequence"));

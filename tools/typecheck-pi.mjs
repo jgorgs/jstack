@@ -30,12 +30,12 @@ const config = {
     types: ["node"],
     ...piCompilerPaths(piDir),
   },
-  include: [join(repo, "plugins", "pstack", "pi", "*.ts")],
+  include: [join(repo, "plugins", "jstack", "pi", "*.ts")],
 };
-const dir = mkdtempSync(join(tmpdir(), "pstack-pi-typecheck-"));
+const dir = mkdtempSync(join(tmpdir(), "jstack-pi-typecheck-"));
 try {
   writeFileSync(join(dir, "tsconfig.json"), JSON.stringify(config, null, 2));
-  console.log(`typechecking plugins/pstack/pi against ${piDir}`);
+  console.log(`typechecking plugins/jstack/pi against ${piDir}`);
   const tsc = spawnSync("bunx", ["--package", "typescript@5.9.3", "tsc", "-p", join(dir, "tsconfig.json")], { cwd: dir, stdio: "inherit" });
   if (tsc.error) console.error(`could not run bunx: ${tsc.error.message}`);
   process.exitCode = tsc.status ?? 1;

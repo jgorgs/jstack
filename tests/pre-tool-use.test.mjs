@@ -1,6 +1,6 @@
 // The shipped GitHub Copilot PreToolUse command, run for real. It approves
 // `view` of the plugin's own files and strict vendored-script runs, denies
-// pstack agents on models a valid sheet does not name, and stays silent for
+// jstack agents on models a valid sheet does not name, and stays silent for
 // everything else.
 import { afterAll, describe, expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
@@ -9,7 +9,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const pluginRoot = fileURLToPath(new URL("../plugins/pstack/", import.meta.url));
+const pluginRoot = fileURLToPath(new URL("../plugins/jstack/", import.meta.url));
 const preToolUse = JSON.parse(readFileSync(join(pluginRoot, "hooks/copilot-hooks.json"), "utf8")).hooks.PreToolUse;
 const command = preToolUse[0].hooks[0].command;
 const allow = '{"permissionDecision":"allow"}\n';
@@ -71,9 +71,9 @@ describe("PreToolUse hook", () => {
   });
 
   test("approves through the real path when the root is a symlink", () => {
-    const dir = mkdtempSync(join(tmpdir(), "pstack-ptu-"));
+    const dir = mkdtempSync(join(tmpdir(), "jstack-ptu-"));
     try {
-      const link = join(dir, "pstack");
+      const link = join(dir, "jstack");
       symlinkSync(pluginRoot, link);
       const env = { COPILOT_PLUGIN_ROOT: link };
       expect(run(claudeInput("Read", join(link, "skills/how/SKILL.md")), env).out).toBe(allow);
@@ -104,7 +104,7 @@ describe("PreToolUse hook", () => {
 
   // Copilot denies the call when the hook exits non-zero.
   test("exits 0 with no decision and reports the error when awk fails", () => {
-    const bin = mkdtempSync(join(tmpdir(), "pstack-ptu-bin-"));
+    const bin = mkdtempSync(join(tmpdir(), "jstack-ptu-bin-"));
     try {
       writeFileSync(join(bin, "awk"), "#!/bin/sh\necho 'awk: broken' >&2\nexit 2\n", { mode: 0o755 });
       const r = spawnSync("sh", ["-c", command], {
@@ -119,7 +119,7 @@ describe("PreToolUse hook", () => {
   });
 
   test("drops a decision from an awk run that fails", () => {
-    const bin = mkdtempSync(join(tmpdir(), "pstack-ptu-bin-"));
+    const bin = mkdtempSync(join(tmpdir(), "jstack-ptu-bin-"));
     try {
       writeFileSync(join(bin, "awk"), `#!/bin/sh\nprintf '%s\\n' '${allow.trim()}'\nexit 2\n`, { mode: 0o755 });
       const r = spawnSync("sh", ["-c", command], {
@@ -142,10 +142,10 @@ const deny = (out) => {
   return d.permissionDecisionReason;
 };
 
-const home = mkdtempSync(join(tmpdir(), "pstack-ptu-home-"));
+const home = mkdtempSync(join(tmpdir(), "jstack-ptu-home-"));
 const copilotHome = join(home, ".copilot");
 mkdirSync(copilotHome);
-const sheetPath = join(copilotHome, "pstack-models.md");
+const sheetPath = join(copilotHome, "jstack-models.md");
 const workspace = join(home, "work");
 mkdirSync(workspace);
 afterAll(() => rmSync(home, { recursive: true, force: true }));
@@ -159,7 +159,7 @@ function sheet({ one = "gpt-5.5", strong = "claude-opus-5.5", panel = "claude-so
     const v = set[r] ?? (PANELS.has(r) ? panel : ["bug-fix", "perf-issue", "hillclimb", "strongest judgment"].includes(r) ? strong : one);
     return `${r}: ${v}`;
   });
-  return `# pstack model configuration\n\nPer-role model choices: header text.\n\n${lines.join("\n")}\n\nsession hook: on\n${extra}`;
+  return `# jstack model configuration\n\nPer-role model choices: header text.\n\n${lines.join("\n")}\n\nsession hook: on\n${extra}`;
 }
 
 const env = { COPILOT_PLUGIN_ROOT: pluginRoot, COPILOT_HOME: copilotHome, HOME: home };
@@ -172,8 +172,8 @@ const runWith = (sheetText, payload, extraEnv = {}) => {
 };
 const quiet = { status: 0, out: "", err: "" };
 
-describe("PreToolUse model check for pstack agents", () => {
-  const agent = (model, agent_type = "pstack:poteto-agent") =>
+describe("PreToolUse model check for jstack agents", () => {
+  const agent = (model, agent_type = "jstack:poteto-agent") =>
     input("Agent", { agent_type, model, mode: "background", name: "w", prompt: "do it" });
 
   test("allows by silence a model the sheet names, in any role or panel slot", () => {
@@ -186,10 +186,10 @@ describe("PreToolUse model check for pstack agents", () => {
     const r = runWith(sheet(), agent("claude-haiku-4.5"));
     expect(r.status).toBe(0);
     const reason = deny(r.out);
-    expect(reason).toContain("`claude-haiku-4.5` is not one of the user's saved pstack model choices");
+    expect(reason).toContain("`claude-haiku-4.5` is not one of the user's saved jstack model choices");
     expect(reason).toContain("one of `gpt-5.5`, `claude-opus-5.5`, `claude-sonnet-5`, `gemini-3.8-flash`.");
     expect(reason.match(/`gpt-5.5`/g)).toHaveLength(1);
-    expect(reason).toContain("setup-pstack");
+    expect(reason).toContain("setup-jstack");
   });
 
   test("a role value's effort suffix does not change the model it names", () => {
@@ -200,7 +200,7 @@ describe("PreToolUse model check for pstack agents", () => {
   });
 
   test("the camelCase task form is checked too", () => {
-    const payload = JSON.stringify({ toolName: "task", toolArgs: { agent_type: "pstack:comment-sicko", model: "o9" } });
+    const payload = JSON.stringify({ toolName: "task", toolArgs: { agent_type: "jstack:comment-sicko", model: "o9" } });
     expect(deny(runWith(sheet(), payload).out)).toContain("`o9`");
   });
 
@@ -216,10 +216,10 @@ describe("PreToolUse model check for pstack agents", () => {
   });
 
   const silent = {
-    "a call with no model": [sheet(), input("Agent", { agent_type: "pstack:poteto-agent", prompt: "x" })],
+    "a call with no model": [sheet(), input("Agent", { agent_type: "jstack:poteto-agent", prompt: "x" })],
     "an empty model": [sheet(), agent("")],
-    "a non-pstack agent": [sheet(), agent("claude-haiku-4.5", "general-purpose")],
-    "an agent type that only contains pstack:": [sheet(), agent("claude-haiku-4.5", "my-pstack:agent")],
+    "a non-jstack agent": [sheet(), agent("claude-haiku-4.5", "general-purpose")],
+    "an agent type that only contains jstack:": [sheet(), agent("claude-haiku-4.5", "my-jstack:agent")],
     "no sheet": [null, agent("claude-haiku-4.5")],
     "a sheet with no role lines": ["session hook: on\n", agent("claude-haiku-4.5")],
     "a sheet missing a role": [sheet({ drop: "hillclimb" }), agent("claude-haiku-4.5")],
@@ -243,7 +243,7 @@ describe("PreToolUse model check for pstack agents", () => {
     const invoke = (relative, args = []) => spawnSync("sh", [join(pluginRoot, relative), ...args], {
       env: { PATH: process.env.PATH, ...env }, encoding: "utf8",
     });
-    const checked = invoke("skills/setup-pstack/scripts/check-sheet.sh");
+    const checked = invoke("skills/setup-jstack/scripts/check-sheet.sh");
     expect({ status: checked.status, out: checked.stdout, err: checked.stderr }).toEqual({ status: 0, out: "sheet ok\n", err: "" });
     const started = invoke("hooks/session-start.sh", ["copilot"]);
     expect(started.status).toBe(0);
@@ -254,7 +254,7 @@ describe("PreToolUse model check for pstack agents", () => {
   test("reads a sheet directory containing shell punctuation literally", () => {
     const directory = join(home, "copilot ' $value `literal`");
     mkdirSync(directory);
-    writeFileSync(join(directory, "pstack-models.md"), Buffer.from(`\uFEFF${sheet()}`, "utf16le"));
+    writeFileSync(join(directory, "jstack-models.md"), Buffer.from(`\uFEFF${sheet()}`, "utf16le"));
     const result = run(agent("off-sheet-model"), { ...env, COPILOT_HOME: directory });
     expect(result.err).toBe("");
     expect(deny(result.out)).toContain("`off-sheet-model`");
@@ -298,9 +298,9 @@ describe("PreToolUse vendored script runs", () => {
   }
 
   test("approves through the real path when the root is a symlink", () => {
-    const dir = mkdtempSync(join(tmpdir(), "pstack-ptu-"));
+    const dir = mkdtempSync(join(tmpdir(), "jstack-ptu-"));
     try {
-      const link = join(dir, "pstack");
+      const link = join(dir, "jstack");
       symlinkSync(pluginRoot, link);
       const e = { ...env, COPILOT_PLUGIN_ROOT: link };
       expect(run(bash(`node ${link}/skills/reflect/scripts/find-transcript.mjs ${workspace} prompt`), e).out).toBe(allow);
@@ -425,8 +425,8 @@ describe("PreToolUse vendored script runs", () => {
     expect(run(bash(`bash ${log} session-start-copilot.md review decision why evidence result`, join(root, "hooks")), env)).toEqual(quiet);
   });
 
-  // setup-pstack runs its sheet check in this form after it writes the sheet.
-  test("approves setup-pstack's sheet check", () => {
-    expect(run(bash(`sh ${root}/skills/setup-pstack/scripts/check-sheet.sh`), env)).toEqual({ status: 0, out: allow, err: "" });
+  // setup-jstack runs its sheet check in this form after it writes the sheet.
+  test("approves setup-jstack's sheet check", () => {
+    expect(run(bash(`sh ${root}/skills/setup-jstack/scripts/check-sheet.sh`), env)).toEqual({ status: 0, out: allow, err: "" });
   });
 });

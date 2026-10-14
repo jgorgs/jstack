@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { agentSkills } from "../tools/generate.mjs";
 import { sheetCases, writeSheet } from "./session-hook-sheets.mjs";
 
-const pluginRoot = fileURLToPath(new URL("../plugins/pstack/", import.meta.url));
+const pluginRoot = fileURLToPath(new URL("../plugins/jstack/", import.meta.url));
 const mandate = readFileSync(join(pluginRoot, "hooks/session-start-context.md"), "utf8");
 const codexManifest = JSON.parse(readFileSync(join(pluginRoot, ".codex-plugin/plugin.json"), "utf8"));
 const copilotManifest = JSON.parse(readFileSync(join(pluginRoot, ".github/plugin/plugin.json"), "utf8"));
@@ -53,12 +53,12 @@ const runtimes = {
 };
 
 function runHook(runtime, sheet, command = sessionStart[runtimes[runtime].hooks].hooks[0].command) {
-  const home = mkdtempSync(join(tmpdir(), "pstack-hook-"));
+  const home = mkdtempSync(join(tmpdir(), "jstack-hook-"));
   const { sheetDir, env } = runtimes[runtime];
   const sheetRoot = join(home, sheetDir);
   if (sheet !== null) {
     mkdirSync(sheetRoot);
-    writeSheet(join(sheetRoot, "pstack-models.md"), sheet);
+    writeSheet(join(sheetRoot, "jstack-models.md"), sheet);
   }
   try {
     const r = spawnSync("sh", ["-c", command], {
@@ -82,7 +82,7 @@ describe("SessionStart hook", () => {
   });
 
   test("names only skills that exist", () => {
-    const named = [...mandate.matchAll(/(?:pstack:|`\/)([a-z0-9-]+)/g)].map((m) => m[1]);
+    const named = [...mandate.matchAll(/(?:jstack:|`\/)([a-z0-9-]+)/g)].map((m) => m[1]);
     const skills = new Set(agentSkills(join(pluginRoot, "skills")).map(({ name }) => name));
     expect(named).toContain("poteto-mode");
     expect(named.filter((name) => !skills.has(name))).toEqual([]);
@@ -139,7 +139,7 @@ function context(out, starts) {
   expect(additionalContext.startsWith(mandate.slice(0, at))).toBe(true);
   expect(additionalContext.endsWith(`\n${mandate.slice(at)}`)).toBe(true);
   const notes = additionalContext.slice(at, additionalContext.length - mandate.length + at - 1);
-  expect(notes.startsWith("\nOn GitHub Copilot, load pstack skills")).toBe(true);
+  expect(notes.startsWith("\nOn GitHub Copilot, load JStack skills")).toBe(true);
   for (const block of notes.split("\n\n").slice(2)) expect(starts.some((s) => block.startsWith(s))).toBe(true);
   return mandate;
 }
@@ -147,7 +147,7 @@ function context(out, starts) {
 const PANEL = "claude-opus-5, gpt-5.5 @xhigh, gemini-3.8-flash";
 const sheetLines = (set = {}) =>
   models.roles.map(({ role, models: tier }) => `${role}: ${role in set ? set[role] : tier === "panel" ? PANEL : "claude-sonnet-5"}`);
-const validSheet = (extra = []) => ["# pstack model overrides", "", ...sheetLines(), ...extra, "session hook: on", ""].join("\n");
+const validSheet = (extra = []) => ["# jstack model overrides", "", ...sheetLines(), ...extra, "session hook: on", ""].join("\n");
 
 function copilotContext(sheet) {
   const r = runHook("copilot", sheet);
@@ -204,10 +204,10 @@ describe("Copilot SessionStart context", () => {
   // The shipped texts hold no character JSON must escape; a copy of the hooks
   // with such characters shows the output stays one JSON object.
   test("escapes the texts it adds to the JSON output", () => {
-    const root = mkdtempSync(join(tmpdir(), "pstack-esc-"));
+    const root = mkdtempSync(join(tmpdir(), "jstack-esc-"));
     try {
       cpSync(join(pluginRoot, "hooks"), join(root, "hooks"), { recursive: true });
-      cpSync(join(pluginRoot, "skills/setup-pstack/scripts"), join(root, "skills/setup-pstack/scripts"), { recursive: true });
+      cpSync(join(pluginRoot, "skills/setup-jstack/scripts"), join(root, "skills/setup-jstack/scripts"), { recursive: true });
       const odd = 'a "quote", a back\\slash, and a\ttab';
       writeFileSync(join(root, "hooks/session-start-copilot-setup.md"), `${odd}\n`);
       const r = spawnSync("sh", ["-c", sessionStart.copilot.hooks[0].command], {
@@ -245,7 +245,7 @@ describe("Copilot SessionStart context", () => {
   });
 
   test("each runtime reads only its own sheet", () => {
-    const home = mkdtempSync(join(tmpdir(), "pstack-hook-"));
+    const home = mkdtempSync(join(tmpdir(), "jstack-hook-"));
     try {
       const run = (runtime) =>
         spawnSync("sh", ["-c", sessionStart[runtime].hooks[0].command], {
@@ -254,13 +254,13 @@ describe("Copilot SessionStart context", () => {
         }).stdout;
       for (const dir of [".claude", ".codex"]) {
         mkdirSync(join(home, dir));
-        writeFileSync(join(home, dir, "pstack-models.md"), "session hook: off\n");
+        writeFileSync(join(home, dir, "jstack-models.md"), "session hook: off\n");
       }
       expect(run("copilot")).not.toBe("");
       rmSync(join(home, ".claude"), { recursive: true });
       rmSync(join(home, ".codex"), { recursive: true });
       mkdirSync(join(home, ".copilot"));
-      writeFileSync(join(home, ".copilot", "pstack-models.md"), "session hook: off\n");
+      writeFileSync(join(home, ".copilot", "jstack-models.md"), "session hook: off\n");
       expect(run("claude")).toBe(mandate);
       expect(run("codex")).toBe(mandate);
       expect(run("copilot")).toBe("");

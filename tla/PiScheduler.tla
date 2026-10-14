@@ -4,12 +4,12 @@
    a run the user cut off from re-arming the loop.
 
    Source followed:
-     plugins/pstack/pi/schedule.ts:23-93    class Scheduler
-     plugins/pstack/pi/schedule.ts:131-226  registerSchedule: the
+     plugins/jstack/pi/schedule.ts:23-93    class Scheduler
+     plugins/jstack/pi/schedule.ts:131-226  registerSchedule: the
                                             schedule_wakeup tool, the
                                             agent_start and agent_settled
                                             handlers, /loop
-     plugins/pstack/pi/index.ts:29-34       session_shutdown calls stopAll()
+     plugins/jstack/pi/index.ts:29-34       session_shutdown calls stopAll()
 
    One Node.js event loop runs every task to completion, so each action below
    is one task: a timer callback, a tool call, a command handler, an event

@@ -4,10 +4,10 @@ import { mkdirSync, mkdtempSync, rmSync, symlinkSync, utimesSync, writeFileSync 
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 
-import { candidates, findTranscript, openingPrompt } from "../plugins/pstack/skills/reflect/scripts/find-transcript.mjs";
+import { candidates, findTranscript, openingPrompt } from "../plugins/jstack/skills/reflect/scripts/find-transcript.mjs";
 import { removeDuring } from "./remove-during.mjs";
 
-const script = join(import.meta.dir, "../plugins/pstack/skills/reflect/scripts/find-transcript.mjs");
+const script = join(import.meta.dir, "../plugins/jstack/skills/reflect/scripts/find-transcript.mjs");
 const noNode = spawnSync("node", ["--version"]).status !== 0;
 
 const meta = JSON.stringify({ type: "bridge-session", sessionId: "abc" });
@@ -67,7 +67,7 @@ describe("find-transcript", () => {
 
   test("a skill invocation is the typed prompt and keeps its arguments", async () => {
     const dir = tempDir();
-    const skill = userString("<command-message>pstack:reflect</command-message>\n<command-name>/pstack:reflect</command-name>\n<command-args>the release lanes</command-args>");
+    const skill = userString("<command-message>jstack:reflect</command-message>\n<command-name>/jstack:reflect</command-name>\n<command-args>the release lanes</command-args>");
     const path = transcript(dir, "skill.jsonl", [meta, skill, user("a later prompt")], 100);
     expect(await openingPrompt(path)).toContain("the release lanes");
   });
@@ -185,7 +185,7 @@ describe("find-transcript", () => {
         piMessage("u1", null, "user", "first branch opening"),
         piMessage("a1", "u1", "assistant", "ok"),
         piMessage("u2", null, "user", "second root opening"),
-        piEntry("c1", "a1", "custom", { customType: "pstack-agents", data: {} }),
+        piEntry("c1", "a1", "custom", { customType: "jstack-agents", data: {} }),
       ],
       100,
     );

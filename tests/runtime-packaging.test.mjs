@@ -11,46 +11,46 @@ const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 describe("validateCodexMarketplace", () => {
   const manifest = (plugins) => JSON.stringify({ plugins });
   test("needs one entry whose name matches and whose path exists", () => {
-    const ok = { name: "pstack", source: { path: "./plugins/pstack" } };
+    const ok = { name: "jstack", source: { path: "./plugins/jstack" } };
     expect(() =>
-      validateCodexMarketplace(manifest([ok]), { expectedName: "pstack", pathExists: () => true }),
+      validateCodexMarketplace(manifest([ok]), { expectedName: "jstack", pathExists: () => true }),
     ).not.toThrow();
-    expect(() => validateCodexMarketplace(manifest([]), { expectedName: "pstack", pathExists: () => true })).toThrow(
+    expect(() => validateCodexMarketplace(manifest([]), { expectedName: "jstack", pathExists: () => true })).toThrow(
       "expected 1 plugin entry, found 0",
     );
     expect(() =>
-      validateCodexMarketplace(manifest([{ ...ok, name: "other" }]), { expectedName: "pstack", pathExists: () => true }),
-    ).toThrow('plugin name "other" != Codex manifest name "pstack"');
-    expect(() => validateCodexMarketplace(manifest([ok]), { expectedName: "pstack", pathExists: () => false })).toThrow(
+      validateCodexMarketplace(manifest([{ ...ok, name: "other" }]), { expectedName: "jstack", pathExists: () => true }),
+    ).toThrow('plugin name "other" != Codex manifest name "jstack"');
+    expect(() => validateCodexMarketplace(manifest([ok]), { expectedName: "jstack", pathExists: () => false })).toThrow(
       "does not resolve to a directory",
     );
   });
 });
 
 describe("validateCopilotManifest", () => {
-  const claude = { name: "pstack" };
-  const ok = { name: "pstack", hooks: "hooks/copilot-hooks.json" };
+  const claude = { name: "jstack" };
+  const ok = { name: "jstack", hooks: "hooks/copilot-hooks.json" };
   test("needs the Claude Code name and a hooks file that exists", () => {
-    const pathExists = (rel) => rel === "plugins/pstack/hooks/copilot-hooks.json";
+    const pathExists = (rel) => rel === "plugins/jstack/hooks/copilot-hooks.json";
     expect(() => validateCopilotManifest(ok, { claude, pathExists })).not.toThrow();
     expect(() => validateCopilotManifest({ ...ok, name: "other" }, { claude, pathExists })).toThrow(
-      'name "other" != Claude Code manifest name "pstack"',
+      'name "other" != Claude Code manifest name "jstack"',
     );
     expect(() => validateCopilotManifest({ ...ok, hooks: "hooks/nope.json" }, { claude, pathExists })).toThrow(
       'hooks "hooks/nope.json" is not a file in the plugin',
     );
-    expect(() => validateCopilotManifest({ name: "pstack" }, { claude, pathExists })).toThrow("is not a file in the plugin");
+    expect(() => validateCopilotManifest({ name: "jstack" }, { claude, pathExists })).toThrow("is not a file in the plugin");
   });
 });
 
 describe("manifests", () => {
   const json = (rel) => JSON.parse(readFileSync(join(repoRoot, rel), "utf8"));
-  const claude = json("plugins/pstack/.claude-plugin/plugin.json");
-  const codex = json("plugins/pstack/.codex-plugin/plugin.json");
+  const claude = json("plugins/jstack/.claude-plugin/plugin.json");
+  const codex = json("plugins/jstack/.codex-plugin/plugin.json");
   const claudeMarketplace = json(".claude-plugin/marketplace.json");
   const codexMarketplace = json(".agents/plugins/marketplace.json");
   const piPackage = json("package.json");
-  const copilot = json("plugins/pstack/.github/plugin/plugin.json");
+  const copilot = json("plugins/jstack/.github/plugin/plugin.json");
 
   test("the plugin and marketplace manifests agree on every fact they repeat", () => {
     const shared = ({ name, author, homepage, repository, license, keywords }) =>
@@ -58,7 +58,7 @@ describe("manifests", () => {
     expect(Object.values(shared(claude))).not.toContain(undefined);
     expect(shared(codex)).toEqual(shared(claude));
     expect(claudeMarketplace.owner).toEqual(claude.author);
-    expect(claudeMarketplace.plugins.map(({ name, source }) => [name, source])).toEqual([[claude.name, "./plugins/pstack"]]);
+    expect(claudeMarketplace.plugins.map(({ name, source }) => [name, source])).toEqual([[claude.name, "./plugins/jstack"]]);
     expect(shared(piPackage)).toEqual({ ...shared(claude), keywords: ["pi-package", ...claude.keywords] });
     expect(piPackage.version).toBe(claude.version);
     expect({ ...shared(copilot), keywords: claude.keywords }).toEqual(shared(claude));
@@ -84,7 +84,7 @@ function codexHookEvents(read) {
 }
 
 describe("Codex hook discovery", () => {
-  const pluginRoot = join(repoRoot, "plugins/pstack");
+  const pluginRoot = join(repoRoot, "plugins/jstack");
   const shipped = (rel) => (existsSync(join(pluginRoot, rel)) ? readFileSync(join(pluginRoot, rel), "utf8") : null);
 
   test("Codex registers the shipped SessionStart hook", () => {
@@ -92,15 +92,15 @@ describe("Codex hook discovery", () => {
   });
 
   test("an Agent Plugins manifest at the plugin root hides the hooks, as 0.9.83 did", () => {
-    const manifest = JSON.stringify({ $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", name: "pstack" });
+    const manifest = JSON.stringify({ $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json", name: "jstack" });
     expect(codexHookEvents((rel) => (rel === "plugin.json" ? manifest : shipped(rel)))).toEqual([]);
   });
 });
 
 describe("validatePiPackage", () => {
-  const ENTRY = "plugins/pstack/pi/index.ts";
-  const manifest = (pi, extra = {}) => JSON.stringify({ name: "pstack", keywords: ["pi-package"], ...extra, pi });
-  const good = { skills: ["./plugins/pstack/skills"], extensions: [`./${ENTRY}`] };
+  const ENTRY = "plugins/jstack/pi/index.ts";
+  const manifest = (pi, extra = {}) => JSON.stringify({ name: "jstack", keywords: ["pi-package"], ...extra, pi });
+  const good = { skills: ["./plugins/jstack/skills"], extensions: [`./${ENTRY}`] };
   const everything = () => true;
 
   test("accepts the skills tree and the extension entry when both exist", () => {
@@ -108,15 +108,15 @@ describe("validatePiPackage", () => {
   });
 
   test("names each listed path that does not exist", () => {
-    const pathExists = (rel) => rel !== "plugins/pstack/skill";
+    const pathExists = (rel) => rel !== "plugins/jstack/skill";
     expect(() =>
-      validatePiPackage(manifest({ ...good, skills: ["./plugins/pstack/skill"] }), { pathExists }),
-    ).toThrow("package.json: pi.skills names ./plugins/pstack/skill, which does not exist");
+      validatePiPackage(manifest({ ...good, skills: ["./plugins/jstack/skill"] }), { pathExists }),
+    ).toThrow("package.json: pi.skills names ./plugins/jstack/skill, which does not exist");
   });
 
   test("requires the skills tree and the extension entry", () => {
     expect(() => validatePiPackage(manifest({ ...good, skills: [] }), { pathExists: everything })).toThrow(
-      "package.json: pi.skills must list ./plugins/pstack/skills",
+      "package.json: pi.skills must list ./plugins/jstack/skills",
     );
     const { extensions, ...skillsOnly } = good;
     expect(() => validatePiPackage(manifest(skillsOnly), { pathExists: everything })).toThrow(

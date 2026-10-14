@@ -4,18 +4,18 @@ import { spawn, spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { lineSplitter } from "../../plugins/pstack/pi/child.ts";
-import { parseSheet } from "../../plugins/pstack/pi/config.ts";
+import { lineSplitter } from "../../plugins/jstack/pi/child.ts";
+import { parseSheet } from "../../plugins/jstack/pi/config.ts";
 import { readEntries, sleep } from "./harness.mjs";
 
 export const MINUTE = 60_000;
 
 // The sheet and alias map the real-pi runs use: the shipped table of
-// PSTACK_PI_LIVE_PROVIDER (default openai), with any aliases the
-// `pi models:` line in PSTACK_PI_LIVE_MODELS names replaced.
+// JSTACK_PI_LIVE_PROVIDER (default openai), with any aliases the
+// `pi models:` line in JSTACK_PI_LIVE_MODELS names replaced.
 export function liveModels(root, head = "") {
-  const line = process.env.PSTACK_PI_LIVE_MODELS;
-  const provider = process.env.PSTACK_PI_LIVE_PROVIDER ?? "openai";
+  const line = process.env.JSTACK_PI_LIVE_MODELS;
+  const provider = process.env.JSTACK_PI_LIVE_PROVIDER ?? "openai";
   const sheet = `${head}${line ? `${line}\n` : ""}session hook: on\n`;
   const shipped = JSON.parse(readFileSync(join(root, "models.json"), "utf8")).pi.models[provider];
   if (!shipped) throw new Error(`models.json has no pi table for "${provider}"`);
@@ -100,7 +100,7 @@ export class PiRpc {
   }
 
   notices(from = 0) {
-    return this.messages(from).filter((m) => m.role === "custom" && m.customType === "pstack-agent");
+    return this.messages(from).filter((m) => m.role === "custom" && m.customType === "jstack-agent");
   }
 
   toolResults(name, from = 0) {
@@ -122,7 +122,7 @@ export class PiRpc {
 function registry(sessionFile) {
   const byId = new Map();
   for (const e of readEntries(sessionFile)) {
-    if (e.type !== "custom" || e.customType !== "pstack-agents") continue;
+    if (e.type !== "custom" || e.customType !== "jstack-agents") continue;
     byId.set(e.data.agent.id, [...(byId.get(e.data.agent.id) ?? []), e.data]);
   }
   return byId;

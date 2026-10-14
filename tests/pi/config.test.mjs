@@ -4,7 +4,7 @@ import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:f
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { defaultSettings, loadAgentTypes, readSheet } from "../../plugins/pstack/pi/config.ts";
+import { defaultSettings, loadAgentTypes, readSheet } from "../../plugins/jstack/pi/config.ts";
 import { chmodDeniesReads } from "../session-hook-sheets.mjs";
 
 test("depth comes from the reader on each use and PI_CODING_AGENT_DIR moves the sheet", () => {
@@ -18,25 +18,25 @@ test("depth comes from the reader on each use and PI_CODING_AGENT_DIR moves the 
 });
 
 test("an agent file's effort is checked against the efforts list in models.json", () => {
-  const root = mkdtempSync(join(tmpdir(), "pstack-agents-"));
+  const root = mkdtempSync(join(tmpdir(), "jstack-agents-"));
   try {
     const models = { available: [], efforts: ["low"], pi: { fallback: "anthropic", models: {} } };
     writeFileSync(join(root, "models.json"), JSON.stringify(models));
     mkdirSync(join(root, "agents"));
     writeFileSync(join(root, "agents", "slow.md"), "---\neffort: low\n---\nbody\n");
     const settings = { pluginRoot: root, modelsFile: join(root, "models.json") };
-    expect(loadAgentTypes(settings).get("pstack:slow")).toEqual({ body: "body", model: undefined, effort: "low" });
+    expect(loadAgentTypes(settings).get("jstack:slow")).toEqual({ body: "body", model: undefined, effort: "low" });
     writeFileSync(join(root, "agents", "slow.md"), "---\neffort: medium\n---\nbody\n");
-    expect(() => loadAgentTypes(settings)).toThrow('pstack:slow: effort "medium" is not one of low');
+    expect(() => loadAgentTypes(settings)).toThrow('jstack:slow: effort "medium" is not one of low');
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
 });
 
 test.skipIf(!chmodDeniesReads)("a sheet in a directory that cannot be searched reads as absent until it can", () => {
-  const dir = mkdtempSync(join(tmpdir(), "pstack-sheet-"));
+  const dir = mkdtempSync(join(tmpdir(), "jstack-sheet-"));
   try {
-    writeFileSync(join(dir, "pstack-models.md"), "session hook: off\n");
+    writeFileSync(join(dir, "jstack-models.md"), "session hook: off\n");
     chmodSync(dir, 0o000);
     expect(readSheet(dir)).toBeUndefined();
     chmodSync(dir, 0o700);

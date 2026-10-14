@@ -1,18 +1,18 @@
 {
-  "name": "pstack",
+  "name": "jstack",
   "private": true,
-  "version": "0.9.8401",
-  "description": "If you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Pi package of the Claude Code plugin; skills are shared, tool names resolve via skills/poteto-mode/references/pi-tools.md. Original pstack by Lauren Tan (poteto).",
+  "version": "1.0.0",
+  "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. Pi package of the Claude Code plugin; skills are shared, tool names resolve via skills/poteto-mode/references/pi-tools.md. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
   "author": {
-    "name": "Michael Denyer",
-    "url": "https://github.com/michael-denyer"
+    "name": "Jake Gorgol",
+    "url": "https://github.com/jgorgs"
   },
-  "homepage": "https://github.com/michael-denyer/pstack-claude",
-  "repository": "https://github.com/michael-denyer/pstack-claude",
+  "homepage": "https://github.com/jgorgs/jstack",
+  "repository": "https://github.com/jgorgs/jstack",
   "license": "MIT",
   "keywords": [
     "pi-package",
-    "pstack",
+    "jstack",
     "poteto-mode",
     "workflow",
     "principles",
@@ -31,10 +31,10 @@
   ],
   "pi": {
     "skills": [
-      "./plugins/pstack/skills"
+      "./plugins/jstack/skills"
     ],
     "extensions": [
-      "./plugins/pstack/pi/index.ts"
+      "./plugins/jstack/pi/index.ts"
     ]
   },
   "peerDependencies": {

@@ -1,16 +1,16 @@
 {
-  "name": "pstack-claude",
+  "name": "jstack",
   "owner": {
-    "name": "Michael Denyer",
-    "url": "https://github.com/michael-denyer"
+    "name": "Jake Gorgol",
+    "url": "https://github.com/jgorgs"
   },
-  "description": "Claude Code port of poteto's pstack. Rigorous agent workflows with Cursor primitives translated to Claude Code equivalents.",
+  "description": "JStack, Jake Gorgol's agent workflow plugin for Claude Code, Codex, Pi, and GitHub Copilot. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
   "plugins": [
     {
-      "name": "pstack",
-      "source": "./plugins/pstack",
-      "description": "If you want to go fast, go deep first. pstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence. Original pstack by Lauren Tan (poteto).",
-      "version": "0.9.8401"
+      "name": "jstack",
+      "source": "./plugins/jstack",
+      "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
+      "version": "1.0.0"
     }
   ]
 }

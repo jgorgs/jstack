@@ -19,7 +19,7 @@ test.each([
   ["npm's nested layout", (piDir) => join(piDir, "node_modules")],
   ["bun's flat global layout", (piDir) => join(piDir, "..", "..")],
 ])("every file the typecheck names exists under %s", (_, depRoot) => {
-  const root = mkdtempSync(join(tmpdir(), "pstack-pi-package-"));
+  const root = mkdtempSync(join(tmpdir(), "jstack-pi-package-"));
   try {
     const piDir = join(root, "node_modules", "@earendil-works", "pi-coding-agent");
     for (const file of [join(piDir, "dist/index.d.ts"), ...DEP_FILES.map((dep) => join(depRoot(piDir), dep))]) {
@@ -38,7 +38,7 @@ test.each([
 });
 
 test("piDependency picks the copy nested under Pi over one beside it, as Node does", () => {
-  const root = mkdtempSync(join(tmpdir(), "pstack-pi-package-"));
+  const root = mkdtempSync(join(tmpdir(), "jstack-pi-package-"));
   try {
     const piDir = join(root, "node_modules", "@earendil-works", "pi-coding-agent");
     const nested = join(piDir, "node_modules", "@earendil-works", "pi-ai");
@@ -75,7 +75,7 @@ test.each([
   ["BUN_INSTALL_GLOBAL_DIR", (root) => ({ BUN_INSTALL_GLOBAL_DIR: join(root, "gd") }), (root) => join(root, "gd", "node_modules")],
   ["XDG_CACHE_HOME", (root) => ({ XDG_CACHE_HOME: join(root, "xdg") }), (root) => join(root, "xdg", ".bun", "install", "global", "node_modules")],
 ])("findPiPackage finds a Pi that bun add -g put under %s", (_, env, globalDir) => {
-  const root = mkdtempSync(join(tmpdir(), "pstack-pi-package-"));
+  const root = mkdtempSync(join(tmpdir(), "jstack-pi-package-"));
   try {
     const { found, piDir } = findPiUnder(root, env(root), globalDir(root));
     expect(found).toBe(piDir);
@@ -85,7 +85,7 @@ test.each([
 });
 
 test.skipIf(process.platform === "win32")("findPiPackage finds a Pi that brew install put under the Homebrew prefix", () => {
-  const root = mkdtempSync(join(tmpdir(), "pstack-pi-package-"));
+  const root = mkdtempSync(join(tmpdir(), "jstack-pi-package-"));
   try {
     const { found, piDir } = findPiUnder(root, {}, join(root, "brew", "opt", "pi-coding-agent", "libexec", "lib", "node_modules"));
     expect(found).toBe(piDir);
@@ -95,7 +95,7 @@ test.skipIf(process.platform === "win32")("findPiPackage finds a Pi that brew in
 });
 
 test("findPiPackage still finds a Pi under HOME's default bun directory", () => {
-  const root = mkdtempSync(join(tmpdir(), "pstack-pi-package-"));
+  const root = mkdtempSync(join(tmpdir(), "jstack-pi-package-"));
   try {
     const { found, piDir } = findPiUnder(root, {}, join(root, "home", ".bun", "install", "global", "node_modules"));
     expect(found).toBe(piDir);

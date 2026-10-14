@@ -1,4 +1,4 @@
-// The runtimes other than Claude Code that pstack ships to: the table the
+// The runtimes other than Claude Code that jstack ships to: the table the
 // generator iterates, with each runtime's Model names renderer, models.json
 // check, versioned manifest, packaging validator, and hooks files.
 
@@ -74,7 +74,7 @@ function checkCodexModels(codex, { raw, fail, unique }) {
   }
 }
 
-// The pstack Pi extension resolves each Claude alias a skill names through the
+// The jstack Pi extension resolves each Claude alias a skill names through the
 // table of the session's provider, or the fallback table on any other provider,
 // so every table maps exactly the available aliases to that provider's models.
 function checkPiModels(pi, { raw, fail, isObject }) {
@@ -111,7 +111,7 @@ export function codexModelNamesSection(models) {
     "signal comes from model diversity, so use the distinct Codex models available to you. A good default panel " +
     `on ChatGPT is ${codeList(models.codex.panel)}. If only one model family is reachable, vary reasoning ` +
     "effort and note in the verdict that diversity was reduced.\n\n" +
-    "`/setup-pstack` writes the configured model list. On Codex, set it to your Codex model slugs."
+    "`/setup-jstack` writes the configured model list. On Codex, set it to your Codex model slugs."
   );
 }
 
@@ -123,7 +123,7 @@ export function piModelNamesSection(models) {
     models.available.map((alias) => `| ${code(alias)} | ${columns.map((p) => code(tables[p][alias])).join(" | ")} |`).join("\n");
   return (
     "Skills name models by the Claude aliases in their Models sections. On Pi, pass the alias as the `agent` " +
-    "tool's `model`. The pstack extension resolves it in the column of the provider the session's current model " +
+    "tool's `model`. The jstack extension resolves it in the column of the provider the session's current model " +
     `comes from, and in the ${code(fallback)} column for any other provider:\n\n` +
     table +
     "\n\nPi warns that Anthropic bills Claude used through Pi per token, as extra usage, even on a Claude subscription. " +
@@ -137,7 +137,7 @@ export function piModelNamesSection(models) {
     "parent's current model. Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`) " +
     "stay diverse only while their aliases resolve to distinct models. If one model family is all you can reach, " +
     "vary the reasoning effort and note in the verdict that diversity was reduced.\n\n" +
-    "`/setup-pstack` writes the configured model list. On Pi, keep the aliases and remap them with `pi models:`."
+    "`/setup-jstack` writes the configured model list. On Pi, keep the aliases and remap them with `pi models:`."
   );
 }
 
@@ -194,41 +194,41 @@ export function validatePiPackage(text, { pathExists }) {
 export const roleSkills = (models) => [...new Set(models.roles.map((r) => r.skill))].sort();
 
 // Copilot ships no default slugs: the models a Copilot account can reach vary
-// by plan and policy, so the user picks them in setup-pstack.
+// by plan and policy, so the user picks them in setup-jstack.
 export function copilotModelNamesSection(models) {
   const strongest = models.roles.filter((r) => r.tier === "strongest");
   return (
     "Skills name Claude Code model aliases in their Models sections. Those aliases are not Copilot model IDs, " +
     "and the Copilot build ships no default model IDs: the models an account can reach depend on its plan " +
     "and policy, so the user picks them once.\n\n" +
-    "- The model sheet is `${COPILOT_HOME:-~/.copilot}/pstack-models.md`. It sits outside the workspace, so reading it " +
+    "- The model sheet is `${COPILOT_HOME:-~/.copilot}/jstack-models.md`. It sits outside the workspace, so reading it " +
     "asks for path access. The plugin's SessionStart hook reads it, checks it, and adds its role lines to the " +
-    "session context as the user's saved pstack model choices. Take role models from that block and do not `view` the " +
+    "session context as the user's saved jstack model choices. Take role models from that block and do not `view` the " +
     "sheet. A role line names the model for that role.\n" +
     "- Read the sheet only when that block and the hook's `sheet invalid` or no-sheet note are all missing, as in a " +
     "skills-only install with no hook. `view`, `create`, and `edit` take literal paths and expand neither `~` nor " +
     "`$COPILOT_HOME`, so print the sheet's absolute path with `bash` first (" +
-    "`echo \"${COPILOT_HOME:-$HOME/.copilot}/pstack-models.md\"`" +
+    "`echo \"${COPILOT_HOME:-$HOME/.copilot}/jstack-models.md\"`" +
     ") and read and write exactly that path; do not append `.copilot` or any other segment to it. A session with its " +
     "own `COPILOT_HOME` then never touches `~/.copilot`.\n" +
     `- No sheet, or the hook reports \`sheet invalid\`: before a skill that needs a role model (${roleSkills(models).map(code).join(", ")}), stop, load ` +
-    "`setup-pstack` with the `skill` tool, and finish it first. In that same session, use the values it just wrote; " +
+    "`setup-jstack` with the `skill` tool, and finish it first. In that same session, use the values it just wrote; " +
     "later sessions get them from the hook. Do not ask again on later runs.\n" +
     "- A role line in the sheet is the user's explicit model instruction, so pass it as the `task` tool's " +
     "`model` parameter. `inherit-parent` or `auto` omits `model`.\n" +
-    "- The plugin's `PreToolUse` hook enforces this for pstack agents. While the sheet is valid, it denies a `task` " +
-    "call whose `agent_type` starts with `pstack:` and whose `model` is not one of the sheet's values, and its reason " +
+    "- The plugin's `PreToolUse` hook enforces this for jstack agents. While the sheet is valid, it denies a `task` " +
+    "call whose `agent_type` starts with `jstack:` and whose `model` is not one of the sheet's values, and its reason " +
     "lists the saved IDs. Retry with the role's saved model; never retry on another unsaved model. It leaves calls " +
     "with no `model` and other agent types alone.\n" +
     `- Roles that default to the strongest model (${strongest.map((r) => code(r.role)).join(", ")}): ` +
     "the strongest model the user chose.\n" +
     "- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial " +
     "signal comes from model diversity, so fill a panel from distinct vendors in the `task` tool's `model` " +
-    "list (Claude, GPT, Gemini, Grok, and so on). pstack ships no default Copilot panel. If only one vendor is " +
+    "list (Claude, GPT, Gemini, Grok, and so on). jstack ships no default Copilot panel. If only one vendor is " +
     "reachable, vary reasoning effort and note in the verdict that diversity was reduced.\n\n" +
-    "`setup-pstack` lists the models from the `model` enum of the `task` tool and writes only IDs it saw there. " +
+    "`setup-jstack` lists the models from the `model` enum of the `task` tool and writes only IDs it saw there. " +
     "After it writes the sheet, it runs its `check-sheet.sh` script, which applies the hook's checks.\n\n" +
-    "Run `setup-pstack`, and the parent session that orchestrates a panel, on a model at least as strong as " +
+    "Run `setup-jstack`, and the parent session that orchestrates a panel, on a model at least as strong as " +
     "gpt-5.4-mini or a Sonnet-class Claude model. On a Haiku-class model, setup picked models the user never " +
     "chose in about half of the smoke runs."
   );

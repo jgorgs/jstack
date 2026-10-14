@@ -1,6 +1,20 @@
 # CHANGES
 
-This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. The Cursor-to-Claude rewrite rules live in [`tools/substitutions.json`](tools/substitutions.json), and the [sync boundary](CONTRIBUTING.md#the-sync-boundary) in `CONTRIBUTING.md` defines how a change to upstream's skill content is declared.
+This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
+
+## 1.0.0 - JStack becomes its own plugin
+
+JStack is now its own plugin, maintained by Jake Gorgol, instead of a fork that merges pstack-claude. pstack-claude becomes a source reviewed by hand.
+
+The install id is `jstack@jstack`: the plugin and its marketplace are both named `jstack`. Remove `pstack@pstack-claude`, then run `/plugin marketplace add jgorgs/jstack` and `/plugin install jstack@jstack`. Codex and Copilot take the same marketplace and id, and Pi installs `git:github.com/jgorgs/jstack`. Plugin content moves from `plugins/pstack/` to `plugins/jstack/`.
+
+Every skill and agent moves to the `jstack:` namespace, as in `jstack:poteto-mode`, `jstack:poteto-agent`, `jstack:effort-high`, and `jstack:comment-sicko`. A `subagent_type` or `/pstack:<name>` written in your own instructions needs the new prefix. The session hooks on Claude Code, Codex, Copilot, and Pi name JStack and its `jstack:` skills.
+
+`setup-pstack` is now `setup-jstack`, and the model override sheet is `jstack-models.md`: `~/.claude/jstack-models.md` (under `$CLAUDE_CONFIG_DIR` when set), `~/.codex/jstack-models.md`, and the same file name under the Copilot, Pi, opencode, and Gemini CLI homes. Rename your existing `pstack-models.md` and the `@` include line in `CLAUDE.md` that loads it, or rerun `/jstack:setup-jstack`. The `PSTACK_*` test and live-run variables are now `JSTACK_*`, and the Pi extension and the resume script keep their state under a `jstack` directory.
+
+The upstream-sync tooling is removed: `tools/sync.mjs`, `tools/forks.json`, `tools/upstream.json`, `tools/substitutions.json`, their tests, and CI's fork-registry job. The generator never read the substitution table, so it went too, along with `deriveSkill`, which only the sync tool called. The generator, the validators, and the Codex, Copilot, and Pi builds are unchanged.
+
+[UPSTREAM.md](UPSTREAM.md) records the last pstack-claude commit reviewed, `94f5ce9` (0.9.84, the commit this fork took), and the review procedure. The new `/jstack:upstream-review` skill runs it and lists the upstream changes worth copying, each with a reason. It opens no PR and moves the recorded commit only after Jake picks.
 
 ## 0.9.8401 - carry Jake's engineering lessons and route reflect's learnings
 
