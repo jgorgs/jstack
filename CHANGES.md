@@ -21,17 +21,17 @@ The poteto names become jedi names. Nothing else changes: the skills, playbooks,
 
 No environment variable carried the poteto name, so none changes. The override sheet's role names are unchanged too, so an existing `jstack-models.md` keeps working.
 
-The session hooks on Claude Code, Codex, Copilot, and Pi now route to `jstack:jedi-mode`, and the Codex, Pi, and Copilot mappings, the Pi agent tool, the generator's effort-agent stamps, and the tests and fixtures follow the new names. The skill's description triggers on "jedi" and `/jedi-mode`.
+The session hooks on Claude Code, Codex, and Copilot, and the routing instruction the Pi extension injects, now name `jedi-mode`, and the Codex, Pi, and Copilot mappings, the Pi agent tool, the generator's effort-agent stamps, and the tests and fixtures follow the new names. The skill's description triggers on "jedi" and `/jedi-mode`.
 
 What a caller must change:
 
 - Invoke `/jstack:jedi-mode` and `/jstack:jedi-help` on Claude Code and Copilot, `/jedi-mode` and `/jedi-help` on Codex, and `jedi-mode` by name on Pi and in skills-only installs.
 - Replace `subagent_type: "jstack:poteto-agent"` with `"jstack:jedi-agent"`, and `jstack:poteto-agent-<level>` with `jstack:jedi-agent-<level>`, in your own instructions and skills.
 - Point any path into `skills/poteto-mode/`, such as `skills/poteto-mode/scripts/check-playbooks.mjs` or `skills/poteto-mode/references/codex-tools.md`, at `skills/jedi-mode/`.
-- Rename the skill in instruction files (`CLAUDE.md`, `AGENTS.md`) that require poteto-mode.
-- Reinstall a skills-only install, or update symlinks into the tree, because the skill directories moved. The vendored scripts reinstall their bun dependencies on first run under the new directory.
+- Rename the skill in instruction files that require poteto-mode: `CLAUDE.md`, `AGENTS.md`, and the standing instruction that `/jstack:setup-jstack` offers to append to `~/.copilot/copilot-instructions.md`.
+- Reinstall a skills-only install, or update symlinks into the tree, because the skill directories moved. The vendored scripts reinstall their bun dependencies on first run under the new directory. A clone that ran them before 2.0.0 keeps an untracked `plugins/jstack/skills/poteto-mode/scripts/node_modules/` after checkout. `.gitignore` now ignores `node_modules/` under any skill's `scripts/`, so the leftover stays out of commits, and you can delete it.
 
-Project playbooks under `.agents/playbooks/` need no change: their `extends` stems name playbooks, and no playbook was renamed. Lauren Tan's credit in LICENSE, the NOTICE files, and the README is unchanged, and NOTICE.md records that `jedi-mode`, `jedi-help`, and `jedi-agent` are upstream's `poteto-mode`, `poteto-help`, and `poteto-agent` renamed. The entries below keep the names their releases shipped.
+A project playbook under `.agents/playbooks/` keeps its `extends` stems, because no playbook was renamed. Its anchors can break: the rename changed text in 14 of the bundled playbooks, including step text such as "poteto-mode's Models section" and "`jstack:poteto-agent`". Run `node <plugin>/skills/jedi-mode/scripts/check-playbooks.mjs` from the repository root, and requote each anchor it reports with the new names. Lauren Tan's credit in LICENSE, the NOTICE files, and the README is unchanged, and NOTICE.md records that `jedi-mode`, `jedi-help`, and `jedi-agent` are upstream's `poteto-mode`, `poteto-help`, and `poteto-agent` renamed. The entries below keep the names their releases shipped.
 
 ## 1.0.0 - JStack becomes its own plugin
 
