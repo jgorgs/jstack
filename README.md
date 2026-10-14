@@ -63,8 +63,6 @@ For a bug, it reproduces the failure, uses `how` and `why` to investigate, deleg
 
 [Other playbooks](plugins/jstack/skills/jedi-mode/SKILL.md#playbooks) cover planning, features, refactoring, performance issues, investigations, prototypes, PR maintenance, shipping, and longer projects.
 
-![jedi-mode on Claude Code, Codex, and Pi turns a request into verified work. Choose a playbook, plan and delegate with architect, arena, or swarm, then review and verify with interrogate, tests, and measurements. Project playbooks customize the workflow, and setup-jstack configures the model and reasoning effort per role. Supporting skills include how, why, and unslop.](assets/jstack-overview.png)
-
 ## Details
 
 - [Skills and slash commands](docs/reference.md#slash-commands)
