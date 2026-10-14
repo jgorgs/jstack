@@ -14,6 +14,8 @@ Check the real thing, not a proxy:
 - Check process liveness directly, not indirectly through derived state
 - Read the actual value, not a cached or derived representation
 - When verification fails, suspect the observation method before suspecting the system
+- Treat verification environment overrides as part of the test surface. If you point tests at a base URL through an environment variable, first probe that exact URL and remember it may bypass the test runner's own server startup.
+- For user-facing features, start from the screen users are likely to come from and reach the feature through visible navigation before checking it via a direct URL; a deep link proves the destination renders, not that users can find it.
 
 Verify the process as well as the outcome. A correct result can rest on a broken process, and a review that checks results passes it: a clause reconstructed from the user's paste instead of the durable record, a constraint honored by chance from a file never read. For each fact you relied on, name the record it came from and confirm that record is the one the project's rules point at.
 

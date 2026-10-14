@@ -2,6 +2,14 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. The Cursor-to-Claude rewrite rules live in [`tools/substitutions.json`](tools/substitutions.json), and the [sync boundary](CONTRIBUTING.md#the-sync-boundary) in `CONTRIBUTING.md` defines how a change to upstream's skill content is declared.
 
+## 0.9.8401 - carry Jake's engineering lessons and route reflect's learnings
+
+This fork's releases number their patch as the upstream patch times 100 plus a fork counter, so 0.9.8401 is the first fork release on upstream 0.9.84. The number sorts above 0.9.84, so `claude plugin update pstack@pstack-claude` installs it, and below the 0.9.8500 that would follow a merge of upstream 0.9.85.
+
+Seven skills carry one-sentence lessons as `policy` forks. `architect` traces the alternate routes to an outcome before a design replaces an existing workflow action. `blast-radius` also triggers on changes to shared application chrome, global styles, or selectors. `poteto-mode` announces in the first work update when a repo instruction file requires its workflow. The shipping playbook treats an admin merge over pending checks as a human-directed exception that records the check state and the user's reason. `principle-prove-it-works` probes a verification environment override before trusting it, and reaches a user-facing feature through visible navigation before a direct URL. `why` answers a comparative design question for both its history and its present fit.
+
+`reflect` labels conclusions drawn from a digest and treats evidence missing from one as inconclusive. Its Apply step routes a learning that holds in any repository to a pull request on `jgorgs/jstack`, never to the installed plugin cache, and a learning about one project to that project's `AGENTS.md`.
+
 ## 0.9.84 - run the Codex SessionStart hook again
 
 0.9.83 shipped a root `plugins/pstack/plugin.json` in the Agent Plugins 1.0.0 format. Codex reads that manifest before `.codex-plugin/plugin.json` and loads no plugin hooks for an Agent Plugins manifest, so on Codex the `SessionStart` hook stopped running and sessions lost the pstack routing instruction. Skills still loaded, and Claude Code was not affected. The root manifest is gone, so Codex reads `.codex-plugin/plugin.json` and its hooks again. The generator now fails when `plugins/pstack/plugin.json` exists, and the sync still excludes upstream's copy. A packaging test follows Codex's manifest lookup over the shipped plugin and checks that it finds the `SessionStart` hook, and that the 0.9.83 manifest would hide it. @Dude-Bear found the cause and confirmed it by moving the file aside, in [#265](https://github.com/michael-denyer/pstack-claude/issues/265).
