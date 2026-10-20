@@ -8,6 +8,8 @@ New public skill `question-the-requirements` (`/jstack:question-the-requirements
 
 A builder bot runs it on a schedule the repo sets. It reads two files in the product repo, `docs/algorithm/context.md` (problem, users, requirements and their owners) and `docs/algorithm/decisions.md` (past verdicts). It returns a read-only memo with the top 3 requirements to question, 1 thing to delete, and 1 assumption about the problem, each with evidence. It never raises a rejected challenge again without new evidence. When the owner replies in plain words, the builder bot records the verdicts in the decisions log through its own PR.
 
+The context file lists each requirement with its owner, the domain expert consulted, the date asked, and the source. The memo opens with a problem check and ends with one "Held for later" line from the later steps. Facts about meetings or history must cite the exact source file and line.
+
 The skill reuses `why`, `unslop`, and the principles attack-the-premise, subtract-before-you-add, laziness-protocol, redesign-from-first-principles, minimize-reader-load, build-the-lever, encode-lessons-in-structure, and explain-the-number. It adds no principle. The slash-command table and `jedi-help` gain a row for it.
 
 ## 2.0.1 - attribution labels, overview image, security reporting
