@@ -79,6 +79,7 @@ The default answer is `/jedi-mode`, which runs most of the others when its steps
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |
+| Question a product's requirements and find what to delete before building more | [`/question-the-requirements`](../question-the-requirements/SKILL.md) |
 | Find their way around jstack | `/jedi-help` |
 
 If a skill directory next to this one is missing from the table, read its frontmatter and route by its description. The `principle-*` directories are covered under principles below.

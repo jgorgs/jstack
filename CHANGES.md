@@ -2,6 +2,14 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.0 - question-the-requirements
+
+New public skill `question-the-requirements` (`/jstack:question-the-requirements`, Codex `/question-the-requirements`). It runs the five-step engineering algorithm against a product repo, strictly in order. It questions each requirement and its named owner, deletes parts and steps, and only then simplifies, speeds up, and automates what survived. It also checks whether the repo solves the right problem for the right user.
+
+A builder bot runs it on a schedule the repo sets. It reads two files in the product repo, `docs/algorithm/context.md` (problem, users, requirements and their owners) and `docs/algorithm/decisions.md` (past verdicts). It returns a read-only memo with the top 3 requirements to question, 1 thing to delete, and 1 assumption about the problem, each with evidence. It never raises a rejected challenge again without new evidence. When the owner replies in plain words, the builder bot records the verdicts in the decisions log through its own PR.
+
+The skill reuses `why`, `unslop`, and the principles attack-the-premise, subtract-before-you-add, laziness-protocol, redesign-from-first-principles, minimize-reader-load, build-the-lever, encode-lessons-in-structure, and explain-the-number. It adds no principle. The slash-command table and `jedi-help` gain a row for it.
+
 ## 2.0.1 - attribution labels, overview image, security reporting
 
 Eight upstream links in `NOTICE.md` read `cursor/plugins/jstack @ <sha>` while their URLs open `cursor/plugins/pstack`, because the JStack rename rewrote the labels along with the repository's own paths. Each label now names upstream's real path, `cursor/plugins/pstack`.
