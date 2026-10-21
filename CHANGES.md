@@ -2,6 +2,12 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.3 - babysit triggers and base-branch intent
+
+Two rules from a session that reviewed, fixed and merged five PRs in order through a merge queue.
+
+- `babysit` description now fires on "watch CI and merge", "keep these green", merging several PRs in order, and merge queues, and sends multi-PR work to the jedi-mode Babysit playbook and its `watch-pr` watcher. The session hand-rolled polling loops instead, and read a PR entering the queue as an ejection.
+- `thermo-nuclear-review` Scope: a finding in existing code the diff only calls must be checked against that code's docblock and `git blame` on the base branch first. A review reported deliberate behavior on main as data loss, and the fix nearly reversed it.
 ## 2.1.2 - formal verification skills
 
 Adds `/create-formal-verification-skill` to choose and verify a high-risk property ordinary tests rarely reach, then leave a project-local skill that reruns the check. TLA+ is the default for ordering bugs such as races and state machines; the skill uses a code-level verifier or proof when that better fits the property. `/maintain-formal-verification-skill` keeps the model, harness, bounds, and sync commit aligned with later code changes, and distinguishes verification drift from a code bug. Both skills are available across the supported runtimes, with project-skill paths mapped for Codex, Pi, and Copilot.
