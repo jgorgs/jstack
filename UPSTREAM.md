@@ -2,7 +2,7 @@
 
 JStack takes changes from Michael Denyer's [pstack-claude](https://github.com/michael-denyer/pstack-claude) by hand and never merges it. The `upstream` remote points there: `git remote add upstream https://github.com/michael-denyer/pstack-claude.git`.
 
-Last reviewed: `94f5ce9` (pstack-claude 0.9.84)
+Last reviewed: `1ecb936` (pstack-claude 0.9.100)
 
 ## Procedure
 

@@ -25,6 +25,7 @@ Check the state that changes the answer, and mention it only when it does:
 
 - For model or routing questions, identify the runtime and installation type, then read [`setup-jstack`](../setup-jstack/SKILL.md#other-runtimes) for the sheet's location and how that runtime loads it. Check that configuration before saying whether defaults or overrides apply.
 - No project `verify` or `verify-*` skill or other app harness means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
+- Concurrency, retry, state-machine, parser, or unsafe-code bugs can hide beyond ordinary test coverage. Mention `/create-formal-verification-skill` to model-check or formally verify a high-risk property, and `/maintain-formal-verification-skill` when its covered code has changed.
 
 When the model sheet is missing and it matters, ask whether the user wants to pick a model for each role and a default effort now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
 
@@ -72,6 +73,8 @@ The default answer is `/jedi-mode`, which runs most of the others when its steps
 | Hear the last reply again in plain words | [`/bro`](../bro/SKILL.md) |
 | Give agents a scripted way to drive the app and prove behavior | [`/create-verification-skill`](../create-verification-skill/SKILL.md) |
 | Bring a verification skill and its feature map back in line with the app | [`/maintain-verification-skill`](../maintain-verification-skill/SKILL.md) |
+| Formally verify a high-risk property that tests rarely reach | [`/create-formal-verification-skill`](../create-formal-verification-skill/SKILL.md) |
+| Bring formal checks back in line after covered code changes | [`/maintain-formal-verification-skill`](../maintain-formal-verification-skill/SKILL.md) |
 | Vet a performance number before reporting or acting on it | [`/benchmark-checklist`](../benchmark-checklist/SKILL.md) |
 | Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
