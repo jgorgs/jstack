@@ -1,6 +1,6 @@
 {
   "name": "jstack",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "If you want to go fast, go deep first. JStack helps you write less, but higher quality code: rigorous agent workflows you can parallelize with confidence. Codex build of the Claude Code plugin; skills are shared, tool names resolve via skills/jedi-mode/references/codex-tools.md. Built on Lauren Tan's pstack and Michael Denyer's pstack-claude port.",
   "author": {
     "name": "Jake Gorgol",

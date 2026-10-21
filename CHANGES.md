@@ -2,6 +2,15 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.1 - lessons from a five-slice ship
+
+Four rules from a session that shipped a feature as five stacked slices through background agents.
+
+- `jedi-mode` "You own every subagent's work" now covers a subagent's claims about external state, such as a flag being off or a review not having run. Check the live system or the whole thread before relaying the claim or asking the operator about it. A local environment differs from production, and the tail of a thread is not the thread.
+- `jedi-mode` "Writing the reply" gains a rule that open decisions lead every update and are restated until answered. Each is explained through the concrete interaction first, then how established products handle it, then the recommendation, with no shorthand reply token.
+- Babysit step 5: push a verified fix to its owning branch at once. A verified commit held locally is stranded, along with every agent waiting on it, if the session restarts.
+- Babysit step 7: a local test timeout while reviewers or other runs load the same machine is load. Rerun only the failed files, one at a time, before treating any as real.
+
 ## 2.1.0 - question-the-requirements
 
 New public skill `question-the-requirements` (`/jstack:question-the-requirements`, Codex `/question-the-requirements`). It runs the five-step engineering algorithm against a product repo, strictly in order. It questions each requirement and its named owner, deletes parts and steps, and only then simplifies, speeds up, and automates what survived. It also checks whether the repo solves the right problem for the right user.
