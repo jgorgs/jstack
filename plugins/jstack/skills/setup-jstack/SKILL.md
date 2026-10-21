@@ -94,6 +94,10 @@ Tell the user where the override was written, how its model rows load, and wheth
 
 Check whether the project has a way to drive the real app for proof (a project `verify` or `verify-*` skill, or an existing harness). If not, offer once: "want a project-local verification skill, so agents can drive the app the way a user does and prove changes work? I can generate one with /create-verification-skill." On yes, invoke [`/create-verification-skill`](../create-verification-skill/SKILL.md). On no, move on without pushing.
 
+### 10. Offer a formal verification skill (optional)
+
+If the repo contains concurrency, retries, state machines, parsers, unsafe code, or another high-risk property ordinary tests rarely reach, offer once: "want me to formally verify the riskiest hard-to-test property and leave a project skill to recheck it? I can generate one with /create-formal-verification-skill." On yes, invoke [`/create-formal-verification-skill`](../create-formal-verification-skill/SKILL.md). On no, move on without pushing.
+
 ## Other runtimes
 
 The role lines are the same everywhere. What differs is the sheet path, how the runtime loads it, and how you list models. Detect models with the runtime's own tool and never write a slug you have not seen listed. A runtime whose subagent call has no model parameter still gets the sheet, as the record of the user's choice, and applies it where it can. The `session hook` line applies to the Claude Code, Codex, and GitHub Copilot plugins and to the jstack Pi extension.
