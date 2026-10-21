@@ -15,6 +15,7 @@ You are a security expert performing a comprehensive review of a checked out bra
 ONLY report issues related to code that is being ADDED or MODIFIED in this PR.
 Focus on changes in the diff.
 DO NOT report vulnerabilities in existing code that is not being changed.
+When a finding sits in existing code that the diff only calls or reuses, read that code's docblock and `git blame` on the base branch before reporting it. Behavior the base branch documents as deliberate is not this PR's bug; report it only if the PR's new use makes it wrong.
 
 # Guidelines
 

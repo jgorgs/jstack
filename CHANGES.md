@@ -2,6 +2,13 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.2 - babysit triggers and base-branch intent
+
+Two rules from a session that reviewed, fixed and merged five PRs in order through a merge queue.
+
+- `babysit` description now fires on "watch CI and merge", "keep these green", merging several PRs in order, and merge queues, and sends multi-PR work to the jedi-mode Babysit playbook and its `watch-pr` watcher. The session hand-rolled polling loops instead, and read a PR entering the queue as an ejection.
+- `thermo-nuclear-review` Scope: a finding in existing code the diff only calls must be checked against that code's docblock and `git blame` on the base branch first. A review reported deliberate behavior on main as data loss, and the fix nearly reversed it.
+
 ## 2.1.1 - lessons from a five-slice ship
 
 Four rules from a session that shipped a feature as five stacked slices through background agents.

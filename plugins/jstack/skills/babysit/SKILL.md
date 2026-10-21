@@ -1,6 +1,6 @@
 ---
 name: babysit
-description: Watch an open PR — fix failing CI, handle the straightforward review comments, and drive it to a mergeable state. Claude Code analog of Cursor's built-in /babysit. Use after opening a PR when the user wants the agent to shepherd it without re-prompting.
+description: Use when the user asks to watch CI, fix failures and merge one or several PRs ("watch CI and merge", "keep these green", "merge them in the order you need", a merge queue), or to shepherd an open PR without re-prompting. Fixes failing CI, handles the straightforward review comments, and drives each PR to a mergeable state with the `watch-pr` watcher instead of hand-rolled polling. For several PRs or a stack, follow the jedi-mode Babysit playbook, which owns the merge frontier and merge-queue state.
 ---
 
 # Babysit a PR
@@ -17,6 +17,7 @@ Inside jedi-mode, the **Babysit** playbook ([`../jedi-mode/playbooks/babysit.md`
 
 - There's an open PR and the user explicitly wants it kept green, and you are not already inside a jedi-mode run (the playbook owns that case).
 - The user invokes `/babysit` directly.
+- The user asks to review, fix CI and merge several PRs in order, or the repo merges through a queue: follow the jedi-mode Babysit playbook and its `watch-pr` watcher, which read queue state, rather than polling `gh` in a loop.
 - A subagent that opens a PR does NOT babysit — return to the parent and let the parent decide.
 
 ## Steps
