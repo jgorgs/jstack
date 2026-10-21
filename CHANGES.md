@@ -2,6 +2,12 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.2 - formal verification skills
+
+Adds `/create-formal-verification-skill` to choose and verify a high-risk property ordinary tests rarely reach, then leave a project-local skill that reruns the check. TLA+ is the default for ordering bugs such as races and state machines; the skill uses a code-level verifier or proof when that better fits the property. `/maintain-formal-verification-skill` keeps the model, harness, bounds, and sync commit aligned with later code changes, and distinguishes verification drift from a code bug. Both skills are available across the supported runtimes, with project-skill paths mapped for Codex, Pi, and Copilot.
+
+Synced from pstack-claude `1ecb936` (0.9.100), which carries the pstack v0.15.27 formal verification skills from `7b353f7`.
+
 ## 2.1.1 - lessons from a five-slice ship
 
 Four rules from a session that shipped a feature as five stacked slices through background agents.
