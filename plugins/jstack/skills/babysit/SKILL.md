@@ -29,7 +29,7 @@ Inside jedi-mode, the **Babysit** playbook ([`../jedi-mode/playbooks/babysit.md`
    ```
 
 2. **Triage in priority order.**
-   - Merge conflicts (`mergeStateStatus == DIRTY`): run the **fix-merge-conflicts** skill. Force-push only if the branch is yours and not shared.
+   - Merge conflicts (`mergeStateStatus == DIRTY`): run the **fix-merge-conflicts** skill and validate each proposed change against current product behavior; retain only intent that remains accurate. Force-push only if the branch is yours and not shared.
    - Failing checks (`statusCheckRollup` entries with `conclusion: FAILURE`): run the **fix-ci** skill. Root-cause the failure; fix the underlying code or test; commit; push.
    - Review comments: run the **get-pr-comments** skill for the summary, then act only on feedback you actually agree with. When a comment has a single mechanical answer — a rename, a guard clause, a formatting nit — make the edit and quote the comment in the commit message. When it hinges on a judgement call, or you can't tell what's being asked, don't guess: leave it and reply with what you would have done.
    - Review-bot comments (Bugbot and similar automation): classify fix/dismiss/ask before acting, per [`bugbot-triage.md`](../jedi-mode/references/bugbot-triage.md). Ask by default on security, data, and high-severity findings.
