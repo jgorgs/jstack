@@ -2,6 +2,10 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.5 - check product and documentation drift
+
+Babysit now asks the rebase owner to compare affected code, callers, product behavior, and documentation claims with current trunk, then reconcile stale facts in the same wave.
+
 ## 2.1.4 - validate conflict resolutions and show execution
 
 Two lessons from a journal architecture refactor and ship.
