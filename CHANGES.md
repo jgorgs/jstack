@@ -2,6 +2,13 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.1.4 - validate conflict resolutions and show execution
+
+Two lessons from a journal architecture refactor and ship.
+
+- `babysit` now asks agents to check conflict-resolved changes against current product behavior, since stale documentation can remain syntactically conflict-free but factually wrong.
+- `jedi-mode` progress updates now show an observed result or active operation, and start the first reversible action before a plan-only update.
+
 ## 2.1.3 - babysit triggers and base-branch intent
 
 Two rules from a session that reviewed, fixed and merged five PRs in order through a merge queue.
