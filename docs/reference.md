@@ -4,7 +4,7 @@ Start with the [README](../README.md) for installation and your first task.
 
 ## Slash commands
 
-The package includes 65 skill directories: 41 public skills and 24 `principle-*` references. Claude Code uses `/jstack:<name>`, and Pi uses `/skill:<name>`. In Codex, request a skill by name or install the [optional shortcuts](#codex) for the `/name` form below.
+The package includes 66 skill directories: 42 public skills and 24 `principle-*` references. Claude Code uses `/jstack:<name>`, and Pi uses `/skill:<name>`. In Codex, request a skill by name or install the [optional shortcuts](#codex) for the `/name` form below.
 
 Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 
@@ -51,6 +51,7 @@ Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 | `/get-pr-comments` | fetch and summarize review comments from the active PR |
 | `/what-did-i-get-done` | summarize authored commits over a user-chosen period |
 | `/question-the-requirements` | challenge a product repo's requirements, pick one thing to delete, and test the problem, as a read-only memo |
+| `/design-critique` | critique a UI change before its PR is ready, against the approved mock and production |
 
 ## Runtime support
 
