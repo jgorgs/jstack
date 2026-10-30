@@ -2,6 +2,19 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.2.0 - add /statechart and /ketchup-video from pstack v0.15.35
+
+Takes pstack-claude 0.9.103 and 0.9.105 (#313 and #319), its syncs to pstack `e73df47` (v0.15.32) and `ab1f702` (v0.15.35), by hand. pstack-claude 0.9.104 (#318, the Pi `ask tool: off` line) and the commits after 0.9.105 are left for the next review.
+
+- `/statechart` is new. It checks a TLA+ model with TLC and draws it as a Mermaid statechart, with the shortest path to each state that breaks a rule. Its scripts are the TypeScript compiler from v0.15.35, under `plugins/jstack/skills/statechart/scripts`, and a new `Statechart scripts` CI job runs their tests against the TLC jar `run.ts` pins.
+- `/ketchup-video` is new. It turns the `/ketchup` catch-up into a short silent slide video with subtitles, with the calls waiting on you as text under it.
+- `create-formal-verification-skill` tells the skill it generates to read TLA+ results with `/statechart`.
+- `interrogate` now runs each finding before it reports it, reuses `arena`'s phases for the panel, and lists what it dropped. Its Models section is now stamped like the other skills' and its reviewer table is gone. The Pi, Codex, and Copilot mapping notes follow.
+- `arena` has a judge from another model family cross-check the winner. `jedi-mode` gains the Explain the Number principle line and runs a steer or resume of a running agent in the background. `jedi-help` lists the two new skills and the formal verification recipe.
+- The README says how to turn on auto-update for the jstack marketplace in Claude Code.
+
+Not taken: upstream's rewritten Autopilot-stack ("Autopilot-full without the merge") and its blocking rule, because JStack's Autopilot-full and Autopilot-stack are its own and already stop before the merge; the `orch/store.ts` and `orch.test.ts` changes, which target the forge-based orch that JStack does not run; and the `sharpen`, `in-your-own-words`, Muse, and reasoning-level text JStack left out before. pstack v0.15.36 (`c742dd6`), which deletes the orch scripts and makes Orchestrate agentic, is not in pstack-claude yet and is not taken.
+
 ## 2.1.5 - check product and documentation drift
 
 Babysit now asks the rebase owner to compare affected code, callers, product behavior, and documentation claims with current trunk, then reconcile stale facts in the same wave.

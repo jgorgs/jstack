@@ -22,6 +22,7 @@ JStack is built on upstream MIT-licensed work. It began as a fork of Michael Den
 | `plugins/jstack/skills/correct/` (v0.15.9 addition) | [cursor/plugins/pstack @ e43c7ee](https://github.com/cursor/plugins/tree/e43c7ee/pstack) | (c) 2026 Lauren Tan | MIT | [LICENSE](LICENSE) |
 | `plugins/jstack/skills/jedi-help/` (v0.15.13 addition) | [cursor/plugins/pstack @ 2cbf585](https://github.com/cursor/plugins/tree/2cbf585/pstack) | (c) 2026 Lauren Tan | MIT | [LICENSE](LICENSE) |
 | `plugins/jstack/skills/create-formal-verification-skill/`, `plugins/jstack/skills/maintain-formal-verification-skill/` (v0.15.27 additions) | [cursor/plugins/pstack @ 7b353f7](https://github.com/cursor/plugins/tree/7b353f7/pstack) | (c) 2026 Lauren Tan | MIT | [LICENSE](LICENSE) |
+| `plugins/jstack/skills/statechart/`, `plugins/jstack/skills/ketchup-video/` (v0.15.31 to v0.15.35 additions) | [cursor/plugins/pstack @ ab1f702](https://github.com/cursor/plugins/tree/ab1f702/pstack) | (c) 2026 Lauren Tan | MIT | [LICENSE](LICENSE) |
 
 ## What changed in the port
 

@@ -4,7 +4,7 @@ Start with the [README](../README.md) for installation and your first task.
 
 ## Slash commands
 
-The package includes 66 skill directories: 42 public skills and 24 `principle-*` references. Claude Code uses `/jstack:<name>`, and Pi uses `/skill:<name>`. In Codex, request a skill by name or install the [optional shortcuts](#codex) for the `/name` form below.
+The package includes 68 skill directories: 44 public skills and 24 `principle-*` references. Claude Code uses `/jstack:<name>`, and Pi uses `/skill:<name>`. In Codex, request a skill by name or install the [optional shortcuts](#codex) for the `/name` form below.
 
 Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 
@@ -31,6 +31,7 @@ Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 | `/blast-radius` | find what a change could break beyond the diff and prove safety by running code |
 | `/recall` | catch up on recent working context from chat history, live state, and the shared record |
 | `/ketchup` | catch up on everything in this chat since your last message, with an executive summary for each action item |
+| `/ketchup-video` | get the `/ketchup` catch-up as a short silent video of slides, with the calls waiting on you as text under it |
 | `/setup-jstack` | configure jstack per-role model choices |
 | `/jedi-help` | answer a question about jstack with the prompt to send and the file the answer came from |
 | `/upstream-review` | list the pstack-claude changes since the last review that are worth copying into JStack |
@@ -40,6 +41,7 @@ Find each skill's instructions in the [skills tree](../plugins/jstack/skills/).
 | `/maintain-verification-skill` | re-sync a drifted verification skill and its feature map |
 | `/create-formal-verification-skill` | model-check or formally verify one high-risk property and leave a rerunnable project skill |
 | `/maintain-formal-verification-skill` | bring formal checks back in line after covered code changes |
+| `/statechart` | check a TLA+ model and draw it as a Mermaid statechart, with the shortest path to each state that breaks a rule |
 | `/deslop` | deslop a diff before commit |
 | `/babysit` | monitor an open PR, fix CI/comments, keep it merge-ready |
 | `/thermo-nuclear-review` | audit a branch's changes for bugs, breakage, security issues, devex regressions, and feature-gate leaks |
@@ -239,7 +241,7 @@ CI also checks shell scripts, workflows, Markdown, relative links, and the bundl
 
 ### Attribution and upstream review
 
-JStack forked Michael Denyer's [pstack-claude](https://github.com/michael-denyer/pstack-claude) at `94f5ce9` (0.9.84). The latest reviewed pstack-claude revision is `1ecb936` (0.9.100), whose skill tree includes Lauren Tan's formal verification skills synced from pstack `7b353f7` (v0.15.27). JStack takes later upstream changes by hand: [UPSTREAM.md](../UPSTREAM.md) records the last pstack-claude commit reviewed, and `/jstack:upstream-review` lists what changed since.
+JStack forked Michael Denyer's [pstack-claude](https://github.com/michael-denyer/pstack-claude) at `94f5ce9` (0.9.84). The latest reviewed pstack-claude revision is `1b01ed1` (0.9.105), whose skill tree includes Lauren Tan's `statechart` and `ketchup-video` skills synced from pstack `ab1f702` (v0.15.35). JStack takes later upstream changes by hand: [UPSTREAM.md](../UPSTREAM.md) records the last pstack-claude commit reviewed, and `/jstack:upstream-review` lists what changed since.
 
 The pstack-claude port brought Lauren Tan's pstack from Cursor to Claude Code and shares the skills with other runtimes. It includes six cursor-team-kit skills, the three thermos skills with their two review subagents, and an independently authored `babysit` skill. The port supplies Claude Code plugin registration and routing, Codex manifests and shortcuts, the Codex tool mapping, the Pi package, extension, and tool mapping, and the GitHub Copilot hooks and tool mapping.
 

@@ -17,6 +17,8 @@ Run in Claude Code:
 /plugin install jstack@jstack
 ```
 
+Claude Code leaves auto-update off for third-party marketplaces, so jstack stays on the version you installed. To turn it on, run `/plugin`, open the **Marketplaces** tab, select `jstack`, and choose **Enable auto-update**. To update once by hand, run `claude plugin update jstack@jstack`.
+
 ### Codex
 
 Run in your terminal:

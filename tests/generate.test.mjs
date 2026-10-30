@@ -121,11 +121,6 @@ describe("regions", () => {
     );
   });
 
-  test("a policy without the interrogate reviewers role throws naming it", () => {
-    const roles = models.roles.filter((r) => r.role !== "interrogate reviewers");
-    expect(() => regions({ ...models, roles })).toThrow('models.json: no "interrogate reviewers" role');
-  });
-
   test("applyRegions leaves a file the generator does not own untouched", () => {
     const text = "# other\n\n## Models\n\nprose\n";
     expect(applyRegions("plugins/jstack/skills/other/SKILL.md", text, models)).toBe(text);

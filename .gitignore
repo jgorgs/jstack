@@ -14,6 +14,9 @@
 # bun deps for the vendored jedi-mode scripts (bootstrap.ts installs them on first run)
 plugins/jstack/skills/*/scripts/node_modules/
 
+# bun installs fast-check for the statechart tests
+plugins/jstack/skills/statechart/scripts/node_modules/
+
 # bun installs the typebox peer for the Pi extension tests
 /node_modules/
 
