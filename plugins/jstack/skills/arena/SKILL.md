@@ -56,8 +56,8 @@ One synthesized artifact, with a short synthesis note alongside naming the base 
 
 Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.
 
-- arena runners: `opus`, `fable`, `sonnet`, `haiku`
-- arena cross-judge pool: `opus`, `fable`, `sonnet`, `haiku`
+- arena runners: `fable`, `opus`, `sonnet`
+- arena cross-judge pool: `fable`, `opus`, `sonnet`
 
 ## Reasoning effort
 

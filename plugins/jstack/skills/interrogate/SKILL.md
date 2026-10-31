@@ -48,7 +48,7 @@ This skill is self-contained, so a repository that vendors only `interrogate` ha
 
 Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.
 
-- interrogate reviewers: `opus`, `fable`, `sonnet`, `haiku`
+- interrogate reviewers: `fable`, `opus`, `sonnet`
 
 ## Reasoning effort
 

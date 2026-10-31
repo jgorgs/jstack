@@ -2,7 +2,8 @@
   "tiers": {
     "default": "opus",
     "strongest": "fable",
-    "panel": ["opus", "fable", "sonnet", "haiku"]
+    "panel": ["fable", "opus", "sonnet"],
+    "fast": "sonnet"
   },
   "efforts": ["low", "medium", "high", "xhigh", "max"],
   "defaultEffort": "session",
@@ -11,22 +12,23 @@
     { "role": "feature, refactoring", "models": "default", "skill": "jedi-mode" },
     { "role": "bug-fix", "models": "strongest", "skill": "jedi-mode" },
     { "role": "perf-issue", "models": "strongest", "skill": "jedi-mode" },
-    { "role": "hillclimb", "models": "strongest", "skill": "jedi-mode" },
+    { "role": "hillclimb", "models": "default", "skill": "jedi-mode" },
     { "role": "judgment and prose", "models": "default", "skill": "jedi-mode" },
     { "role": "strongest judgment", "models": "strongest", "skill": "jedi-mode" },
-    { "role": "how explorer", "models": "default", "skill": "how" },
+    { "role": "mechanical edits", "models": "fast", "skill": "jedi-mode" },
+    { "role": "how explorer", "models": "fast", "skill": "how" },
     { "role": "how explainer", "models": "default", "skill": "how" },
-    { "role": "why investigators", "models": "default", "skill": "why" },
+    { "role": "why investigators", "models": "fast", "skill": "why" },
     { "role": "why synthesizer", "models": "default", "skill": "why" },
-    { "role": "reflect tooling", "models": "default", "skill": "reflect" },
+    { "role": "reflect tooling", "models": "fast", "skill": "reflect" },
     { "role": "reflect judgment, divergent, synthesizer", "models": "default", "skill": "reflect" },
     { "role": "arena runners", "models": "panel", "skill": "arena" },
     { "role": "arena cross-judge pool", "models": "panel", "skill": "arena" },
-    { "role": "swarm workers", "models": "default", "skill": "swarm" },
+    { "role": "swarm workers", "models": "fast", "skill": "swarm" },
     { "role": "architect runners", "models": "panel", "skill": "architect" },
     { "role": "interrogate reviewers", "models": "panel", "skill": "interrogate" },
     { "role": "thermos reviewers", "models": "default", "skill": "thermos" },
-    { "role": "no-comments reviewer", "models": "default", "skill": "no-comments" }
+    { "role": "no-comments reviewer", "models": "fast", "skill": "no-comments" }
   ],
   "codex": {
     "default": "gpt-6.1-sol",
@@ -40,6 +42,7 @@
     "hillclimb": "grok-4.7-xhigh",
     "judgment and prose": "claude-opus-5-5-xhigh",
     "strongest judgment": "claude-opus-5-5-xhigh",
+    "mechanical edits": "composer-2.5",
     "how explorer": "grok-4.7-xhigh",
     "how explainer": "claude-opus-5-5-xhigh",
     "why investigators": "grok-4.7-xhigh",

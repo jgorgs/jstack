@@ -65,22 +65,23 @@ Per-role model overrides for jstack skills. Each jstack SKILL.md names its defau
 feature, refactoring: opus
 bug-fix: fable
 perf-issue: fable
-hillclimb: fable
+hillclimb: opus
 judgment and prose: opus
 strongest judgment: fable
-how explorer: opus
+mechanical edits: sonnet
+how explorer: sonnet
 how explainer: opus
-why investigators: opus
+why investigators: sonnet
 why synthesizer: opus
-reflect tooling: opus
+reflect tooling: sonnet
 reflect judgment, divergent, synthesizer: opus
-arena runners: opus, fable, sonnet, haiku
-arena cross-judge pool: opus, fable, sonnet, haiku
-swarm workers: opus
-architect runners: opus, fable, sonnet, haiku
-interrogate reviewers: opus, fable, sonnet, haiku
+arena runners: fable, opus, sonnet
+arena cross-judge pool: fable, opus, sonnet
+swarm workers: sonnet
+architect runners: fable, opus, sonnet
+interrogate reviewers: fable, opus, sonnet
 thermos reviewers: opus
-no-comments reviewer: opus
+no-comments reviewer: sonnet
 
 default effort: session
 session hook: on
@@ -124,7 +125,7 @@ The role lines are the same everywhere. What differs is the sheet path, how the 
 Stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`).
 
 - Available Claude models: `opus`, `fable`, `sonnet`, `haiku`
-- Default panel: `opus`, `fable`, `sonnet`, `haiku`
+- Default panel: `fable`, `opus`, `sonnet`
 - Reasoning effort levels: `low`, `medium`, `high`, `xhigh`, `max`
 - Default reasoning effort: `session`
 - Single-role default: `opus`

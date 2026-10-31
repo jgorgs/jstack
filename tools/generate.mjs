@@ -443,6 +443,7 @@ export function regions(models) {
         [
           ["Default", "default"],
           ["Strongest", "strongest"],
+          ["Fast", "fast"],
           ["Panel", "panel"],
         ].map(([label, tier]) => `| ${label} | ${models.roles.filter((r) => r.tier === tier).map((r) => code(r.role)).join(", ")} |`),
     },

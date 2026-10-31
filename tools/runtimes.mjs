@@ -74,9 +74,12 @@ export const RUNTIMES = [
     : null,
 }));
 
-// Codex has no Claude aliases, so its block gives an example model per tier.
+// Codex has no Claude aliases, so its block gives an example model per tier the
+// Model names section renders with one. The fast tier renders without an
+// example, so jstack adds no Codex model for it.
+const CODEX_UNEXAMPLED_TIERS = ["fast"];
 function checkCodexModels(codex, { raw, fail, unique }) {
-  for (const tier of Object.keys(raw.tiers)) {
+  for (const tier of Object.keys(raw.tiers).filter((t) => !CODEX_UNEXAMPLED_TIERS.includes(t))) {
     if (!Object.hasOwn(codex, tier)) fail(`codex has no example for tier "${tier}"`);
   }
   for (const [tier, value] of Object.entries(codex)) {
@@ -153,6 +156,8 @@ export function codexModelNamesSection(models) {
     `- Single-model roles: your primary Codex model (for example ${code(models.codex.default)}).\n` +
     `- Roles that default to the strongest Claude model (${strongest.map((r) => code(r.role)).join(", ")}): ` +
     `your strongest Codex model (for example ${code(models.codex.strongest)}).\n` +
+    `- Roles that default to the fast Claude tier (${models.roles.filter((r) => r.tier === "fast").map((r) => code(r.role)).join(", ")}): ` +
+    "your fastest configured Codex model, or your primary one when you have only one.\n" +
     "- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial " +
     "signal comes from model diversity, so use the distinct Codex models available to you. A good default panel " +
     `on ChatGPT is ${codeList(models.codex.panel)}. If only one model family is reachable, vary reasoning ` +

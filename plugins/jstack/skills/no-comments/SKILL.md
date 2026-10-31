@@ -36,7 +36,7 @@ Use the caller's files or diff. Otherwise use the current diff against the base 
 
 Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.
 
-- no-comments reviewer: `opus`
+- no-comments reviewer: `sonnet`
 
 ## Reasoning effort
 

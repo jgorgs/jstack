@@ -17,6 +17,7 @@ function sheet_roles(roles, panel,    n) {
   roles[++n] = "hillclimb"
   roles[++n] = "judgment and prose"
   roles[++n] = "strongest judgment"
+  roles[++n] = "mechanical edits"
   roles[++n] = "how explorer"
   roles[++n] = "how explainer"
   roles[++n] = "why investigators"

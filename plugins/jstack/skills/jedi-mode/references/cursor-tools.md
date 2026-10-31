@@ -35,6 +35,7 @@ Skills name Claude defaults in their Models sections. Those names do not pick a 
 | hillclimb | `grok-4.7-xhigh` |
 | judgment and prose | `claude-opus-5-5-xhigh` |
 | strongest judgment | `claude-opus-5-5-xhigh` |
+| mechanical edits | `composer-2.5` |
 | how explorer | `grok-4.7-xhigh` |
 | how explainer | `claude-opus-5-5-xhigh` |
 | why investigators | `grok-4.7-xhigh` |

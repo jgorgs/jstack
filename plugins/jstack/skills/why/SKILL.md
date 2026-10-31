@@ -108,7 +108,7 @@ After Sources Consulted, if the user's `why` question is a precursor to changing
 
 Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.
 
-- why investigators: `opus`
+- why investigators: `sonnet`
 - why synthesizer: `opus`
 
 ## Reasoning effort
