@@ -2,6 +2,21 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.3.0 - sync selected pstack-claude fixes through 0.9.125
+
+Takes these pstack-claude changes by hand, renamed to jstack:
+
+- `/no-comments` and `comment-sicko` keep a comment that states a dependency, platform, vendor, or protocol rule as a `HOLD` unless the report cites documentation or source that refutes it, and a second rejected report fails only its own findings, not the run (0.9.106, #320).
+- `check-plan.mjs` no longer counts text inside a fenced example toward the required plan guidance, program markers, or review-gate evidence (0.9.107, #321). The `claude-config-dir` test change in that release is not taken, because JStack has no such test.
+- `bootstrap.ts` re-runs the script after it installs `commander`, so the first `watch-pr`, `ship-pr`, or `orch` run after an update does not fail with "Cannot find package 'commander'" (0.9.108, #327).
+- The Codex default, Codex panel, and the Pi `sonnet` mappings for the `openai` and `openai-codex` providers now use `gpt-6.1-sol` in place of `gpt-6-sol` (0.9.110 and 0.9.111, #329 and #330). The GPT-6.1 Terra panel seat from 0.9.109 (#328) is not taken, so the Codex panel stays at three models.
+- On Codex, `session` effort is read from the active turn with the new `jedi-mode/scripts/codex-session-effort.mjs` helper and passed as `reasoning_effort`, and setup says when a host cannot expose it (0.9.113, #333). Upstream's task-adjusted effort sentence is left out, because `jedi-mode` has no task-adjustment rule.
+- `thermos` and `/no-comments` get their own model roles, `thermos reviewers` and `no-comments reviewer`, which `/setup-jstack` writes to the sheet (0.9.115 and 0.9.117, #348 and #350).
+
+Not taken: the Windows, Muse, MiniMax, and statechart-CI changes, the Pi extension fixes (0.9.118 to 0.9.121), README changes, the 0.9.123 sync to pstack v0.15.36 (agentic Orchestrate, orch scripts removed), and 0.9.124's Orchestrate store notes, because JStack keeps its own orch, Autopilot, babysit, and merge-safety.
+
+UPSTREAM.md: last reviewed `a53c0f8` (pstack-claude 0.9.125).
+
 ## 2.2.1 - interrogate runs without arena
 
 - `interrogate` runs its own adversary panel again. 2.2.0 had it borrow `arena`'s phases, so a repository that vendors only `interrogate` (as `skills add --skill interrogate` does) had no panel steps to follow. The panel steps it needs (seats from the `interrogate reviewers` line, a worktree per adversary, one background spawn, rerun-to-verify) now live in its own file. Its brief, verification rule, and output are unchanged.

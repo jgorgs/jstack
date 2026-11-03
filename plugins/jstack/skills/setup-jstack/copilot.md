@@ -49,7 +49,7 @@ Each tier question below writes every role in its row. The panel row's roles eac
 
 | Tier | Roles |
 | --- | --- |
-| Default | `feature, refactoring`, `judgment and prose`, `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment, divergent, synthesizer`, `swarm workers` |
+| Default | `feature, refactoring`, `judgment and prose`, `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment, divergent, synthesizer`, `swarm workers`, `thermos reviewers`, `no-comments reviewer` |
 | Strongest | `bug-fix`, `perf-issue`, `hillclimb`, `strongest judgment` |
 | Panel | `arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers` |
 

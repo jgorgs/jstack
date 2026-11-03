@@ -37,7 +37,10 @@ jedi-mode's Subagents section sets Claude-specific defaults (`subagent_type: "js
 
 - There is no `jedi-agent` subagent type. Route an ad-hoc subagent through jedi-mode's style by dispatching a `spawn_agent` whose instructions tell it to read the `jedi-mode` skill in full first.
 - `spawn_agent` calls already run concurrently with your turn, so `run_in_background: true` has no separate flag. Issue the dispatch and continue.
-- There are no `jstack:effort-<level>` or `jstack:jedi-agent-<level>` types. When a role value carries `@<level>`, or the `default effort` line names a level, pass that level as `spawn_agent`'s `reasoning_effort` and keep the dispatch otherwise unchanged. `session` passes no `reasoning_effort`.
+- There are no `jstack:effort-<level>` or `jstack:jedi-agent-<level>` types. When a role value carries `@<level>`, or the `default effort` line names a level, pass that level as `spawn_agent`'s `reasoning_effort` and keep the dispatch otherwise unchanged.
+- For `session`, run `node <jedi-mode-dir>/scripts/codex-session-effort.mjs` before dispatching, with `<jedi-mode-dir>` resolved to this skill's directory. The [helper](../scripts/codex-session-effort.mjs) reads the active turn's effort from the exact runtime log identified by `CODEX_THREAD_ID`, under `$CODEX_HOME/sessions` (default `~/.codex/sessions`). It prints only the effort. Run it again on each turn; a UI effort change must not reuse the previous turn's value.
+- Pass that level, or the explicit role or `default effort` level, as `reasoning_effort` on `spawn_agent`, including when a model is selected explicitly. An omitted effort can use a configured subagent effort or, when a model is selected, that model's default instead of the parent's level.
+- Do not guess the session's effort from the model, a config default, or a previous turn. If the helper cannot identify the active turn's effort, ask for an explicit role or `default effort` level before dispatching. Do not substitute an omitted `reasoning_effort` for the missing starting level. Automatic `session` resolution depends on the host exposing the current thread's runtime log; it is not available on every Codex host.
 - There is no `comment-sicko` subagent type either. The **no-comments** skill spawns it on Claude Code; on Codex dispatch a `spawn_agent` whose instructions tell it to read `jedi-mode/references/agents/comment-sicko.md` in full first.
 - There are no `thermo-nuclear-review-subagent` or `thermo-nuclear-code-quality-review-subagent` types. The **thermos** skill spawns both on Claude Code; on Codex dispatch two `spawn_agent` calls whose instructions tell each to read the `thermo-nuclear-review` or `thermo-nuclear-code-quality-review` skill in full first and review only the diff and file contents in its prompt.
 - Claude Code runs every subagent on this machine, so the **swarm** skill's workers and the fan-out playbooks (`orchestrate`, `autopilot-full`, `autopilot-stack`) isolate writers with worktrees. The same holds on Codex.
@@ -47,9 +50,9 @@ jedi-mode's Subagents section sets Claude-specific defaults (`subagent_type: "js
 
 Skills name Claude defaults (a single-role default for code/prose/judgment plus a diverse-model panel for diverse-model panels; each model-consuming skill lists its own in a Models section). These slugs do not resolve on Codex. Substitute your configured Codex models:
 
-- Single-model roles: your primary Codex model (for example `gpt-6-sol`).
+- Single-model roles: your primary Codex model (for example `gpt-6.1-sol`).
 - Roles that default to the strongest Claude model (`bug-fix`, `perf-issue`, `hillclimb`, `strongest judgment`): your strongest Codex model (for example `gpt-6-astra`).
-- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial signal comes from model diversity, so use the distinct Codex models available to you. A good default panel on ChatGPT is `gpt-6-astra`, `gpt-6-sol`, `gpt-6-luna`. If only one model family is reachable, vary reasoning effort and note in the verdict that diversity was reduced.
+- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial signal comes from model diversity, so use the distinct Codex models available to you. A good default panel on ChatGPT is `gpt-6-astra`, `gpt-6.1-sol`, `gpt-6-luna`. If only one model family is reachable, vary reasoning effort and note in the verdict that diversity was reduced.
 
 `/setup-jstack` writes the configured model list. On Codex, set it to your Codex model slugs.
 
