@@ -54,6 +54,16 @@ In `modes/`. Default: `screen.md` plus the quick pass in `accessibility.md`. Add
 ## Output
 
 1. Fix blockers in the branch, then re-screenshot and re-check them.
-2. Write a `Design critique` section in the PR body: who uses the screen and why, a one-line verdict, then Fix first, Worth fixing, Minor, Working well, Could not judge.
+2. Write a `Design critique` section in the PR body: who uses the screen and why, a one-line verdict, then Fix first, Worth fixing, Minor, Working well, Could not judge. Write each finding under Fix first, Worth fixing, and Minor as one checkbox line with its severity and your tag:
+
+   ```markdown
+   - [x] **Blocker** · real · Save button sits below the fold at 375 px, so the user can't submit. Fixed in the branch.
+   - [x] **Minor** · false alarm · Card shadow looks heavier than the mock. The screenshot is compressed, so this is an estimate.
+   ```
+
+   - Severity is one of the three levels in [Severity](#severity).
+   - The tag is your call after checking the finding: `real` if it holds, `false alarm` if it turned out not to matter. Keep false alarms in the list so Jake can see them.
+   - Tick every box when you write the section. A ticked box means the finding is kept. Jake unticks a finding he rejects. Never re-tick a box he unticked.
+   - Jake adds a finding you missed as a `missed: …` line under the matching severity heading. Treat it as a kept finding.
 3. Draft one follow-up per unfixed worth-fixing item for the repo's tracker. Put the drafts in the PR body when it moves to review. File them only after Jake says yes.
 4. Keep a per-screen open-fix list only if the repo section asks for one, and only for screens with open blockers.
