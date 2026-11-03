@@ -20,7 +20,7 @@ The `.cursor/rules/jstack-models.mdc` rule at the root of the jstack repository 
 - Every jstack subagent type becomes `subagent_type: "generalPurpose"`: `general-purpose`, `jstack:jedi-agent`, and the `jstack:effort-<level>` and `jstack:jedi-agent-<level>` variants. Tell a stand-in for `jstack:jedi-agent` to read the `jedi-mode` skill in full first.
 - There is no `jstack:comment-sicko` subagent type. The **no-comments** skill spawns a `generalPurpose` `Task` whose instructions tell it to read `jedi-mode/references/agents/comment-sicko.md` in full first, on the `feature, refactoring` model.
 - There are no `thermo-nuclear-review-subagent` or `thermo-nuclear-code-quality-review-subagent` types. The **thermos** skill spawns two `generalPurpose` `Task` calls whose instructions tell each to read the `thermo-nuclear-review` or `thermo-nuclear-code-quality-review` skill in full first, on the `reflect judgment, divergent, synthesizer` model.
-- A role value's `@<level>` suffix and the sheet's `default effort` line do not apply. A Cursor slug carries its reasoning effort and speed, as in `grok-4.7-high` or `grok-4.7-xhigh-fast`.
+- A role value's `@<level>` suffix and the sheet's `default effort` line do not apply. A Cursor slug carries its reasoning effort, and its speed where Cursor offers a `-fast` variant, as in `grok-4.7-high` or `grok-4.7-xhigh`. jstack defaults to the regular, non-fast variants.
 - Pass `model` on every `Task` call a skill makes for a role. A call without it runs on the parent chat's model, so a Claude parent would run every explorer and worker on Claude.
 
 ## Model names
@@ -29,23 +29,23 @@ Skills name Claude defaults in their Models sections. Those names do not pick a 
 
 | Role | Cursor model |
 | --- | --- |
-| feature, refactoring | `grok-4.7-xhigh-fast` |
-| bug-fix | `grok-4.7-xhigh-fast` |
-| perf-issue | `grok-4.7-xhigh-fast` |
-| hillclimb | `grok-4.7-xhigh-fast` |
+| feature, refactoring | `grok-4.7-xhigh` |
+| bug-fix | `grok-4.7-xhigh` |
+| perf-issue | `grok-4.7-xhigh` |
+| hillclimb | `grok-4.7-xhigh` |
 | judgment and prose | `claude-opus-5-5-xhigh` |
 | strongest judgment | `claude-opus-5-5-xhigh` |
-| how explorer | `grok-4.7-xhigh-fast` |
+| how explorer | `grok-4.7-xhigh` |
 | how explainer | `claude-opus-5-5-xhigh` |
-| why investigators | `grok-4.7-xhigh-fast` |
+| why investigators | `grok-4.7-xhigh` |
 | why synthesizer | `claude-opus-5-5-xhigh` |
-| reflect tooling | `grok-4.7-xhigh-fast` |
+| reflect tooling | `grok-4.7-xhigh` |
 | reflect judgment, divergent, synthesizer | `claude-opus-5-5-xhigh` |
-| arena runners | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh-fast` |
-| arena cross-judge pool | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh-fast` |
-| swarm workers | `grok-4.7-xhigh-fast` |
-| architect runners | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh-fast` |
-| interrogate reviewers | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh-fast`, `composer-2.5` |
+| arena runners | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh` |
+| arena cross-judge pool | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh` |
+| swarm workers | `grok-4.7-xhigh` |
+| architect runners | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh` |
+| interrogate reviewers | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh`, `composer-2.5` |
 
 The split follows pstack's Cursor defaults: Grok runs code, exploration, investigation, tooling review, and swarm work; Claude runs the judgment, synthesis, and explanation roles and one seat of each diverse panel. A panel role runs one subagent per listed slug.
 
