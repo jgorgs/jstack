@@ -4,4 +4,4 @@ description: have three different models try to break a diff
 disable-model-invocation: true
 ---
 
-Invoke the `interrogate` skill and follow it.
+Invoke the `interrogate` skill and follow it. Resolve Claude tool names, Claude model names, and Claude built-in skills through `jedi-mode/references/codex-tools.md`, including its Per-skill notes.

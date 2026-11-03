@@ -2,6 +2,12 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.2.1 - interrogate runs without arena
+
+- `interrogate` runs its own adversary panel again. 2.2.0 had it borrow `arena`'s phases, so a repository that vendors only `interrogate` (as `skills add --skill interrogate` does) had no panel steps to follow. The panel steps it needs (seats from the `interrogate reviewers` line, a worktree per adversary, one background spawn, rerun-to-verify) now live in its own file. Its brief, verification rule, and output are unchanged.
+- `interrogate` no longer links to `jedi-mode/references/codex-tools.md` or `copilot-tools.md`, which `skills add --skill interrogate` does not vendor. Its Codex and Copilot dispatch notes now sit in its own Other runtimes section, and the two mapping tables drop their `interrogate` rows.
+- The `jedi-mode` opening-a-PR playbook again has a subagent that opens a PR run `/interrogate` before `/deslop` and `/no-comments`. 2.2.0 dropped it from that line.
+
 ## 2.2.0 - add /statechart and /ketchup-video from pstack v0.15.35
 
 Takes pstack-claude 0.9.103 and 0.9.105 (#313 and #319), its syncs to pstack `e73df47` (v0.15.32) and `ab1f702` (v0.15.35), by hand. pstack-claude 0.9.104 (#318, the Pi `ask tool: off` line) and the commits after 0.9.105 are left for the next review.

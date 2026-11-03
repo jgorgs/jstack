@@ -55,3 +55,13 @@ describe("prose skill references", () => {
     expect([...listed].sort()).toEqual([...principles].sort());
   });
 });
+
+// `pnpm dlx skills add '<repo>#main' --skill interrogate` vendors only the
+// interrogate directory, so a link out of it would dangle in that repository.
+describe("standalone skills", () => {
+  test("interrogate links nothing outside its own directory", () => {
+    const text = readFileSync(join(skillsDir, "interrogate", "SKILL.md"), "utf8");
+    const outward = [...text.matchAll(/\]\((\.\.\/[^)]*)\)/g)].map((m) => m[1]);
+    expect(outward).toEqual([]);
+  });
+});
