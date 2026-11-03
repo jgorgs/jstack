@@ -9,6 +9,8 @@ On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), i
 
 On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
 
+On Cursor, read the [platform mapping](../jedi-mode/references/cursor-tools.md), including its per-skill notes, before following this skill.
+
 Spawn comment-sicko. Act on accepted findings.
 
 Defer to comment-sicko's fresh perspective.

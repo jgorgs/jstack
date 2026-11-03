@@ -16,17 +16,21 @@
 //   user-invocable: false); a skill without a row or a row without a skill
 //   fails by name.
 //   plugins/jstack/models.json (the model policy: role defaults, diverse panel,
-//   available slugs, and one block per RUNTIMES row: Codex equivalents, Pi IDs)
+//   available slugs, and one block per RUNTIMES row: Codex equivalents, Pi IDs,
+//   Cursor slugs per role)
 //     -> each model-consuming skill's "## Models" and "## Reasoning effort" sections
 //     -> setup-jstack's Models section and override-sheet block
 //     -> the "## Model names" section of each runtime's mapping file
-//        (jedi-mode/references/codex-tools.md, pi-tools.md, copilot-tools.md)
+//        (jedi-mode/references/codex-tools.md, pi-tools.md, copilot-tools.md, cursor-tools.md)
+//     -> .cursor/rules/jstack-models.mdc, the Cursor rule consuming repos copy
 //     -> one effort agent pair per level in plugins/jstack/effort-agents/
 //   the Per-skill notes table in jedi-mode/references/codex-tools.md
 //     -> the Codex preamble under the first heading of each listed skill's SKILL.md,
 //        and the codex-tools.md pointer in the prompt stub of every other public skill
 //   the Per-skill notes table in jedi-mode/references/copilot-tools.md
 //     -> the GitHub Copilot preamble under the same heading, after any Codex one
+//   the Per-skill notes table in jedi-mode/references/cursor-tools.md
+//     -> the Cursor preamble under the same heading, after any Copilot one
 //   DRIVER_PLAYBOOKS -> the driver-skill line under each playbook's first heading
 //   plugins/jstack/models.json's roles, again
 //     -> the role list in setup-jstack's scripts/sheet.awk, which checks a Copilot sheet
@@ -62,7 +66,7 @@ import { Type } from "typebox";
 import { Value } from "typebox/value";
 
 import { code, codeList, PLUGIN, SKILLS } from "./plugin.mjs";
-import { RUNTIMES, roleSkills } from "./runtimes.mjs";
+import { cursorModelRows, RUNTIMES, roleSkills } from "./runtimes.mjs";
 import { markdownFiles, pathIsInside, validateProsePaths, validateSkillsTree, walk } from "./validate-skills.mjs";
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -73,7 +77,7 @@ const PROMPT_RUNTIMES = RUNTIMES.filter((runtime) => runtime.prompts);
 const VERSIONED_MANIFESTS = [
   ".claude-plugin/marketplace.json",
   `${PLUGIN}/.claude-plugin/plugin.json`,
-  ...RUNTIMES.map((runtime) => runtime.manifest),
+  ...RUNTIMES.flatMap((runtime) => runtime.manifest ?? []),
 ];
 
 export const PORTABLE_ASSETS = [
@@ -727,6 +731,38 @@ export function overrideSheetBlock(models) {
   );
 }
 
+// The always-applied Cursor rule that gives a Cursor agent each role's Task
+// model. It lives outside the skills tree so a repo that vendors single skills
+// can copy it to its own .cursor/rules/.
+const CURSOR_RULE = ".cursor/rules/jstack-models.mdc";
+export function cursorRule(models) {
+  return (
+    "---\n" +
+    "description: jstack role models for Cursor's Task tool\n" +
+    "alwaysApply: true\n" +
+    "---\n\n" +
+    "# jstack models on Cursor\n\n" +
+    "Generated from plugins/jstack/models.json by tools/generate.mjs in jgorgs/jstack. " +
+    "Copy this file to a repo's .cursor/rules/ to use it there, and edit a role line to change that role's model.\n\n" +
+    "jstack skills are written for Claude Code. When one runs in Cursor:\n\n" +
+    "- Its `Agent` tool is the `Task` tool, and every subagent type it names becomes " +
+    "`subagent_type: \"generalPurpose\"`. Tell the stand-in to read first what that type would have loaded: " +
+    "the jedi-mode skill for `jstack:jedi-agent` and its `-<level>` variants, " +
+    "jedi-mode/references/agents/comment-sicko.md for `jstack:comment-sicko`, and the thermo-nuclear-review or " +
+    "thermo-nuclear-code-quality-review skill for the two thermos subagents.\n" +
+    "- Where it reads a role line from the `jstack-models.md` override sheet or a default from its Models section, " +
+    "pass the role's line below as `Task`'s `model` instead. Claude Code model names do not pick a Cursor model, " +
+    "and a `Task` call with no `model` runs on the parent chat's model.\n" +
+    "- A panel line lists one model per seat. Run one subagent per entry.\n" +
+    "- `inherit-parent` or `auto` means omit `model`.\n" +
+    "- An `@<level>` suffix and the `default effort` line do not apply. The slug carries reasoning effort and speed.\n" +
+    "- If `Task` rejects a slug, use the closest valid slug of the same family from its error and say so. " +
+    "If there is none, omit `model` and say so. Never retry a rejected slug.\n\n" +
+    cursorModelRows(models).join("\n") +
+    "\n"
+  );
+}
+
 // After stamping, skill prose outside the regions the generator owns may name
 // no model: a full claude-* ID is rejected by the Agent tool, and a backticked
 // family name hard-codes a default that belongs in models.json.
@@ -881,6 +917,7 @@ export function plan(root, models) {
       put(`${runtime.prompts}/${skill.name}.md`, promptStub(skill, runtime, { preamble }));
     }
   }
+  put(CURSOR_RULE, cursorRule(models));
   const agents = effortAgents(models.efforts, read(`${PLUGIN}/agents/jedi-agent.md`));
   for (const agent of agents) put(`${EFFORT_AGENTS}/${agent.name}.md`, agent.text);
   stamp(`${PLUGIN}/.claude-plugin/plugin.json`, (text) =>
@@ -968,7 +1005,7 @@ export function problems(root, models) {
   const skillsDir = join(root, SKILLS);
   const read = (rel) => readFileSync(join(root, rel), "utf8");
   const pathExists = (rel) => existsSync(join(root, rel));
-  const packages = RUNTIMES.map((runtime) =>
+  const packages = RUNTIMES.filter((runtime) => runtime.manifest).map((runtime) =>
     attempt(() => {
       const text = read(runtime.manifest);
       let manifest;

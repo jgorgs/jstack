@@ -9,6 +9,8 @@ On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), i
 
 On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
 
+On Cursor, read the [platform mapping](../jedi-mode/references/cursor-tools.md), including its per-skill notes, before following this skill.
+
 Mine the current conversation for durable learnings, then route them into skill edits.
 
 Invoke when the user says "reflect" or "/reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.

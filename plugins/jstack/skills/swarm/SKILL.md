@@ -9,6 +9,8 @@ On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), i
 
 On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
 
+On Cursor, read the [platform mapping](../jedi-mode/references/cursor-tools.md), including its per-skill notes, before following this skill.
+
 Fan out N parallel workers. They may cover separate slices, race the same brief, or mix both. The parent waits, aggregates, and returns one report.
 
 ## Start
