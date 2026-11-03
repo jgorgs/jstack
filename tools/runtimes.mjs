@@ -141,9 +141,8 @@ export function cursorModelNamesSection(models) {
     "from the `jstack-models.mdc` rule when it is loaded, or from this table, which the rule copies:\n\n" +
     "| Role | Cursor model |\n| --- | --- |\n" +
     rows.join("\n") +
-    "\n\nThe split follows pstack's Cursor defaults: Grok runs code, exploration, investigation, tooling review, " +
-    "and swarm work; Claude runs the judgment, synthesis, and explanation roles and one seat of each diverse panel. " +
-    "A panel role runs one subagent per listed slug."
+    "\n\nGrok runs every role except `mechanical edits`, which runs on Composer, and each diverse panel pairs " +
+    "a Grok seat with a Composer seat. A panel role runs one subagent per listed slug."
   );
 }
 
