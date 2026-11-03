@@ -5,10 +5,6 @@ description: "Use for \"interrogate\", \"adversarial review\", \"multi-model rev
 
 # Interrogate
 
-On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), including its per-skill notes, before following this skill.
-
-On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
-
 Adversaries try to break a change or a design. A finding survives only when a run proves it. Report the findings. Do not apply fixes.
 
 ## Frame
@@ -38,6 +34,14 @@ There is no judge, pick, or graft step. Adversaries find different failures, so 
 - **Intent**: the restatement.
 - **Findings**: for each verified finding, the command, its output, how it breaks the intent, and the adversaries that found it. Say "no verified findings" when none survive.
 - **Dropped**: for each adversary, the count of dropped findings and why.
+
+## Other runtimes
+
+This skill is self-contained, so a repository that vendors only `interrogate` has everything it needs here.
+
+- **Codex**: each adversary is a `spawn_agent` call. The `subagent_type` and `model` dispatch fields map to `spawn_agent`, which already runs concurrently, so `run_in_background` has no separate flag. Substitute your configured Codex models for the defaults and keep the panel model-diverse. If `spawn_agent` is unavailable (the `multi_agent` feature is off), run the adversaries as sequential passes and say so. A thread-limit error is a capacity error, not a rejected model, so stop spawning instead of falling back to another model.
+- **GitHub Copilot**: each adversary is a `task` call. `subagent_type` becomes `agent_type`, and `model` comes from the `jstack-models.md` sheet. Keep the panel's vendors distinct (Claude, GPT, Gemini, Grok, and so on).
+- On either runtime, if only one model family is reachable, vary reasoning effort across adversaries and note in the output that diversity was reduced.
 
 ## Models
 

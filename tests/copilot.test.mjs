@@ -63,7 +63,7 @@ describe("copilot-tools.md coverage", () => {
     const noted = [...table.matchAll(/^\| `([a-z0-9-]+)` \|/gm)].map((m) => m[1]);
     const skills = new Set(skillText.filter(([rel]) => rel.endsWith("/SKILL.md")).map(([rel]) => rel.split("/")[0]));
     for (const name of noted) expect(skills.has(name)).toBe(true);
-    for (const name of ["interrogate", "setup-jstack", "no-comments", "reflect", "recall", "babysit"]) {
+    for (const name of ["setup-jstack", "no-comments", "reflect", "recall", "babysit"]) {
       expect(noted).toContain(name);
     }
   });
