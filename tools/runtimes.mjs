@@ -17,6 +17,9 @@ import { code, codeList, PLUGIN, SKILLS } from "./plugin.mjs";
 // relative to the plugin root. GitHub Copilot stamps preambles but has no
 // prompts directory, since its CLI and app list plugin skills as slash commands
 // themselves, and no models.json block, since it ships no default models.
+// Cursor has no manifest: skills reach it vendored into a repo's .agents/skills/,
+// and its models.json block names a Cursor model per role, which the generator
+// also writes into .cursor/rules/jstack-models.mdc for consuming repos to copy.
 export const RUNTIMES = [
   {
     name: "Codex",
@@ -52,6 +55,14 @@ export const RUNTIMES = [
       validateCopilotManifest(manifest, { claude: JSON.parse(read(`${PLUGIN}/.claude-plugin/plugin.json`)), pathExists }),
     hooks: (manifest) => [manifest.hooks],
     pluginRootVar: "COPILOT_PLUGIN_ROOT",
+  },
+  {
+    name: "Cursor",
+    key: "cursor",
+    mapping: "cursor-tools.md",
+    modelNames: cursorModelNamesSection,
+    checkModels: checkCursorModels,
+    skillPreambles: true,
   },
 ].map((runtime) => ({
   ...runtime,
@@ -96,6 +107,41 @@ function checkPiModels(pi, { raw, fail, isObject }) {
       }
     }
   }
+}
+
+// Cursor's Task tool takes one slug per model, reasoning effort and speed
+// included, so the block maps each role to a slug, or a panel role to a list.
+const CURSOR_SLUG = /^(?:grok|composer|claude)-[0-9a-z.-]+$/;
+function checkCursorModels(cursor, { raw, fail, unique }) {
+  const labels = new Set(raw.roles.map((r) => r.role));
+  for (const label of labels) if (!Object.hasOwn(cursor, label)) fail(`cursor has no model for role "${label}"`);
+  for (const [label, value] of Object.entries(cursor)) {
+    if (!labels.has(label)) fail(`cursor names "${label}", which is not a role`);
+    const slugs = [value].flat();
+    if (slugs.length === 0) fail(`cursor "${label}" needs a model`);
+    unique(slugs, `cursor "${label}"`);
+    for (const slug of slugs) {
+      if (typeof slug !== "string" || !CURSOR_SLUG.test(slug)) fail(`cursor "${label}" names "${slug}", not a Cursor model slug`);
+    }
+  }
+}
+
+export function cursorModelRows(models) {
+  return models.roles.map((r) => `${r.role}: ${[models.cursor[r.role]].flat().join(", ")}`);
+}
+
+export function cursorModelNamesSection(models) {
+  const rows = models.roles.map((r) => `| ${r.role} | ${codeList([models.cursor[r.role]].flat())} |`);
+  return (
+    "Skills name Claude defaults in their Models sections. Those names do not pick a Cursor model, and a `Task` " +
+    "call without `model` runs on the parent chat's model. Pass the role's Cursor slug as the `Task` tool's `model`, " +
+    "from the `jstack-models.mdc` rule when it is loaded, or from this table, which the rule copies:\n\n" +
+    "| Role | Cursor model |\n| --- | --- |\n" +
+    rows.join("\n") +
+    "\n\nThe split follows pstack's Cursor defaults: Grok runs code, exploration, investigation, tooling review, " +
+    "and swarm work; Claude runs the judgment, synthesis, and explanation roles and one seat of each diverse panel. " +
+    "A panel role runs one subagent per listed slug."
+  );
 }
 
 export function codexModelNamesSection(models) {

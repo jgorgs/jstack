@@ -41,7 +41,8 @@ This skill is self-contained, so a repository that vendors only `interrogate` ha
 
 - **Codex**: each adversary is a `spawn_agent` call. The `subagent_type` and `model` dispatch fields map to `spawn_agent`, which already runs concurrently, so `run_in_background` has no separate flag. Substitute your configured Codex models for the defaults and keep the panel model-diverse. If `spawn_agent` is unavailable (the `multi_agent` feature is off), run the adversaries as sequential passes and say so. A thread-limit error is a capacity error, not a rejected model, so stop spawning instead of falling back to another model.
 - **GitHub Copilot**: each adversary is a `task` call. `subagent_type` becomes `agent_type`, and `model` comes from the `jstack-models.md` sheet. Keep the panel's vendors distinct (Claude, GPT, Gemini, Grok, and so on).
-- On either runtime, if only one model family is reachable, vary reasoning effort across adversaries and note in the output that diversity was reduced.
+- **Cursor**: each adversary is a `Task` call with `subagent_type: "generalPurpose"` and `run_in_background: true`. Pass one slug from the `interrogate reviewers` line of the `.cursor/rules/jstack-models.mdc` rule as `model` on every call; a call without `model` runs on the parent chat's model. A Cursor slug carries its own reasoning effort, so an `@<level>` suffix does not apply.
+- On any of these runtimes, if only one model family is reachable, vary reasoning effort across adversaries and note in the output that diversity was reduced.
 
 ## Models
 

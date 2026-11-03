@@ -52,7 +52,7 @@ import { walk } from "../tools/validate-skills.mjs";
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
 const models = loadModels();
 const leads = loadLeadLines();
-const [codex, pi, copilot] = RUNTIMES;
+const [codex, pi, copilot, cursor] = RUNTIMES;
 
 const lines = (text) => text.split("\n");
 const spanned = (locate, doc) => {
@@ -403,8 +403,11 @@ describe("lead lines", () => {
     for (const text of ["# X\n\nA.\n", "# X\n\nA."]) expect(stampLeadLine(text, "A.")).toBe(text);
   });
 
-  test("Codex and Copilot stamp a preamble on their noted skills and Pi stamps none", () => {
-    expect(RUNTIMES.map((r) => r.name)).toEqual(["Codex", "Pi", "GitHub Copilot"]);
+  test("Codex, Copilot, and Cursor stamp a preamble on their noted skills and Pi stamps none", () => {
+    expect(RUNTIMES.map((r) => r.name)).toEqual(["Codex", "Pi", "GitHub Copilot", "Cursor"]);
+    expect(cursor.preamble).toBe(
+      "On Cursor, read the [platform mapping](../jedi-mode/references/cursor-tools.md), including its per-skill notes, before following this skill.",
+    );
     expect(codex.preamble).toBe(
       "On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), including its per-skill notes, before following this skill.",
     );

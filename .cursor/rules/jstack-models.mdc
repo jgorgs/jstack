@@ -1,0 +1,37 @@
+---
+description: jstack role models for Cursor's Task tool
+alwaysApply: true
+---
+
+# jstack models on Cursor
+
+Generated from plugins/jstack/models.json by tools/generate.mjs in jgorgs/jstack. Copy this file to a repo's .cursor/rules/ to use it there, and edit a role line to change that role's model.
+
+jstack skills are written for Claude Code. When one runs in Cursor:
+
+- Its `Agent` tool is the `Task` tool, and every subagent type it names becomes `subagent_type: "generalPurpose"`. Tell the stand-in to read first what that type would have loaded: the jedi-mode skill for `jstack:jedi-agent` and its `-<level>` variants, jedi-mode/references/agents/comment-sicko.md for `jstack:comment-sicko`, and the thermo-nuclear-review or thermo-nuclear-code-quality-review skill for the two thermos subagents.
+- Where it reads a role line from the `jstack-models.md` override sheet or a default from its Models section, pass the role's line below as `Task`'s `model` instead. Claude Code model names do not pick a Cursor model, and a `Task` call with no `model` runs on the parent chat's model.
+- A panel line lists one model per seat. Run one subagent per entry.
+- `inherit-parent` or `auto` means omit `model`.
+- An `@<level>` suffix and the `default effort` line do not apply. The slug carries reasoning effort and speed.
+- If `Task` rejects a slug, use the closest valid slug of the same family from its error and say so. If there is none, omit `model` and say so. Never retry a rejected slug.
+
+feature, refactoring: grok-4.7-xhigh
+bug-fix: grok-4.7-xhigh
+perf-issue: grok-4.7-xhigh
+hillclimb: grok-4.7-xhigh
+judgment and prose: claude-opus-5-5-xhigh
+strongest judgment: claude-opus-5-5-xhigh
+how explorer: grok-4.7-xhigh
+how explainer: claude-opus-5-5-xhigh
+why investigators: grok-4.7-xhigh
+why synthesizer: claude-opus-5-5-xhigh
+reflect tooling: grok-4.7-xhigh
+reflect judgment, divergent, synthesizer: claude-opus-5-5-xhigh
+arena runners: claude-opus-5-5-xhigh, grok-4.7-xhigh
+arena cross-judge pool: claude-opus-5-5-xhigh, grok-4.7-xhigh
+swarm workers: grok-4.7-xhigh
+architect runners: claude-opus-5-5-xhigh, grok-4.7-xhigh
+interrogate reviewers: claude-opus-5-5-xhigh, grok-4.7-xhigh, composer-2.5
+thermos reviewers: grok-4.7-xhigh
+no-comments reviewer: grok-4.7-xhigh

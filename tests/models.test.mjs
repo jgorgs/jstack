@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { loadModels, parseModels, regions } from "../tools/generate.mjs";
+import { cursorRule, loadModels, parseModels, regions } from "../tools/generate.mjs";
 import { markdownFiles } from "../tools/validate-skills.mjs";
 
 const repoRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -94,6 +94,20 @@ describe("parseModels", () => {
     expect(parse((p) => (role(p, "arena runners").models = [...raw.tiers.panel]))).toThrow(
       'models.json: role "arena runners" lists tier "panel" literally; name the tier',
     );
+  });
+
+  test("the cursor block names a Cursor slug for exactly the roles", () => {
+    expect(parse((p) => delete p.cursor["bug-fix"])).toThrow('models.json: cursor has no model for role "bug-fix"');
+    expect(parse((p) => (p.cursor["bug fix"] = "grok-4.7-high"))).toThrow('models.json: cursor names "bug fix", which is not a role');
+    expect(parse((p) => (p.cursor["bug-fix"] = "opus"))).toThrow('models.json: cursor "bug-fix" names "opus", not a Cursor model slug');
+    expect(parse((p) => (p.cursor["arena runners"] = []))).toThrow('models.json: cursor "arena runners" needs a model');
+  });
+
+  test("the Cursor rule is always applied and gives every role its cursor line", () => {
+    const rule = cursorRule(models);
+    expect(rule.startsWith("---\ndescription: ")).toBe(true);
+    expect(rule).toContain("\nalwaysApply: true\n---\n");
+    for (const r of raw.roles) expect(rule).toContain(`\n${r.role}: ${[raw.cursor[r.role]].flat().join(", ")}\n`);
   });
 
   test("a duplicate role label throws naming it", () => {

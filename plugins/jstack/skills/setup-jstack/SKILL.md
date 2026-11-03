@@ -9,6 +9,8 @@ On Codex, read the [platform mapping](../jedi-mode/references/codex-tools.md), i
 
 On GitHub Copilot, read the [platform mapping](../jedi-mode/references/copilot-tools.md), including its per-skill notes, before following this skill.
 
+On Cursor, read the [platform mapping](../jedi-mode/references/cursor-tools.md), including its per-skill notes, before following this skill.
+
 On GitHub Copilot, follow [the Copilot setup](copilot.md) in place of steps 1, 3, 4, and 7 and step 6's header.
 
 On another runtime, read [Other runtimes](#other-runtimes) below for where the sheet lives and how it loads; the steps are the same.
@@ -112,6 +114,7 @@ The role lines are the same everywhere. What differs is the sheet path, how the 
 | Codex | `<codex-home>/jstack-models.md` | model rows: paste into `<codex-home>/AGENTS.md`; hook setting: read by the plugin | your configured Codex models, see [codex-tools.md](../jedi-mode/references/codex-tools.md#model-names) | hook contract tested; discovery verified |
 | Pi | `jstack-models.md` in the Pi agent directory, `$PI_CODING_AGENT_DIR` or `~/.pi/agent` | read by the jstack Pi extension, model rows and hook setting both; no include line | `pi --list-models`, see [pi-tools.md](../jedi-mode/references/pi-tools.md#model-names) and its `setup-jstack` note | extension contract tested offline; live results in the repository's `docs/pi-equivalence.md` |
 | GitHub Copilot (CLI and app) | `${COPILOT_HOME:-~/.copilot}/jstack-models.md` | the plugin hook checks it and injects its role lines at session start; skills-only installs read it with `view` | the `task` tool's `model` enum, see [copilot-tools.md](../jedi-mode/references/copilot-tools.md#model-names) | hook contract tested; CLI install smoke-tested |
+| Cursor | `.cursor/rules/jstack-models.mdc` in the repo, or `~/.cursor/rules/jstack-models.mdc` for every repo | an always-applied rule; copy the jstack repository's `.cursor/rules/jstack-models.mdc` and edit its role lines | the `Task` tool's `model` parameter, see [cursor-tools.md](../jedi-mode/references/cursor-tools.md#model-names) | rule generated and checked; no live session |
 | opencode | `~/.config/opencode/jstack-models.md` | add the path to the `instructions` array in `opencode.json` | the `models` slash command in the session | from published docs, no live session |
 | Gemini CLI | `~/.gemini/jstack-models.md` | `@~/.gemini/jstack-models.md` in `~/.gemini/GEMINI.md` | the `model` slash command in the session | from published docs, no live session |
 | Prime Agent | no documented sheet path; Prime's configuration chooses models | | | no live session |
