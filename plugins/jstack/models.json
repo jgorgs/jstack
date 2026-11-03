@@ -50,7 +50,9 @@
     "arena cross-judge pool": ["claude-opus-5-5-xhigh", "grok-4.7-xhigh"],
     "swarm workers": "grok-4.7-xhigh",
     "architect runners": ["claude-opus-5-5-xhigh", "grok-4.7-xhigh"],
-    "interrogate reviewers": ["claude-opus-5-5-xhigh", "grok-4.7-xhigh", "composer-2.5"]
+    "interrogate reviewers": ["claude-opus-5-5-xhigh", "grok-4.7-xhigh", "composer-2.5"],
+    "thermos reviewers": "grok-4.7-xhigh",
+    "no-comments reviewer": "grok-4.7-xhigh"
   },
   "pi": {
     "fallback": "anthropic",
