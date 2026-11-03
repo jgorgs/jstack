@@ -2,6 +2,12 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.4.0 - Cursor model routing, cheaper role defaults, Grok-only Cursor models
+
+- Cursor is a supported runtime (#18). `jedi-mode/references/cursor-tools.md` maps the Claude Code tools, subagent types, and role models to Cursor's `Task` tool, and skills that dispatch on role models get a Cursor preamble that links to it. `tools/generate.mjs` builds that file's Model names table and the `.cursor/rules/jstack-models.mdc` rule from the new `cursor` block in `models.json`, which names a Cursor model for every role. A repo copies the rule into its own `.cursor/rules/`. `interrogate` keeps its Cursor dispatch note in its own Other runtimes section, so it stays self-contained.
+- Cheaper role defaults (#15). A new `fast` tier (`sonnet`) runs the new `mechanical edits` role plus `how explorer`, `why investigators`, `reflect tooling`, `swarm workers`, and `no-comments reviewer`. The default panel is `fable`, `opus`, `sonnet`, with the `haiku` seat dropped. `hillclimb` moves from the strongest tier to the default tier. On Codex, fast-tier roles use the fastest configured Codex model, and no Codex model is added.
+- Cursor runs on Grok and Composer only. `claude-opus-5-5-xhigh` is not included in every Cursor plan, so every Cursor role that used it now uses `grok-4.7-xhigh`. The `arena`, `architect`, and `interrogate` panels are `grok-4.7-xhigh` and `composer-2.5`, and `arena` treats `grok-*` and `composer-*` as separate families for its cross-judge. The Cursor mapping no longer mentions Claude models. The Claude Code and Codex model tables are unchanged.
+
 ## 2.3.0 - sync selected pstack-claude fixes through 0.9.125
 
 Takes these pstack-claude changes by hand, renamed to jstack:

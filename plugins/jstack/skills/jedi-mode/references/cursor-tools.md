@@ -21,7 +21,7 @@ The `.cursor/rules/jstack-models.mdc` rule at the root of the jstack repository 
 - There is no `jstack:comment-sicko` subagent type. The **no-comments** skill spawns a `generalPurpose` `Task` whose instructions tell it to read `jedi-mode/references/agents/comment-sicko.md` in full first, on the `no-comments reviewer` model.
 - There are no `thermo-nuclear-review-subagent` or `thermo-nuclear-code-quality-review-subagent` types. The **thermos** skill spawns two `generalPurpose` `Task` calls whose instructions tell each to read the `thermo-nuclear-review` or `thermo-nuclear-code-quality-review` skill in full first, on the `thermos reviewers` model.
 - A role value's `@<level>` suffix and the sheet's `default effort` line do not apply. A Cursor slug carries its reasoning effort, and its speed where Cursor offers a `-fast` variant, as in `grok-4.7-high` or `grok-4.7-xhigh`. jstack defaults to the regular, non-fast variants.
-- Pass `model` on every `Task` call a skill makes for a role. A call without it runs on the parent chat's model, so a Claude parent would run every explorer and worker on Claude.
+- Pass `model` on every `Task` call a skill makes for a role. A call without it runs on the parent chat's model, so every explorer and worker would run on whatever model the parent chat uses.
 
 ## Model names
 
@@ -33,31 +33,31 @@ Skills name Claude defaults in their Models sections. Those names do not pick a 
 | bug-fix | `grok-4.7-xhigh` |
 | perf-issue | `grok-4.7-xhigh` |
 | hillclimb | `grok-4.7-xhigh` |
-| judgment and prose | `claude-opus-5-5-xhigh` |
-| strongest judgment | `claude-opus-5-5-xhigh` |
+| judgment and prose | `grok-4.7-xhigh` |
+| strongest judgment | `grok-4.7-xhigh` |
 | mechanical edits | `composer-2.5` |
 | how explorer | `grok-4.7-xhigh` |
-| how explainer | `claude-opus-5-5-xhigh` |
+| how explainer | `grok-4.7-xhigh` |
 | why investigators | `grok-4.7-xhigh` |
-| why synthesizer | `claude-opus-5-5-xhigh` |
+| why synthesizer | `grok-4.7-xhigh` |
 | reflect tooling | `grok-4.7-xhigh` |
-| reflect judgment, divergent, synthesizer | `claude-opus-5-5-xhigh` |
-| arena runners | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh` |
-| arena cross-judge pool | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh` |
+| reflect judgment, divergent, synthesizer | `grok-4.7-xhigh` |
+| arena runners | `grok-4.7-xhigh`, `composer-2.5` |
+| arena cross-judge pool | `grok-4.7-xhigh`, `composer-2.5` |
 | swarm workers | `grok-4.7-xhigh` |
-| architect runners | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh` |
-| interrogate reviewers | `claude-opus-5-5-xhigh`, `grok-4.7-xhigh`, `composer-2.5` |
+| architect runners | `grok-4.7-xhigh`, `composer-2.5` |
+| interrogate reviewers | `grok-4.7-xhigh`, `composer-2.5` |
 | thermos reviewers | `grok-4.7-xhigh` |
 | no-comments reviewer | `grok-4.7-xhigh` |
 
-The split follows pstack's Cursor defaults: Grok runs code, exploration, investigation, tooling review, and swarm work; Claude runs the judgment, synthesis, and explanation roles and one seat of each diverse panel. A panel role runs one subagent per listed slug.
+Grok runs every role except `mechanical edits`, which runs on Composer, and each diverse panel pairs a Grok seat with a Composer seat. A panel role runs one subagent per listed slug.
 
 ## Per-skill notes
 
 | Skill | On Cursor |
 |-------|-----------|
 | `architect` | The runners are `Task` calls on the `architect runners` slugs. |
-| `arena` | The runners and the cross-judge are `Task` calls on the `arena runners` and `arena cross-judge pool` slugs. Families go by prefix: `claude-*`, and `grok-*` with `composer-*`. |
+| `arena` | The runners and the cross-judge are `Task` calls on the `arena runners` and `arena cross-judge pool` slugs. Families go by prefix: `grok-*` and `composer-*` are separate families. |
 | `how` | Explorers and the explainer are `Task` calls on the `how explorer` and `how explainer` slugs. |
 | `no-comments` | There is no `comment-sicko` subagent type; see Subagent policy above. |
 | `reflect` | The reviewers and the synthesizer are `Task` calls on the `reflect tooling` and `reflect judgment, divergent, synthesizer` slugs. The transcript finder reads Claude Code's layout, so pass the session digest step 1 allows instead. |
