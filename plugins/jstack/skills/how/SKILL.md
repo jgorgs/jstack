@@ -44,7 +44,7 @@ The explanation uses the sections defined in `references/explainer-prompt.md`, d
 
 Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.
 
-- how explorer: `opus`
+- how explorer: `sonnet`
 - how explainer: `opus`
 
 ## Reasoning effort

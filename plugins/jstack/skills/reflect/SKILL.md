@@ -83,7 +83,7 @@ Short list, no preamble:
 
 Role defaults, stamped from `plugins/jstack/models.json` (edit there, rerun `tools/generate.mjs`). A matching role line in the `jstack-models.md` override sheet overrides each at runtime; `/setup-jstack` writes it and lists its path per runtime.
 
-- reflect tooling: `opus`
+- reflect tooling: `sonnet`
 - reflect judgment, divergent, synthesizer: `opus`
 
 ## Reasoning effort

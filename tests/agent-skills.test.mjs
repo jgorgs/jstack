@@ -293,7 +293,7 @@ describe("Codex model names", () => {
     expect(strongestLine).not.toContain("swarm workers");
 
     expect(strongestLine).toContain(`\`${raw.codex.strongest}\``);
-    for (const role of ["bug-fix", "perf-issue", "hillclimb", "strongest judgment"]) {
+    for (const role of ["bug-fix", "perf-issue", "strongest judgment"]) {
       expect(section).toContain(role);
     }
     for (const family of raw.available) expect(section).not.toContain(`\`${family}\``);

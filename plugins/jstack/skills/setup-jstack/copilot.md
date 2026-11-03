@@ -49,8 +49,9 @@ Each tier question below writes every role in its row. The panel row's roles eac
 
 | Tier | Roles |
 | --- | --- |
-| Default | `feature, refactoring`, `judgment and prose`, `how explorer`, `how explainer`, `why investigators`, `why synthesizer`, `reflect tooling`, `reflect judgment, divergent, synthesizer`, `swarm workers`, `thermos reviewers`, `no-comments reviewer` |
-| Strongest | `bug-fix`, `perf-issue`, `hillclimb`, `strongest judgment` |
+| Default | `feature, refactoring`, `hillclimb`, `judgment and prose`, `how explainer`, `why synthesizer`, `reflect judgment, divergent, synthesizer`, `thermos reviewers` |
+| Strongest | `bug-fix`, `perf-issue`, `strongest judgment` |
+| Fast | `mechanical edits`, `how explorer`, `why investigators`, `reflect tooling`, `swarm workers`, `no-comments reviewer` |
 | Panel | `arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers` |
 
 ## Question sequence
@@ -59,7 +60,7 @@ Ask in this order. Each model question is the vendor and model pair above; every
 
 0. **Session model.** "Run every jstack role on this session's model?" with `Yes, use the session's model for every role` and `No, choose models by tier`. This is for a plan that offers one model or only automatic selection, and for anyone who wants no per-role choices. On a re-run, put the choice that matches the saved sheet first, labeled `(current)`. Yes skips questions 1 through 6 and the model detection. Set every role line to `inherit-parent`, with three `inherit-parent` entries in each panel role. Ask questions 7 and 8, then say in step 8 that the panels' diversity is reduced and that panel entries can differ only by reasoning effort. This path needs no `panel vendors: any` line, because a panel of only `inherit-parent` needs no vendor check. No answers the questions below.
 1. **Default model.** "Default model: runs <the Default row's roles>." It writes every role in the Default row.
-2. **Strongest model.** "Strongest model: runs <the Strongest row's roles>." It writes every role in the Strongest row.
+2. **Strongest model.** "Strongest model: runs <the Strongest row's roles>." It writes every role in the Strongest row. Then ask **Fast model.** "Fast model: runs <the Fast row's roles>, the high-volume mechanical and exploration work." It writes every role in the Fast row. On a re-run whose sheet has no line for the Fast row's first role, start from the saved Default model.
 3. **Panel model 1 of 3**, then **panel model 2 of 3**, then **panel model 3 of 3**, as three separate questions. "Panel model N of 3: panels run one subagent per model, and models from different vendors catch different mistakes." In slots 2 and 3, list the vendors not yet in the panel first, then the rest, then `inherit-parent`. Do not offer a model already in the panel.
 4. **More panel models.** "Add a 4th panel model?" with `Done` as the first choice and `Add a 4th` second. Adding asks one more slot the same way, then asks again for a 5th. Stop offering at 5 models.
 5. **Vendor check.** When the panel's model IDs, not counting `inherit-parent`, all come from one vendor and more than one vendor is detected, ask "The panel is single-vendor (Claude), so its cross-checks share blind spots." with `Pick the panel again` and `Keep it anyway`. Picking again returns to panel model 1. `Keep it anyway` writes the line `panel vendors: any` after the `session hook` line. When only one vendor is detected, skip this question, write `panel vendors: any`, and say in step 8 that the panel's diversity is reduced. A panel of only `inherit-parent` needs no check.
