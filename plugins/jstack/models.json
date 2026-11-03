@@ -24,12 +24,14 @@
     { "role": "arena cross-judge pool", "models": "panel", "skill": "arena" },
     { "role": "swarm workers", "models": "default", "skill": "swarm" },
     { "role": "architect runners", "models": "panel", "skill": "architect" },
-    { "role": "interrogate reviewers", "models": "panel", "skill": "interrogate" }
+    { "role": "interrogate reviewers", "models": "panel", "skill": "interrogate" },
+    { "role": "thermos reviewers", "models": "default", "skill": "thermos" },
+    { "role": "no-comments reviewer", "models": "default", "skill": "no-comments" }
   ],
   "codex": {
-    "default": "gpt-6-sol",
+    "default": "gpt-6.1-sol",
     "strongest": "gpt-6-astra",
-    "panel": ["gpt-6-astra", "gpt-6-sol", "gpt-6-luna"]
+    "panel": ["gpt-6-astra", "gpt-6.1-sol", "gpt-6-luna"]
   },
   "pi": {
     "fallback": "anthropic",
@@ -43,13 +45,13 @@
       "openai": {
         "opus": "openai/gpt-6.1-sol",
         "fable": "openai/gpt-6-astra",
-        "sonnet": "openai/gpt-6-sol",
+        "sonnet": "openai/gpt-6.1-sol",
         "haiku": "openai/gpt-6-luna"
       },
       "openai-codex": {
         "opus": "openai-codex/gpt-6.1-sol",
         "fable": "openai-codex/gpt-6-astra",
-        "sonnet": "openai-codex/gpt-6-sol",
+        "sonnet": "openai-codex/gpt-6.1-sol",
         "haiku": "openai-codex/gpt-6-luna"
       }
     }

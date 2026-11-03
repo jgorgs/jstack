@@ -11,6 +11,21 @@ const skillsDir = fileURLToPath(new URL("../plugins/jstack/skills", import.meta.
 
 const rules = [
   {
+    source: "pstack-claude #333 Codex session effort with an explicit model",
+    file: "jedi-mode/references/codex-tools.md",
+    phrase: "as `reasoning_effort` on `spawn_agent`, including when a model is selected explicitly",
+  },
+  {
+    source: "pstack-claude #333 unknown Codex session effort",
+    file: "jedi-mode/references/codex-tools.md",
+    phrase: "Do not substitute an omitted `reasoning_effort` for the missing starting level.",
+  },
+  {
+    source: "pstack-claude #333 resolve active Codex effort before dispatch",
+    file: "jedi-mode/references/codex-tools.md",
+    phrase: "run `node <jedi-mode-dir>/scripts/codex-session-effort.mjs` before dispatching",
+  },
+  {
     source: "#71 callable driver policy",
     file: "jedi-mode/SKILL.md",
     phrase: "fall back to `run` when the repo has none",
@@ -139,6 +154,31 @@ const rules = [
     source: "#231 reflect adds nothing beside the transcript path",
     file: "reflect/SKILL.md",
     phrase: "Add nothing beside a transcript path",
+  },
+  {
+    source: "backnotprop/pstack#14 an outside rule nobody can check is held, not deleted",
+    file: "jedi-mode/references/agents/comment-sicko.md",
+    phrase: "the comment stays put as a `HOLD`, the one case where doubt is not meat",
+  },
+  {
+    source: "backnotprop/pstack#14 a kill of an outside rule cites its evidence",
+    file: "jedi-mode/references/agents/comment-sicko.md",
+    phrase: "dies, and the kill cites the page or file",
+  },
+  {
+    source: "backnotprop/pstack#14 the parent keeps each HOLD",
+    file: "no-comments/SKILL.md",
+    phrase: "and where to check it is not an ambiguous keep. Leave it in place and report it open.",
+  },
+  {
+    source: "backnotprop/pstack#14 a second rejection keeps the accepted findings",
+    file: "no-comments/SKILL.md",
+    phrase: "fail `/no-comments` for that report's rejected findings, not for the run.",
+  },
+  {
+    source: "backnotprop/pstack#14 an outside-rule kill needs a refuting citation",
+    file: "no-comments/SKILL.md",
+    phrase: "unless the report cites a documentation page or source file that refutes the rule",
   },
 ];
 

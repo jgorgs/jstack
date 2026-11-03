@@ -498,6 +498,11 @@ describe("effort agents", () => {
     expect(text).toContain('subagent_type: "jstack:jedi-agent-<level>"');
     expect(text).toContain("`reasoning_effort`");
   });
+
+  test("session effort outside Claude Code defers to the platform mapping", () => {
+    const text = effortSection(["low", "max"], "session");
+    expect(text).toContain("On other runtimes, follow the platform mapping for `session`");
+  });
 });
 
 describe("plan, changes, apply", () => {
