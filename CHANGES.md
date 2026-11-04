@@ -2,6 +2,13 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.5.0 - Prototype reviews screens on an art board
+
+- Prototype runs by default before Feature builds a new or reworked screen, unless the screen already has a picked art board or a locked design reference. Feature's `architect` step now hands a screen to Prototype, and the `jedi-mode` routing line says so.
+- Prototype writes the screen's contract first: its types, its API shape, every state (at least loading, empty, error, and full), and one shared sample-data file. Three or four labeled variants render from that one contract, in every state, at desktop and phone width.
+- When the session has the Artifact tool, the variants go on one published art board the user can comment on from a phone, and the session watches it. Comments sent to Claude are the pick: the session merges the named pieces into a `Merged` board, replies in each thread, checks the pick against the contract, and records the screenshots and board link on the issue. Elsewhere the variants stay behind a local switcher.
+- New `jedi-mode/references/art-board.md` covers publishing, keeping comments reaching a working session after the publishing task ends, and what to do on a comment.
+
 ## 2.4.0 - Cursor model routing, cheaper role defaults, Grok-only Cursor models
 
 - Cursor is a supported runtime (#18). `jedi-mode/references/cursor-tools.md` maps the Claude Code tools, subagent types, and role models to Cursor's `Task` tool, and skills that dispatch on role models get a Cursor preamble that links to it. `tools/generate.mjs` builds that file's Model names table and the `.cursor/rules/jstack-models.mdc` rule from the new `cursor` block in `models.json`, which names a Cursor model for every role. A repo copies the rule into its own `.cursor/rules/`. `interrogate` keeps its Cursor dispatch note in its own Other runtimes section, so it stays self-contained.

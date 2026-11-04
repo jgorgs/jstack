@@ -3,7 +3,7 @@
 **You own the design. Plan, review, verify.** Delegate implementation. Stay in the lead.
 
 1. `how` over the affected subsystem.
-2. `architect` for parallel design exploration.
+2. `architect` for parallel design exploration. For a new or reworked screen, then run Prototype (`prototype.md`) on the contract `architect` names, unless the screen already has a picked art board or a locked design reference, and build from the pick.
 3. Write the throughput checkpoint as four todo items. A dimension that genuinely does not apply (single file, no fan-out) keeps its item with `n/a: <reason>` rather than being dropped:
    - **Blocking first steps.** Gates run before fan-out.
    - **Independent workstreams.** Disjoint files, services, or layers parallelize. Shared writes serialize.
