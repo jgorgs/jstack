@@ -87,7 +87,26 @@ Dependabot keeps the pinned action SHAs current. The vendored scripts' one runti
 
 Plugin auto-update installs **by version number**, not by tracking `main`. A skill fix merged without a version bump is inert on every installed copy, because the updater sees the same version it already has and does nothing.
 
-So: any PR that changes skill behavior either bumps the version itself or is followed by a release PR that does. The bump is three steps: edit the root `VERSION` file, add a `CHANGES.md` entry under a `## <version>` heading describing what changed and why, and run `bun tools/generate.mjs` to stamp the manifests. Forgetting any of the three fails CI. Run the full invariant script (including the behavioral leg) before merging.
+Any PR that changes skill behavior either bumps the version itself or is followed by a release PR that does.
+
+To cut a release:
+
+1. Pick the version. Bump the patch number for fixes and wording changes to existing skills, the minor number for a new skill, role, runtime, or other added behavior, and the major number for a change that breaks an existing install or override sheet.
+2. Branch from current `origin/main`. Name the branch `release-<version>`.
+3. Write the version to the root `VERSION` file.
+4. Add a `## <version> - <title>` entry at the top of `CHANGES.md`. List each change merged since the last release with what changed for the user, why, and its PR number.
+5. Run `bun tools/generate.mjs` to stamp the version into `package.json`, `.claude-plugin/marketplace.json`, and the three `plugin.json` manifests.
+6. Run `bun test tests/` and `tests/skill-collision-repro.sh`, plus any runtime-specific checks in [Before you open a PR](#before-you-open-a-pr) that the released changes call for.
+7. Open the PR titled `jstack <version>: <title>`. CI fails if `VERSION`, `CHANGES.md`, and the manifests disagree.
+8. After it merges, update your own install and confirm the version:
+
+   ```shell
+   claude plugin marketplace update jstack
+   claude plugin update jstack@jstack
+   claude plugin list | grep jstack
+   ```
+
+   Restart Claude Code sessions to load the new version. Installs without auto-update stay on their old version until their owner runs the same update.
 
 ## Commit and PR style
 
