@@ -2,6 +2,13 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.4.1 - jedi-mode checks forwarded diagnoses and verifies prod fixes live
+
+- The `jedi-mode` Bug fix and Investigation playbooks treat a diagnosis forwarded from an agent, bot, or alert as a hypothesis. Before closing, they run the cheapest live query on whether the failing path ever succeeded in production (#21).
+- Bug fix searches every reader of a wrong stored or configured value before it states the blast radius, and ships fixes for the other readers as separate follow-ups (#21).
+- Bug fix no longer treats a deploy marked ready as proof that a production fix works. It reruns the query that proved the bug and checks the error tracker before closing the alert (#21).
+- The Investigation reply opens with a plain verdict and what users lose, then says what was and was not changed (#21).
+
 ## 2.4.0 - Cursor model routing, cheaper role defaults, Grok-only Cursor models
 
 - Cursor is a supported runtime (#18). `jedi-mode/references/cursor-tools.md` maps the Claude Code tools, subagent types, and role models to Cursor's `Task` tool, and skills that dispatch on role models get a Cursor preamble that links to it. `tools/generate.mjs` builds that file's Model names table and the `.cursor/rules/jstack-models.mdc` rule from the new `cursor` block in `models.json`, which names a Cursor model for every role. A repo copies the rule into its own `.cursor/rules/`. `interrogate` keeps its Cursor dispatch note in its own Other runtimes section, so it stays self-contained.
