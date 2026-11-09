@@ -4,7 +4,7 @@
 
 Investigation requests are read-only. They produce a cited explanation or a recommendation, not a code change.
 
-1. Route through the **how** skill. For motivation questions, also route through the **why** skill. A diagnosis forwarded from another agent, a bot, or an alert ("ops/data, close it") is a hypothesis. Before you agree to close or dismiss it, run the cheapest live query that asks whether this path has ever succeeded in production. A lookup that has never matched is a design bug, not drifted data.
+1. Route through the **how** skill. For motivation questions, also route through the **why** skill. A diagnosis forwarded from another agent, a bot, or an alert ("ops/data, close it") is a hypothesis. Before you agree to close or dismiss it, run the cheapest read-only live query that asks whether this path has ever succeeded in production. Read-only means a select, a GET, or a log or error-tracker search, never a write, a deploy, a secret change, or an order. A lookup that has never matched is a design bug, not drifted data.
 2. Throughput checkpoint stays one line: `throughput checkpoint: n/a, read-only investigation`.
 3. Produce the `how`-shaped output (Overview / Key Concepts / How It Works / Where Things Live / Gotchas), or a recommendation with a tradeoffs table if the request is a decision between alternatives.
 4. Apply the **unslop** skill to the reply.

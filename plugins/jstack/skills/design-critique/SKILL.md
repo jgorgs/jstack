@@ -20,6 +20,16 @@ Skip the critique when the diff doesn't touch the repo's UI paths.
 - Never critique a screen you haven't seen. Name what you couldn't reach.
 - Never put credentials, demo passwords, or bypass tokens in a PR, a comment, or a screenshot. Never touch live payment modes.
 
+## Covered primary actions
+
+Run this on every screen the diff touches that has a primary action button, such as Checkout, Add to cart, Submit, Save, Pay, or Book, at 360px and 390px wide, on top of the repo section's widths.
+
+- Show every fixed or sticky layer that can appear on a first visit: cookie or consent banners, sticky headers and footers, bottom navs, chat or support widgets, toasts, and install prompts.
+- Check the button at the first scroll position and again scrolled to it, including the page's bottom.
+- If any of those layers covers any part of the button, the user can't see it or tap it without dismissing something first. That is a blocker, even when the layer can be dismissed.
+- Name the layer, the button, the width, and the fix, such as padding the page by the bar's height, moving the widget, or docking the button above the bar.
+- Screenshot both widths. If you couldn't render a width or trigger a layer, list it under Could not judge.
+
 ## Baseline
 
 1. The approved mock or board. Name drift. Don't re-argue decisions Jake approved.
@@ -40,7 +50,7 @@ In `modes/`. Default: `screen.md` plus the quick pass in `accessibility.md`. Add
 
 ## Severity
 
-- Blocker: the user can't finish the task or can't read the screen.
+- Blocker: the user can't finish the task or can't read the screen. A primary action button covered by a fixed or sticky layer at 360px or 390px is always a blocker ([Covered primary actions](#covered-primary-actions)).
 - Worth fixing: it costs time or trust, or breaks the design system.
 - Minor: polish.
 
