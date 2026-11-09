@@ -7,7 +7,7 @@ Seven passes, in order:
 2. Spacing. Check for one consistent spacing scale, whether related things sit closer than unrelated ones, and anything cramped or stranded.
 3. Type. Count the distinct sizes and weights. Flag line length past about 75 characters, tight line height on body text, running all caps, and text that truncates.
 4. Color. Count the colors doing real work. Flag color as the only carrier of meaning, brand color competing with the primary action, and text or icons too light to read.
-5. Interaction and states. Is the primary action obvious and in reach? Do clickable things look clickable? Then check the screen empty, loading, erroring, with one item, with two hundred, and with the longest realistic string. On a running app, trigger them for real.
+5. Interaction and states. Is the primary action obvious and in reach? At 360px and 390px, run [Covered primary actions](../SKILL.md#covered-primary-actions): a fixed or sticky layer over a primary button is a blocker. Do clickable things look clickable? Then check the screen empty, loading, erroring, with one item, with two hundred, and with the longest realistic string. On a running app, trigger them for real.
 6. Copy. Buttons that name the outcome, errors that say what to do next, jargon the user was never taught, redundant headers, mixed casing.
 7. Accessibility. Use the quick pass from `accessibility.md`.
 

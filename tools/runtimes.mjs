@@ -112,6 +112,11 @@ function checkPiModels(pi, { raw, fail, isObject }) {
   }
 }
 
+// The skills with a role on the panel tier, which every runtime mapping names
+// as its diverse-model panels.
+const panelSkills = (models) =>
+  codeList([...new Set(models.roles.filter((r) => r.tier === "panel").map((r) => r.skill))]);
+
 // Cursor's Task tool takes one slug per model, reasoning effort and speed
 // included, so the block maps each role to a slug, or a panel role to a list.
 const CURSOR_SLUG = /^(?:grok|composer|claude)-[0-9a-z.-]+$/;
@@ -157,7 +162,7 @@ export function codexModelNamesSection(models) {
     `your strongest Codex model (for example ${code(models.codex.strongest)}).\n` +
     `- Roles that default to the fast Claude tier (${models.roles.filter((r) => r.tier === "fast").map((r) => code(r.role)).join(", ")}): ` +
     "your fastest configured Codex model, or your primary one when you have only one.\n" +
-    "- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial " +
+    `- Diverse-model panels (${panelSkills(models)}): the adversarial ` +
     "signal comes from model diversity, so use the distinct Codex models available to you. A good default panel " +
     `on ChatGPT is ${codeList(models.codex.panel)}. If only one model family is reachable, vary reasoning ` +
     "effort and note in the verdict that diversity was reduced.\n\n" +
@@ -184,7 +189,7 @@ export function piModelNamesSection(models) {
     `ID and the ${code("agent")} call fails with ${code(`No API key found for ${fallback}`)}. ` +
     "The `agent` tool also takes a full " +
     "`provider/id`, passed through unchanged, and `inherit-parent`, `auto`, or no `model` runs the child on the " +
-    "parent's current model. Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`) " +
+    `parent's current model. Diverse-model panels (${panelSkills(models)}) ` +
     "stay diverse only while their aliases resolve to distinct models. If one model family is all you can reach, " +
     "vary the reasoning effort and note in the verdict that diversity was reduced.\n\n" +
     "`/setup-jstack` writes the configured model list. On Pi, keep the aliases and remap them with `pi models:`."
@@ -272,7 +277,7 @@ export function copilotModelNamesSection(models) {
     "with no `model` and other agent types alone.\n" +
     `- Roles that default to the strongest model (${strongest.map((r) => code(r.role)).join(", ")}): ` +
     "the strongest model the user chose.\n" +
-    "- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial " +
+    `- Diverse-model panels (${panelSkills(models)}): the adversarial ` +
     "signal comes from model diversity, so fill a panel from distinct vendors in the `task` tool's `model` " +
     "list (Claude, GPT, Gemini, Grok, and so on). jstack ships no default Copilot panel. If only one vendor is " +
     "reachable, vary reasoning effort and note in the verdict that diversity was reduced.\n\n" +

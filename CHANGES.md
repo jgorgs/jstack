@@ -2,6 +2,24 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.5.0 - sync selected pstack-claude fixes through 0.9.133, covered-button check, read-only prod verification
+
+Takes these pstack-claude changes by hand, renamed to jstack:
+
+- `worktree-audit.mjs` checks a worktree's ancestry against `refs/remotes/origin/<trunk>`, and the REMOTE column's ahead count reads `refs/remotes/origin/<branch>`. git resolves the shorthand `origin/<name>` to a tag or local branch of that name first, so such a ref at unmerged work made the audit call the worktree merged and safe (0.9.133, #423 and #426).
+- When a branch has several PRs, the audit holds its worktree for an open one even when `gh` lists a newer closed or merged PR first (0.9.133, #424).
+- Each runtime mapping names only `arena`, `architect`, and `interrogate` as diverse-model panels, built from the `panel` roles in `models.json` instead of hand-typed lists that also named `how` critics and `reflect`. A test fails when a mapping's list drifts from `models.json` (0.9.131 and 0.9.132, #411 and #412). `CONTEXT.md`'s Panel entry is corrected to match.
+- `deslop` diffs against the branch's base (the PR's base, else the parent branch, else the default branch) with uncommitted changes, where it diffed against `main`, and after editing reruns the checks that verified the change, reverting any edit whose check fails (0.9.130, #400).
+- `how`'s explainer prompt tells a lone explainer on the simple path that no explorers ran, so it traces the code itself (0.9.130, #400).
+- The `jedi-mode` Session pickup playbook verifies inherited claims before it routes the remaining work and ends. Step 5 used to come after the end (0.9.130, #400).
+
+Also in this release:
+
+- `design-critique` adds a Covered primary actions check. At 360px and 390px wide, no fixed or sticky layer (cookie banner, sticky header or footer, bottom nav, chat widget, toast, install prompt) may cover a primary action button such as Checkout, Add to cart, or Submit. A covered primary button is a blocker. `modes/screen.md` runs it in its Interaction and states pass.
+- `jedi-mode`'s production checks from 2.4.1 are read-only. The Bug fix and Investigation playbooks now say the live query is a select, a GET, or a log or error-tracker search, never a write, deploy, secret change, or order. Bug fix's post-deploy verification never writes to production, and it closes the alert or issue only once the operator says yes.
+
+Not taken: the Kimi, Grok Build, OMP, OpenCode 2, and Antigravity runtimes (0.9.129 and 0.9.130), the Pi changes (0.9.126 to 0.9.128), the macOS Bun realpath fix (#406), the CRLF and BOM `resume.mjs` fix (#416), the generated Platform Adaptation sentence (#413) and Build mandate pin (#415), which cover runtimes JStack does not ship, the Codex transcript mapping for `recall` and `show-me-your-work` (#400), the `setup-pstack` split (#422), the Grok subagent rows (#410), and the unreleased commits after 0.9.133 (#427, #428, #433, #435). The Cursor routing stays Grok and Composer only.
+
 ## 2.4.1 - jedi-mode checks forwarded diagnoses and verifies prod fixes live
 
 - The `jedi-mode` Bug fix and Investigation playbooks treat a diagnosis forwarded from an agent, bot, or alert as a hypothesis. Before closing, they run the cheapest live query on whether the failing path ever succeeded in production (#21).

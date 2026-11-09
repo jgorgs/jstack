@@ -53,7 +53,7 @@ Skills name Claude defaults (a single-role default for code/prose/judgment plus 
 - Single-model roles: your primary Codex model (for example `gpt-6.1-sol`).
 - Roles that default to the strongest Claude model (`bug-fix`, `perf-issue`, `strongest judgment`): your strongest Codex model (for example `gpt-6-astra`).
 - Roles that default to the fast Claude tier (`mechanical edits`, `how explorer`, `why investigators`, `reflect tooling`, `swarm workers`, `no-comments reviewer`): your fastest configured Codex model, or your primary one when you have only one.
-- Diverse-model panels (`arena`, `architect`, `interrogate`, `how` critics, `reflect`): the adversarial signal comes from model diversity, so use the distinct Codex models available to you. A good default panel on ChatGPT is `gpt-6-astra`, `gpt-6.1-sol`, `gpt-6-luna`. If only one model family is reachable, vary reasoning effort and note in the verdict that diversity was reduced.
+- Diverse-model panels (`arena`, `architect`, `interrogate`): the adversarial signal comes from model diversity, so use the distinct Codex models available to you. A good default panel on ChatGPT is `gpt-6-astra`, `gpt-6.1-sol`, `gpt-6-luna`. If only one model family is reachable, vary reasoning effort and note in the verdict that diversity was reduced.
 
 `/setup-jstack` writes the configured model list. On Codex, set it to your Codex model slugs.
 
