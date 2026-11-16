@@ -269,6 +269,22 @@ test("a status.showUntrackedFiles=no config does not hide untracked files from t
   expect([row[3], row[7]]).toEqual(["untracked:1", "hold-untracked"]);
 });
 
+test("the REMOTE column counts commits on each side of the pushed branch", () => {
+  const fixture = createFixture();
+  const behind = addWorktree(fixture, "behind");
+  commit(behind, "pushed by someone else");
+  git("-C", behind, "push", "origin", "behind");
+  git("-C", behind, "reset", "--hard", "HEAD~1");
+  const diverged = addWorktree(fixture, "diverged");
+  commit(diverged, "theirs");
+  git("-C", diverged, "push", "origin", "diverged");
+  git("-C", diverged, "reset", "--hard", "HEAD~1");
+  commit(diverged, "mine");
+  const { rows } = runAudit(fixture);
+  expect(rowFor(rows, behind)[4]).toBe("behind1");
+  expect(rowFor(rows, diverged)[4]).toBe("ahead1,behind1");
+});
+
 // Windows caps a path near 260 bytes, so a mebibyte of status output would take thousands of files there.
 test.skipIf(process.platform === "win32")("untracked files are counted when git status prints more than a mebibyte", () => {
   const fixture = createFixture();

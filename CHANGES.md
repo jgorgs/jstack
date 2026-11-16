@@ -2,6 +2,17 @@
 
 This file is the release changelog, with one `## <version> - <title>` entry per release, newest first. Entries before 1.0.0 are pstack-claude's history, kept as written: their paths, names, and tools are the ones that release shipped.
 
+## 2.5.1 - sync selected pstack-claude fixes through 0.9.138
+
+Takes these pstack-claude changes by hand, renamed to jstack:
+
+- The `jedi-mode` Bug fix playbook gets a focused-fix exception. When runtime evidence puts the cause in one subsystem, the fix keeps interfaces and state semantics, a cheap regression check exists, and no competing design remains, one delegate investigates and fixes it without the `how`, `why`, and `architect` fan-out. Contract, schema, migration, concurrency, transaction, routing, and security changes still go through `architect`, and a fix to code that enforces a security or data-integrity invariant needs an independent correctness reviewer. The reply separates verified code, what was published, and what the runtime served, and diagnostics print only known non-sensitive fields. `jedi-mode`'s triggers and the README point to the exception (0.9.134, #438). JStack adds that checking what the runtime served is a read and never writes to production, matching 2.5.0's read-only verification.
+- Project playbooks under `~/.agents/playbooks/` apply in every repository, alongside a repository's `.agents/playbooks/`, and the home folder's changes apply first. `check-playbooks.mjs` checks both folders (0.9.136, #454).
+- `check-playbooks.mjs` reads quoted values and one-line flow lists in a project playbook's `when` and `extends`, and accepts trailing blanks on a `---` delimiter and a closing `---` at the end of the file (0.9.137, #455).
+- `worktree-audit.mjs`'s REMOTE column shows `behindN` and `aheadN,behindN`, where a worktree behind its pushed branch printed `ahead0` and a diverged one showed only its ahead count. Display only (0.9.138, #453).
+
+Not taken: the project `pstack-models.md` override (b75e971, Claude Code only), the Copilot, Antigravity, Pi, and Codex changes, CI bumps, refactors, and the README's agent-diary and feedback notes from #438, which describe pstack-claude's own reporting.
+
 ## 2.5.0 - sync selected pstack-claude fixes through 0.9.133, covered-button check, read-only prod verification
 
 Takes these pstack-claude changes by hand, renamed to jstack:
