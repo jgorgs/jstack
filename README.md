@@ -63,6 +63,8 @@ Use jedi-mode to fix the search filter resetting when I change pages.
 
 For a bug, it reproduces the failure, uses `how` and `why` to investigate, delegates the fix, then reruns the failing case. If the fix crosses a function boundary, it brings in `architect` before implementation. You receive the fix and the failing and passing evidence.
 
+A localized bug with a demonstrated cause can use the [focused-fix exception](plugins/jstack/skills/jedi-mode/playbooks/bug-fix.md#focused-fix-exception). One delegate investigates and implements the correction when it preserves existing interfaces and state semantics and has a focused regression check. Reproduction, verification, and required independent review still apply; a small patch alone does not qualify.
+
 [Other playbooks](plugins/jstack/skills/jedi-mode/SKILL.md#playbooks) cover planning, features, refactoring, performance issues, investigations, prototypes, PR maintenance, shipping, and longer projects.
 
 ## Details
